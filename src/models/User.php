@@ -35,6 +35,11 @@ class User extends \Minz\Model
         ]);
     }
 
+    public function verifyPassword($password)
+    {
+        return password_verify($password, $this->password_hash);
+    }
+
     public static function validateUsername($username)
     {
         return preg_match('/^[0-9a-zA-Z_\-]{1,}$/', $username) === 1;

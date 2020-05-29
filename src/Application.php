@@ -13,7 +13,11 @@ class Application
     public function __construct()
     {
         $router = new \Minz\Router();
-        $router->addRoute('get', '/', 'Auth#login', 'login');
+        $router->addRoute('get', '/', 'Dashboard#index', 'home');
+
+        $router->addRoute('get', '/login', 'Auth#login', 'login');
+        $router->addRoute('post', '/login', 'Auth#createSession', 'create session');
+        $router->addRoute('post', '/logout', 'Auth#deleteSession', 'logout');
 
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
@@ -25,6 +29,12 @@ class Application
 
     public function run($request)
     {
+        \Minz\Output\View::declareDefaultVariables([
+            'environment' => \Minz\Configuration::$environment,
+            'errors' => [],
+            'error' => null,
+        ]);
+
         return $this->engine->run($request);
     }
 }
