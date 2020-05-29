@@ -18,6 +18,9 @@ class System
         $usage .= 'REQUEST can be one of the following:' . "\n";
         $usage .= '  /                 Show this help' . "\n";
         $usage .= '  /system/setup     Initialize or update the system' . "\n";
+        $usage .= '  /users/create     Create a user' . "\n";
+        $usage .= '      -pusername=USERNAME' . "\n";
+        $usage .= '      -ppassword=PASSWORD' . "\n";
 
         return Response::text(200, $usage);
     }
