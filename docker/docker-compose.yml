@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+    php:
+        image: taust_php:dev
+        build:
+            context: .
+            dockerfile: Dockerfile.php
+        restart: unless-stopped
+        command: php -t ./public/ -S 0.0.0.0:8000 ./public/index.php
+        ports:
+            - "8000:8000"
+        volumes:
+            - ..:/var/www/html:z
+        user: $USER
+        links:
+            - database
+
+    database:
+        image: postgres:12-alpine
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: postgres
+            POSTGRES_PASSWORD: postgres
+        ports:
+            - "5432:5432"
+
+volumes:
+    composer: {}
