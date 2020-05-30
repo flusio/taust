@@ -4,3 +4,8 @@ CREATE TABLE users (
     username TEXT NOT NULL,
     password_hash TEXT NOT NULL
 );
+
+CREATE TABLE domains (
+    id TEXT PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL
+);

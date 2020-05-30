@@ -13,6 +13,15 @@ class Dashboard
             return Response::redirect('login');
         }
 
-        return Response::ok('dashboard/index.phtml');
+        $domain_dao = new models\dao\Domain();
+        $db_domains = $domain_dao->listAll();
+        $domains = [];
+        foreach ($db_domains as $db_domain) {
+            $domains[] = new models\Domain($db_domain);
+        }
+
+        return Response::ok('dashboard/index.phtml', [
+            'domains' => $domains,
+        ]);
     }
 }

@@ -19,6 +19,10 @@ class Application
         $router->addRoute('post', '/login', 'Auth#createSession', 'create session');
         $router->addRoute('post', '/logout', 'Auth#deleteSession', 'logout');
 
+        $router->addRoute('get', '/domains/new', 'Domains#new', 'new domain');
+        $router->addRoute('post', '/domains/new', 'Domains#create', 'create domain');
+        $router->addRoute('get', '/domains/:id', 'Domains#show', 'show domain');
+
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
         $router->addRoute('cli', '/users/create', 'Users#create');
