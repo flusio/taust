@@ -1,3 +1,5 @@
+<?php $this->layout('base.phtml', ['title' => _('Login')]); ?>
+
 <form method="post" action="<?= url('create session') ?>">
     <?php if ($error): ?>
         <p class="form__error">

@@ -33,6 +33,7 @@ class Application
             'environment' => \Minz\Configuration::$environment,
             'errors' => [],
             'error' => null,
+            'current_user' => utils\CurrentUser::get(),
         ]);
 
         return $this->engine->run($request);
