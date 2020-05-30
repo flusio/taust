@@ -9,3 +9,11 @@ CREATE TABLE domains (
     id TEXT PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL
 );
+
+CREATE TABLE heartbeats (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    is_success BOOLEAN NOT NULL,
+    details TEXT NOT NULL DEFAULT '',
+    domain_id TEXT REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE
+);

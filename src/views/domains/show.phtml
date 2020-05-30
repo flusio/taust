@@ -1,3 +1,11 @@
 <?php $this->layout('base.phtml', ['title' => _f('Domain %s', $this->protect($domain->id))]); ?>
 
 <h1><?= $this->protect($domain->id) ?></h1>
+
+<p>
+    <?php if ($domain->up()): ?>
+        <?= _('Status: up') ?>
+    <?php else: ?>
+        <?= _('Status: down') ?>
+    <?php endif; ?>
+</p>

@@ -81,4 +81,41 @@ class Domains
             'domain' => $domain,
         ]);
     }
+
+    public function heartbeats($request)
+    {
+        if ($request->method() !== 'cli') {
+            return Response::text(400, 'This endpoint must be called from command line.');
+        }
+
+        $domain_dao = new models\dao\Domain();
+        $heartbeat_dao = new models\dao\Heartbeat();
+        $db_domains = $domain_dao->listAll();
+
+        $results = [];
+        foreach ($db_domains as $db_domain) {
+            $domain_id = $db_domain['id'];
+            $pointer = @fsockopen($domain_id, 443, $errno, $errstr, 5);
+
+            if ($pointer) {
+                fclose($pointer);
+
+                $is_success = 1;
+                $details = "OK";
+            } else {
+                $is_success = 0;
+                $details = "{$errstr} ({$errno})";
+            }
+
+            $heartbeat_dao->create([
+                'is_success' => $is_success,
+                'details' => $details,
+                'domain_id' => $domain_id,
+            ]);
+
+            $results[] = "{$domain_id}: {$details}";
+        }
+
+        return Response::text(200, implode("\n", $results));
+    }
 }
