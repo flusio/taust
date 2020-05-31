@@ -10,6 +10,7 @@
         <a href="<?= url('show domain', ['id' => $domain->id]) ?>">
             <?= $this->protect($domain->id) ?>
         </a>
+        (<?= _($domain->status()) ?>)
     </li>
     <?php endforeach; ?>
 </ul>

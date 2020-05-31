@@ -4,6 +4,10 @@
 
 <p>
     <?= _f('Status: %s', _($domain->status())) ?>
+    <?php if ($last_heartbeat): ?>
+        /
+        <?= _f('Last check: %s', $last_heartbeat['created_at']) ?>
+    <?php endif; ?>
 </p>
 
 <?php if ($alarms): ?>

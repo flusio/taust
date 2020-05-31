@@ -70,6 +70,7 @@ class Domains
         }
 
         $domain_dao = new models\dao\Domain();
+        $heartbeat_dao = new models\dao\Heartbeat();
         $alarm_dao = new models\dao\Alarm();
 
         $id = $request->param('id');
@@ -84,6 +85,7 @@ class Domains
         ]);
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
+            'last_heartbeat' => $heartbeat_dao->findLastHeartbeat($domain->id),
             'alarms' => $alarms,
         ]);
     }
