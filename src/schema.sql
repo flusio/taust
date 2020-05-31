@@ -2,7 +2,10 @@ CREATE TABLE users (
     id TEXT PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL,
     username TEXT NOT NULL,
-    password_hash TEXT NOT NULL
+    password_hash TEXT NOT NULL,
+    email TEXT,
+    free_mobile_login TEXT,
+    free_mobile_key TEXT
 );
 
 CREATE TABLE domains (

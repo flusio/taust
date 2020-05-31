@@ -1,0 +1,80 @@
+<?php $this->layout('base.phtml', ['title' => _('Profile')]); ?>
+
+<h1><?= $this->protect($current_user->username) ?></h1>
+
+<form method="post" action="<?= url('update profile') ?>">
+    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+
+    <p>
+        <?= _('You’ll receive alarms notifications by setting these information.') ?>
+    </p>
+
+    <?php if ($error): ?>
+        <p class="form__error">
+            <?= $error ?>
+        </p>
+    <?php endif; ?>
+
+    <div class="form-group <?= isset($errors['email']) ? 'form-group--invalid' : '' ?>">
+        <label for="email">
+            <?= _('Email address') ?>
+        </label>
+
+        <input
+            id="email"
+            name="email"
+            type="email"
+            value="<?= $email ?>"
+        />
+
+        <?php if (isset($errors['email'])): ?>
+            <p class="form-group__error">
+                <?= $errors['email'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= isset($errors['free_mobile_login']) ? 'form-group--invalid' : '' ?>">
+        <label for="free_mobile_login">
+            <?= _('Free mobile login') ?>
+        </label>
+
+        <input
+            id="free_mobile_login"
+            name="free_mobile_login"
+            type="text"
+            value="<?= $free_mobile_login ?>"
+        />
+
+        <?php if (isset($errors['free_mobile_login'])): ?>
+            <p class="form-group__error">
+                <?= $errors['free_mobile_login'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= isset($errors['free_mobile_key']) ? 'form-group--invalid' : '' ?>">
+        <label for="free_mobile_key">
+            <?= _('Free mobile key') ?>
+        </label>
+
+        <input
+            id="free_mobile_key"
+            name="free_mobile_key"
+            type="password"
+            value="<?= $free_mobile_key ?>"
+        />
+
+        <?php if (isset($errors['free_mobile_key'])): ?>
+            <p class="form-group__error">
+                <?= $errors['free_mobile_key'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form__actions">
+        <button type="submit" class="button--primary">
+            <?= _('Update') ?>
+        </button>
+    </div>
+</form>

@@ -20,7 +20,9 @@
                     <div class="header__separator"></div>
 
                     <?php if ($current_user): ?>
-                        <?= $this->protect($current_user->username) ?>
+                        <a href="<?= url('profile') ?>">
+                            <?= $this->protect($current_user->username) ?>
+                        </a>
 
                         <form method="post" action="<?= url('logout') ?>">
                             <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />

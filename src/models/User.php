@@ -24,6 +24,21 @@ class User extends \Minz\Model
             'type' => 'string',
             'required' => true,
         ],
+
+        'email' => [
+            'type' => 'string',
+            'validator' => '\taust\utils\Email::validate',
+        ],
+
+        'free_mobile_login' => [
+            'type' => 'string',
+            'validator' => '\taust\models\User::validateFreeMobileLogin',
+        ],
+
+        'free_mobile_key' => [
+            'type' => 'string',
+            'validator' => '\taust\models\User::validateFreeMobileKey',
+        ],
     ];
 
     public static function init($username, $password)
@@ -55,6 +70,12 @@ class User extends \Minz\Model
                 }
             } elseif ($property === 'password_hash') {
                 $formatted_error = _('The password is required.');
+            } elseif ($property === 'email') {
+                $formatted_error = _('This email is invalid.');
+            } elseif ($property === 'free_mobile_login') {
+                $formatted_error = _('This login is invalid.');
+            } elseif ($property === 'free_mobile_login') {
+                $formatted_error = _('This key is invalid.');
             } else {
                 $formatted_error = $error;
             }
@@ -68,5 +89,15 @@ class User extends \Minz\Model
     public static function validateUsername($username)
     {
         return preg_match('/^[0-9a-zA-Z_\-]{1,}$/', $username) === 1;
+    }
+
+    public static function validateFreeMobileLogin($login)
+    {
+        return preg_match('/^[\d]{8}$/', $login) === 1;
+    }
+
+    public static function validateFreeMobileKey($key)
+    {
+        return preg_match('/^[0-9a-zA-Z]{14}$/', $key) === 1;
     }
 }
