@@ -62,15 +62,9 @@ class Users
             ]);
         }
 
-        if ($email) {
-            $current_user->email = utils\Email::sanitize($email);
-        }
-        if ($free_mobile_login) {
-            $current_user->free_mobile_login = trim($free_mobile_login);
-        }
-        if ($free_mobile_key) {
-            $current_user->free_mobile_key = trim($free_mobile_key);
-        }
+        $current_user->email = utils\Email::sanitize($email);
+        $current_user->free_mobile_login = $free_mobile_login ? trim($free_mobile_login) : '';
+        $current_user->free_mobile_key = $free_mobile_key ? trim($free_mobile_key) : '';
 
         $errors = $current_user->validate();
         if ($errors) {

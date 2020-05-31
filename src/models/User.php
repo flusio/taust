@@ -74,7 +74,7 @@ class User extends \Minz\Model
                 $formatted_error = _('This email is invalid.');
             } elseif ($property === 'free_mobile_login') {
                 $formatted_error = _('This login is invalid.');
-            } elseif ($property === 'free_mobile_login') {
+            } elseif ($property === 'free_mobile_key') {
                 $formatted_error = _('This key is invalid.');
             } else {
                 $formatted_error = $error;
