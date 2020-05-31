@@ -10,12 +10,6 @@ class Heartbeat extends \Minz\DatabaseModel
         parent::__construct('heartbeats', 'id', $properties);
     }
 
-    public function create($values)
-    {
-        $values['created_at'] = \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT);
-        return parent::create($values);
-    }
-
     public function findLastHeartbeat($domain_id)
     {
         $sql = <<<'SQL'

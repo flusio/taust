@@ -108,6 +108,7 @@ class Domains
             }
 
             $heartbeat_dao->create([
+                'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
                 'is_success' => $is_success,
                 'details' => $details,
                 'domain_id' => $domain_id,
