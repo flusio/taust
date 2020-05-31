@@ -124,19 +124,25 @@ class Domains
         $heartbeat_dao = new models\dao\Heartbeat();
         $db_domains = $domain_dao->listAll();
 
+        $curl_session = curl_init();
+        curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
+
         $results = [];
         foreach ($db_domains as $db_domain) {
             $domain_id = $db_domain['id'];
-            $pointer = @fsockopen($domain_id, 443, $errno, $errstr, 5);
+            curl_setopt($curl_session, CURLOPT_URL, 'https://' . $domain_id);
 
-            if ($pointer) {
-                fclose($pointer);
+            $result = curl_exec($curl_session);
+            $http_code = curl_getinfo($curl_session, CURLINFO_RESPONSE_CODE);
 
+            if ($http_code >= 200 && $http_code < 400) {
                 $is_success = 1;
                 $details = "OK";
             } else {
                 $is_success = 0;
-                $details = "{$errstr} ({$errno})";
+                $error = curl_error($curl_session);
+                $details = "{$error} (code {$http_code})";
             }
 
             $heartbeat_dao->create([
@@ -148,6 +154,8 @@ class Domains
 
             $results[] = "{$domain_id}: {$details}";
         }
+
+        curl_close($curl_session);
 
         return Response::text(200, implode("\n", $results));
     }
