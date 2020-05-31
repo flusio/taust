@@ -43,6 +43,7 @@ class Alarms
                     $alarm_dao->create([
                         'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
                         'domain_id' => $domain_id,
+                        'details' => $heartbeat['details'],
                     ]);
                 } else {
                     $details = 'All good';

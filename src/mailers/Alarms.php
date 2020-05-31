@@ -16,6 +16,7 @@ class Alarms extends \Minz\Mailer
             'mailers/alarms/alarm.txt',
             [
                 'created_at' => $created_at,
+                'details' => $alarm['details'],
                 'domain' => $alarm['domain_id'],
             ]
         );

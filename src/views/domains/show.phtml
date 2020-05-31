@@ -23,7 +23,7 @@
     <ul>
         <?php foreach ($alarms as $alarm): ?>
             <li>
-                <?= $alarm['created_at'] ?>
+                <?= $alarm['created_at'] ?>: <?= $alarm['details'] ?>
                 <?php if ($alarm['finished_at']): ?>
                     (<?= _('finished') ?>)
                 <?php endif; ?>

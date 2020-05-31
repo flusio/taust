@@ -26,5 +26,6 @@ CREATE TABLE alarms (
     created_at TIMESTAMPTZ NOT NULL,
     notified_at TIMESTAMPTZ,
     finished_at TIMESTAMPTZ,
+    details TEXT NOT NULL DEFAULT '',
     domain_id TEXT NOT NULL REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE
 );

@@ -3,7 +3,7 @@
 </p>
 
 <p>
-    <?= _f('It really looks like you have a problem with the %s domain: we can’t reach it anymore :/', $domain) ?>
+    <?= _f('It really looks like you have a problem with the %s domain, here’s the error: %s', $domain, $details) ?>
     <?= _f('I have detected the problem at %s on %s.', _d($created_at, '%H:%M'), _d($created_at, '%A %d %B')) ?>
 </p>
 
