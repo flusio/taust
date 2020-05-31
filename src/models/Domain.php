@@ -24,14 +24,16 @@ class Domain extends \Minz\Model
         ]);
     }
 
-    public function up()
+    public function status()
     {
         $heartbeat_dao = new dao\Heartbeat();
         $last_heartbeat = $heartbeat_dao->findLastHeartbeat($this->id);
-        if ($last_heartbeat) {
-            return $last_heartbeat['is_success'];
+        if ($last_heartbeat && $last_heartbeat['is_success']) {
+            return 'up';
+        } elseif ($last_heartbeat && !$last_heartbeat['is_success']) {
+            return 'down';
         } else {
-            return false;
+            return 'unknown';
         }
     }
 
