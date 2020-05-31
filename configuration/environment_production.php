@@ -11,7 +11,7 @@ return [
 
     'url_options' => [
         'host' => $dotenv->pop('APP_HOST'),
-        'port' => intval($dotenv->pop('APP_PORT')),
+        'protocol' => 'https',
     ],
 
     'database' => [
