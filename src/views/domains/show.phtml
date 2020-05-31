@@ -5,3 +5,18 @@
 <p>
     <?= _f('Status: %s', _($domain->status())) ?>
 </p>
+
+<?php if ($alarms): ?>
+    <h2><?= _('Alarms') ?></h2>
+
+    <ul>
+        <?php foreach ($alarms as $alarm): ?>
+            <li>
+                <?= $alarm['created_at'] ?>
+                <?php if ($alarm['finished_at']): ?>
+                    (<?= _('finished') ?>)
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

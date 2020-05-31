@@ -17,3 +17,11 @@ CREATE TABLE heartbeats (
     details TEXT NOT NULL DEFAULT '',
     domain_id TEXT NOT NULL REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE alarms (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    notified_at TIMESTAMPTZ,
+    finished_at TIMESTAMPTZ,
+    domain_id TEXT NOT NULL REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE
+);

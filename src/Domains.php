@@ -70,6 +70,8 @@ class Domains
         }
 
         $domain_dao = new models\dao\Domain();
+        $alarm_dao = new models\dao\Alarm();
+
         $id = $request->param('id');
         $db_domain = $domain_dao->find($id);
         if (!$db_domain) {
@@ -77,8 +79,12 @@ class Domains
         }
 
         $domain = new models\Domain($db_domain);
+        $alarms = $alarm_dao->listBy([
+            'domain_id' => $domain->id
+        ]);
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
+            'alarms' => $alarms,
         ]);
     }
 

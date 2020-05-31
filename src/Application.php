@@ -27,6 +27,7 @@ class Application
         $router->addRoute('cli', '/system/setup', 'System#setup');
         $router->addRoute('cli', '/users/create', 'Users#create');
         $router->addRoute('cli', '/domains/heartbeats', 'Domains#heartbeats');
+        $router->addRoute('cli', '/alarms/monitor', 'Alarms#monitor');
 
         $this->engine = new \Minz\Engine($router);
         \Minz\Url::setRouter($router);
