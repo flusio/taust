@@ -40,6 +40,31 @@ class User extends \Minz\Model
         return password_verify($password, $this->password_hash);
     }
 
+    public function validate()
+    {
+        $formatted_errors = [];
+
+        foreach (parent::validate() as $property => $error) {
+            $code = $error['code'];
+
+            if ($property === 'username') {
+                if ($code === \Minz\Model::ERROR_REQUIRED) {
+                    $formatted_error = _('The username is required.');
+                } else {
+                    $formatted_error = _('This username is invalid.');
+                }
+            } elseif ($property === 'password_hash') {
+                $formatted_error = _('The password is required.');
+            } else {
+                $formatted_error = $error;
+            }
+
+            $formatted_errors[$property] = $formatted_error;
+        }
+
+        return $formatted_errors;
+    }
+
     public static function validateUsername($username)
     {
         return preg_match('/^[0-9a-zA-Z_\-]{1,}$/', $username) === 1;

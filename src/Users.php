@@ -8,14 +8,17 @@ class Users
 {
     public function create($request)
     {
+        if ($request->method() !== 'cli') {
+            return Response::text(400, 'This endpoint must be called from command line.');
+        }
+
         $username = $request->param('username');
         $password = $request->param('password');
 
         $user = models\User::init($username, $password);
         $errors = $user->validate();
         if ($errors) {
-            $errors = implode(' ', array_column($errors, 'description'));
-            return Response::text(400, 'Can’t create a user: ' . $errors);
+            return Response::text(400, 'Can’t create a user: ' . implode(' ', $errors));
         }
 
         $user_dao = new models\dao\User();
