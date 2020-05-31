@@ -10,7 +10,7 @@ class Alarm extends \Minz\DatabaseModel
         parent::__construct('alarms', 'id', $properties);
     }
 
-    public function findOngoing($domain_id)
+    public function findOngoingByDomainId($domain_id)
     {
         $sql = <<<'SQL'
             SELECT * FROM alarms
@@ -30,6 +30,22 @@ class Alarm extends \Minz\DatabaseModel
             return $result[0];
         } elseif ($result !== false) {
             return null;
+        } else {
+            throw self::sqlStatementError($statement);
+        }
+    }
+
+    public function listOngoingAndNotNotified()
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM alarms
+            WHERE finished_at IS NULL AND notified_at IS NULL;
+        SQL;
+
+        $statement = $this->query($sql);
+        $result = $statement->fetchAll();
+        if ($result !== false) {
+            return $result;
         } else {
             throw self::sqlStatementError($statement);
         }

@@ -27,7 +27,7 @@ class Alarms
                 continue;
             }
 
-            $alarm = $alarm_dao->findOngoing($domain_id);
+            $alarm = $alarm_dao->findOngoingByDomainId($domain_id);
             if ($alarm) {
                 if ($heartbeat['is_success']) {
                     $details = 'Alarm finished';
@@ -53,5 +53,43 @@ class Alarms
         }
 
         return Response::text(200, implode("\n", $results));
+    }
+
+    public function notify($request)
+    {
+        if ($request->method() !== 'cli') {
+            return Response::text(400, 'This endpoint must be called from command line.');
+        }
+
+        $user_dao = new models\dao\User();
+        $alarm_dao = new models\dao\Alarm();
+
+        $alarms_mailer = new mailers\Alarms();
+        $free_mobile_service = new services\FreeMobile();
+
+        $db_users = $user_dao->listAll();
+        $alarms = $alarm_dao->listOngoingAndNotNotified();
+        foreach ($alarms as $alarm) {
+            foreach ($db_users as $db_user) {
+                if ($db_user['email']) {
+                    $alarms_mailer->sendAlarm($db_user['email'], $alarm);
+                }
+
+                if ($db_user['free_mobile_login'] && $db_user['free_mobile_key']) {
+                    $free_mobile_service->sendAlarm(
+                        $db_user['free_mobile_login'],
+                        $db_user['free_mobile_key'],
+                        $alarm
+                    );
+                }
+            }
+
+            $alarm_dao->update($alarm['id'], [
+                'notified_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+            ]);
+        }
+
+        $alarms_count = count($alarms);
+        return Response::text(200, "{$alarms_count} alarms have been notified.");
     }
 }

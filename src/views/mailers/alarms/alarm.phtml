@@ -1,0 +1,19 @@
+<p>
+    <?= _('Hey there!') ?>
+</p>
+
+<p>
+    <?= _f('It really looks like you have a problem with the %s domain: we can’t reach it anymore :/', $domain) ?>
+    <?= _f('I have detected the problem at %s on %s.', _d($created_at, '%H:%M'), _d($created_at, '%A %d %B')) ?>
+</p>
+
+<p>
+    <?= _('You’ll not get any more alerts concerning this issue, so be sure to fix it as soon as possible!') ?>
+<p>
+
+<p>
+    <?= _('Lovingly yours,') ?><br />
+    <a href="<?= url_full('home') ?>">
+        <?= _('The taust robot.') ?>
+    </a>
+</p>
