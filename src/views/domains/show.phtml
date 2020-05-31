@@ -2,6 +2,13 @@
 
 <h1><?= $this->protect($domain->id) ?></h1>
 
+<form method="post" action="<?= url('delete domain', ['id' => $domain->id]) ?>">
+    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+    <button type="submit" class="button--ghost">
+        <?= _('Delete domain') ?>
+    </button>
+</form>
+
 <p>
     <?= _f('Status: %s', _($domain->status())) ?>
     <?php if ($last_heartbeat): ?>

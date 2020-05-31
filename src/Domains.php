@@ -90,6 +90,30 @@ class Domains
         ]);
     }
 
+    public function delete($request)
+    {
+        $current_user = utils\CurrentUser::get();
+        if (!$current_user) {
+            return Response::redirect('login');
+        }
+
+        $id = $request->param('id');
+        $csrf = new \Minz\CSRF();
+
+        if (!$csrf->validateToken($request->param('csrf'))) {
+            return Response::redirect('show domain', ['id' => $id]);
+        }
+
+        $domain_dao = new models\dao\Domain();
+        $db_domain = $domain_dao->find($id);
+        if (!$db_domain) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        $domain_dao->delete($db_domain['id']);
+
+        return Response::redirect('home');
+    }
     public function heartbeats($request)
     {
         if ($request->method() !== 'cli') {
