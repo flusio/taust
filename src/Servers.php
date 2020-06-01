@@ -72,8 +72,7 @@ class Servers
         $metric = $metric_dao->findLastByServerId($server->id);
         return Response::ok('servers/show.phtml', [
             'server' => $server,
-            'metric' => $metric,
-            'metric_payload' => json_decode($metric['payload']),
+            'metric_payload' => $metric ? json_decode($metric['payload']) : null,
         ]);
     }
 }
