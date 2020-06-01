@@ -7,9 +7,22 @@
     <li>IP v6&nbsp;: <?= $server->ipv6 ?></li>
 </ul>
 
-<p>
-    <?= _f('Authentication token: %s', $server->auth_token) ?>
-</p>
+<h2><?= _f('Server configuration') ?></h2>
+
+<div id="server-conf" class="server-conf">
+    <a class="server-conf__display" href="#server-conf">
+        <?= _('Display') ?>
+    </a>
+
+    <a class="server-conf__hide" href="#">
+        <?= _('Hide') ?>
+    </a>
+
+    <div class="server-conf__snippet">
+        ENDPOINT=<?= url_full('create metrics') ?><br />
+        AUTH_TOKEN=<?= $server->auth_token ?>
+    </div>
+</div>
 
 <h2><?= _('CPU') ?></h2>
 

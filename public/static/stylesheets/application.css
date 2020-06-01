@@ -7,3 +7,21 @@
 *::after {
     box-sizing: border-box;
 }
+
+.server-conf__snippet,
+.server-conf__hide,
+.server-conf:target .server-conf__display {
+    display: none;
+}
+
+.server-conf:target .server-conf__snippet,
+.server-conf:target .server-conf__hide {
+    display: block;
+}
+
+.server-conf__snippet {
+    overflow-x: auto;
+    padding: 1rem;
+    background-color: #eee;
+    word-break: break-word;
+}
