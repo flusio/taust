@@ -14,6 +14,7 @@ class Application
     {
         $router = new \Minz\Router();
         $router->addRoute('get', '/', 'Dashboard#index', 'home');
+        $router->addRoute('post', '/', 'Metrics#create', 'create metrics');
 
         $router->addRoute('get', '/login', 'Auth#login', 'login');
         $router->addRoute('post', '/login', 'Auth#createSession', 'create session');
