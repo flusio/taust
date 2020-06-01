@@ -12,6 +12,8 @@ class Application
 
     public function __construct()
     {
+        include(\Minz\Configuration::$app_path . '/src/utils/view_helpers.php');
+
         $router = new \Minz\Router();
         $router->addRoute('get', '/', 'Dashboard#index', 'home');
         $router->addRoute('post', '/', 'Metrics#create', 'create metrics');

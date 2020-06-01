@@ -60,6 +60,7 @@ class Servers
         }
 
         $server_dao = new models\dao\Server();
+        $metric_dao = new models\dao\Metric();
 
         $id = $request->param('id');
         $db_server = $server_dao->find($id);
@@ -68,8 +69,11 @@ class Servers
         }
 
         $server = new models\Server($db_server);
+        $metric = $metric_dao->findLastByServerId($server->id);
         return Response::ok('servers/show.phtml', [
             'server' => $server,
+            'metric' => $metric,
+            'metric_payload' => json_decode($metric['payload']),
         ]);
     }
 }
