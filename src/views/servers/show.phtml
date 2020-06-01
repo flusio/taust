@@ -1,0 +1,12 @@
+<?php $this->layout('base.phtml', ['title' => _f('Server %s', $this->protect($server->hostname))]); ?>
+
+<h1><?= $this->protect($server->hostname) ?></h1>
+
+<ul>
+    <li>IP v4&nbsp;: <?= $server->ipv4 ?></li>
+    <li>IP v6&nbsp;: <?= $server->ipv6 ?></li>
+</ul>
+
+<p>
+    <?= _f('Authentication token: %s', $server->auth_token) ?>
+</p>

@@ -27,6 +27,10 @@ class Application
         $router->addRoute('get', '/domains/:id', 'Domains#show', 'show domain');
         $router->addRoute('post', '/domains/:id/delete', 'Domains#delete', 'delete domain');
 
+        $router->addRoute('get', '/servers/new', 'Servers#new', 'new server');
+        $router->addRoute('post', '/servers/new', 'Servers#create', 'create server');
+        $router->addRoute('get', '/servers/:id', 'Servers#show', 'show server');
+
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
         $router->addRoute('cli', '/users/create', 'Users#create');

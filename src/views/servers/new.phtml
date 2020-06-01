@@ -1,0 +1,49 @@
+<?php $this->layout('base.phtml', ['title' => _('New server')]); ?>
+
+<form method="post" action="<?= url('create server') ?>">
+    <?php if ($error): ?>
+        <p class="form__error">
+            <?= $error ?>
+        </p>
+    <?php endif; ?>
+
+    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+
+    <div class="form-group <?= isset($errors['hostname']) ? 'form-group--invalid' : '' ?>">
+        <label for="hostname">
+            <?= _('Hostname') ?>
+        </label>
+
+        <input
+            id="hostname"
+            name="hostname"
+            type="text"
+            value="<?= $hostname ?>"
+            required
+        />
+
+        <?php if (isset($errors['hostname'])): ?>
+            <p class="form-group__error">
+                <?= $errors['hostname'] ?>
+            </p>
+        <?php else: ?>
+            <?php if (isset($errors['ipv4'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['ipv4'] ?>
+                </p>
+            <?php endif; ?>
+
+            <?php if (isset($errors['ipv6'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['ipv6'] ?>
+                </p>
+            <?php endif; ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="form__actions">
+        <button type="submit" class="button--primary">
+            <?= _('Create the server') ?>
+        </button>
+    </div>
+</form>

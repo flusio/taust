@@ -14,3 +14,17 @@
     </li>
     <?php endforeach; ?>
 </ul>
+
+<a href="<?= url('new server') ?>">
+    <?= _('Add a new server') ?>
+</a>
+
+<ul>
+    <?php foreach ($servers as $server): ?>
+        <li>
+            <a href="<?= url('show server', ['id' => $server->id]) ?>">
+                <?= $this->protect($server->hostname) ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
