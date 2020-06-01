@@ -24,6 +24,15 @@ setup: .env ## Setup the application system
 .PHONY: update
 update: setup ## Update the application
 
+.PHONY: reset
+reset: ## Reset the database
+	rm data/migrations_version.txt
+	$(PHP) ./cli --request /system/setup
+
+user: ## Create a user
+	$(PHP) ./cli --request /users/create -pusername=alice -ppassword=mysecret > /dev/null
+	@echo "User alice (password: mysecret) created"
+
 .PHONY: help
 help:
 	@grep -h -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
