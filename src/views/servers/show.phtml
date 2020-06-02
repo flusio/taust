@@ -24,7 +24,13 @@
     </div>
 </div>
 
-<?php if ($metric_payload): ?>
+<?php if ($metric): ?>
+    <h2><?= _('Status') ?></h2>
+
+    <p>
+        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
+    </p>
+
     <h2><?= _('CPU') ?></h2>
 
     <ul>
