@@ -23,11 +23,15 @@ class Metrics
             return Response::text(400, 'The auth token matches with no servers, please check its value');
         }
 
-        $metric_dao->create([
-            'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-            'server_id' => $db_server['id'],
-            'payload' => $request->param('@input'),
-        ]);
+        $payload = $request->param('@input');
+        $metric = models\Metric::init($db_server['id'], $payload);
+        $errors = $metric->validate();
+        if ($errors) {
+            $errors = array_column($errors, 'description');
+            return Response::text(400, implode(' ', $errors));
+        }
+
+        $metric_dao->save($metric);
 
         return Response::text(200, 'OK');
     }

@@ -4,9 +4,11 @@ namespace taust\models\dao;
 
 class Metric extends \Minz\DatabaseModel
 {
+    use SaveHelper;
+
     public function __construct()
     {
-        $properties = ['id', 'created_at', 'payload', 'server_id'];
+        $properties = array_keys(\taust\models\Metric::PROPERTIES);
         parent::__construct('metrics', 'id', $properties);
     }
 

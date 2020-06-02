@@ -69,10 +69,15 @@ class Servers
         }
 
         $server = new models\Server($db_server);
-        $metric = $metric_dao->findLastByServerId($server->id);
+        $db_metric = $metric_dao->findLastByServerId($server->id);
+        $metric = null;
+        if ($db_metric) {
+            $metric = new models\Metric($db_metric);
+        }
+
         return Response::ok('servers/show.phtml', [
             'server' => $server,
-            'metric_payload' => $metric ? json_decode($metric['payload']) : null,
+            'metric_payload' => $metric ? $metric->payload() : null,
         ]);
     }
 }
