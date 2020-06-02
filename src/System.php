@@ -16,11 +16,14 @@ class System
     {
         $usage = 'Usage: php ./cli --request REQUEST [-pKEY=VALUE]...' . "\n\n";
         $usage .= 'REQUEST can be one of the following:' . "\n";
-        $usage .= '  /                 Show this help' . "\n";
-        $usage .= '  /system/setup     Initialize or update the system' . "\n";
-        $usage .= '  /users/create     Create a user' . "\n";
+        $usage .= '  /                   Show this help' . "\n";
+        $usage .= '  /system/setup       Initialize or update the system' . "\n";
+        $usage .= '  /users/create       Create a user' . "\n";
         $usage .= '      -pusername=USERNAME' . "\n";
         $usage .= '      -ppassword=PASSWORD' . "\n";
+        $usage .= '  /domains/heartbeats Check that monitored domains are up (port 443)' . "\n";
+        $usage .= '  /alarms/monitor     Check domains and servers to find any new or outdated alarms' . "\n";
+        $usage .= '  /alarms/notify      Send alarms notifications if any' . "\n";
 
         return Response::text(200, $usage);
     }
