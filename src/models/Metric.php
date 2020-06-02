@@ -25,6 +25,8 @@ class Metric extends \Minz\Model
         ],
     ];
 
+    private $payload_decoded;
+
     public static function init($server_id, $payload)
     {
         return new self([
@@ -33,9 +35,48 @@ class Metric extends \Minz\Model
         ]);
     }
 
+    public function cpuPercents()
+    {
+        return $this->payload()->cpu_percent;
+    }
+
+    public function memoryTotal()
+    {
+        return $this->payload()->memory_total;
+    }
+
+    public function memoryUsed()
+    {
+        $payload = $this->payload();
+        return $payload->memory_total - $payload->memory_available;
+    }
+
+    public function memoryUsedPercent()
+    {
+        return $this->memoryUsed() * 100 / $this->memoryTotal();
+    }
+
+    public function disks()
+    {
+        return $this->payload()->disks;
+    }
+
+    public function diskUsed($disk)
+    {
+        return $disk->total - $disk->free;
+    }
+
+    public function diskUsedPercent($disk)
+    {
+        return $this->diskUsed($disk) * 100 / $disk->total;
+    }
+
     public function payload()
     {
-        return json_decode($this->payload);
+        if (!$this->payload_decoded) {
+            $this->payload_decoded = json_decode($this->payload);
+        }
+        return $this->payload_decoded;
     }
 
     public static function validateJson($json)

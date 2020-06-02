@@ -78,7 +78,6 @@ class Servers
         return Response::ok('servers/show.phtml', [
             'server' => $server,
             'metric' => $metric,
-            'metric_payload' => $metric ? $metric->payload() : null,
         ]);
     }
 }

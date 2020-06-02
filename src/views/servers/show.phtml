@@ -34,7 +34,7 @@
     <h2><?= _('CPU') ?></h2>
 
     <ul>
-        <?php foreach ($metric_payload->cpu_percent as $cpu_id => $percent): ?>
+        <?php foreach ($metric->cpuPercents() as $cpu_id => $percent): ?>
             <li>
                 <?= _f('CPU%d', $cpu_id + 1) ?>: <?= $percent ?>&nbsp;%
             </li>
@@ -44,18 +44,18 @@
     <h2><?= _('Memory') ?></h2>
 
     <p>
-        <?= _f('%s used on %s', format_bytes($metric_payload->memory_total - $metric_payload->memory_available), format_bytes($metric_payload->memory_total)) ?>
-        (<?= format_number(($metric_payload->memory_total - $metric_payload->memory_available) * 100 / $metric_payload->memory_total) ?>&nbsp;%)
+        <?= _f('%s used on %s', format_bytes($metric->memoryUsed()), format_bytes($metric->memoryTotal())) ?>
+        (<?= format_number($metric->memoryUsedPercent()) ?>&nbsp;%)
     </p>
 
     <h2><?= _('Disks') ?></h2>
 
     <ul>
-        <?php foreach ($metric_payload->disks as $disk): ?>
+        <?php foreach ($metric->disks() as $disk): ?>
             <li>
                 <?= $disk->name ?>:
-                <?= _f('%s used on %s', format_bytes($disk->total - $disk->free), format_bytes($disk->total)) ?>
-                (<?= format_number(($disk->total - $disk->free) * 100 / $disk->total) ?>&nbsp;%)
+                <?= _f('%s used on %s', format_bytes($metric->diskUsed($disk)), format_bytes($disk->total)) ?>
+                (<?= format_number($metric->diskUsedPercent($disk)) ?>&nbsp;%)
             </li>
         <?php endforeach; ?>
     </ul>
