@@ -81,6 +81,7 @@ class Servers
 
         $server_dao = new models\dao\Server();
         $metric_dao = new models\dao\Metric();
+        $alarm_dao = new models\dao\Alarm();
 
         $id = $request->param('id');
         $db_server = $server_dao->find($id);
@@ -89,6 +90,9 @@ class Servers
         }
 
         $server = new models\Server($db_server);
+        $alarms = $alarm_dao->listBy([
+            'server_id' => $server->id
+        ]);
         $db_metric = $metric_dao->findLastByServerId($server->id);
         $metric = null;
         if ($db_metric) {
@@ -98,6 +102,7 @@ class Servers
         $response = Response::ok('servers/show.phtml', [
             'server' => $server,
             'metric' => $metric,
+            'alarms' => $alarms,
         ]);
         $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
         return $response;

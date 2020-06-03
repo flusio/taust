@@ -25,6 +25,11 @@
     border-bottom-right-radius: .25em;
 }
 
+.list__item--muted {
+    color: var(--color-main-muted);
+    font-size: .9rem;
+}
+
 .list__item--link a {
     display: block;
     margin: -.5em -1em;
