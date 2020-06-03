@@ -25,6 +25,7 @@
             <a href="<?= url('show server', ['id' => $server->id]) ?>">
                 <?= $this->protect($server->hostname) ?>
             </a>
+            (<?= _($server->status()) ?>)
         </li>
     <?php endforeach; ?>
 </ul>

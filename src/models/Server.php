@@ -60,6 +60,25 @@ class Server extends \Minz\Model
         ]);
     }
 
+    public function status()
+    {
+        $metric_dao = new dao\Metric();
+        $last_metric = $metric_dao->findLastByServerId($this->id);
+        if ($last_metric) {
+            $created_at = date_create_from_format(
+                \Minz\Model::DATETIME_FORMAT,
+                $last_metric['created_at']
+            );
+            if ($created_at <= \Minz\Time::ago(1, 'minutes')) {
+                return 'down';
+            } else {
+                return 'up';
+            }
+        } else {
+            return 'unknown';
+        }
+    }
+
     public function validate()
     {
         $formatted_errors = [];

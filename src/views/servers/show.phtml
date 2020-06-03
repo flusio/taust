@@ -7,6 +7,14 @@
     <li>IP v6&nbsp;: <?= $server->ipv6 ?></li>
 </ul>
 
+<p>
+    <?= _f('Status: %s', _($server->status())) ?>
+    <?php if ($metric): ?>
+        /
+        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
+    <?php endif; ?>
+</p>
+
 <h2><?= _f('Server configuration') ?></h2>
 
 <div id="server-conf" class="server-conf">
@@ -24,13 +32,7 @@
     </div>
 </div>
 
-<?php if ($metric): ?>
-    <h2><?= _('Status') ?></h2>
-
-    <p>
-        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
-    </p>
-
+<?php if ($metric && $server->status() === 'up'): ?>
     <h2><?= _('CPU') ?></h2>
 
     <ul>
