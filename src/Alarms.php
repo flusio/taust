@@ -26,7 +26,7 @@ class Alarms
         foreach ($db_domains as $db_domain) {
             $domain_id = $db_domain['id'];
 
-            $heartbeat = $heartbeat_dao->findLastHeartbeat($domain_id);
+            $heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($domain_id);
             if (!$heartbeat) {
                 // TODO what to do when there're no heartbeats?
                 continue;

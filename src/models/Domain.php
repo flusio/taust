@@ -27,7 +27,7 @@ class Domain extends \Minz\Model
     public function status()
     {
         $heartbeat_dao = new dao\Heartbeat();
-        $last_heartbeat = $heartbeat_dao->findLastHeartbeat($this->id);
+        $last_heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($this->id);
         if ($last_heartbeat && $last_heartbeat['is_success']) {
             return 'up';
         } elseif ($last_heartbeat && !$last_heartbeat['is_success']) {

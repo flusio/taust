@@ -10,7 +10,7 @@ class Heartbeat extends \Minz\DatabaseModel
         parent::__construct('heartbeats', 'id', $properties);
     }
 
-    public function findLastHeartbeat($domain_id)
+    public function findLastHeartbeatByDomainId($domain_id)
     {
         $sql = <<<'SQL'
             SELECT * FROM heartbeats

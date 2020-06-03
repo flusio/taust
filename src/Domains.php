@@ -85,7 +85,7 @@ class Domains
         ]);
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
-            'last_heartbeat' => $heartbeat_dao->findLastHeartbeat($domain->id),
+            'last_heartbeat' => $heartbeat_dao->findLastHeartbeatByDomainId($domain->id),
             'alarms' => $alarms,
         ]);
     }
