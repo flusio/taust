@@ -6,6 +6,26 @@ use Minz\Response;
 
 class Servers
 {
+    public function index()
+    {
+        $current_user = utils\CurrentUser::get();
+        if (!$current_user) {
+            return Response::redirect('login');
+        }
+
+        $server_dao = new models\dao\Server();
+
+        $db_servers = $server_dao->listAll();
+        $servers = [];
+        foreach ($db_servers as $db_server) {
+            $servers[] = new models\Server($db_server);
+        }
+
+        return Response::ok('servers/index.phtml', [
+            'servers' => $servers,
+        ]);
+    }
+
     public function new()
     {
         $current_user = utils\CurrentUser::get();
@@ -75,9 +95,11 @@ class Servers
             $metric = new models\Metric($db_metric);
         }
 
-        return Response::ok('servers/show.phtml', [
+        $response = Response::ok('servers/show.phtml', [
             'server' => $server,
             'metric' => $metric,
         ]);
+        $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
+        return $response;
     }
 }

@@ -6,6 +6,25 @@ use Minz\Response;
 
 class Domains
 {
+    public function index()
+    {
+        $current_user = utils\CurrentUser::get();
+        if (!$current_user) {
+            return Response::redirect('login');
+        }
+
+        $domain_dao = new models\dao\Domain();
+        $db_domains = $domain_dao->listAll();
+        $domains = [];
+        foreach ($db_domains as $db_domain) {
+            $domains[] = new models\Domain($db_domain);
+        }
+
+        return Response::ok('domains/index.phtml', [
+            'domains' => $domains,
+        ]);
+    }
+
     public function new()
     {
         $current_user = utils\CurrentUser::get();
@@ -83,9 +102,14 @@ class Domains
         $alarms = $alarm_dao->listBy([
             'domain_id' => $domain->id
         ]);
+        $last_heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($domain->id);
+        $last_heartbeat_at = null;
+        if ($last_heartbeat) {
+            $last_heartbeat_at = date_create_from_format(\Minz\Model::DATETIME_FORMAT, $last_heartbeat['created_at']);
+        }
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
-            'last_heartbeat' => $heartbeat_dao->findLastHeartbeatByDomainId($domain->id),
+            'last_heartbeat_at' => $last_heartbeat_at,
             'alarms' => $alarms,
         ]);
     }

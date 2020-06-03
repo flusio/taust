@@ -1,4 +1,6 @@
+@import './_buttons.css';
 @import './_layout.css';
+@import './_lists.css';
 @import './_header.css';
 @import './_forms.css';
 
@@ -8,20 +10,130 @@
     box-sizing: border-box;
 }
 
-.server-conf__snippet,
-.server-conf__hide,
-.server-conf:target .server-conf__display {
-    display: none;
+:root {
+    --color-main: #2a2230;
+    --color-main-muted: #6A6270;
+    --color-secondary: #67487A;
+    --color-secondary-shadow: #c6bacd;
+    --color-contrast: #ece8ee;
+    --color-alert: #9C4C41;
+    --color-warning: #7a6748;
+    --color-success: #487a67;
 }
 
-.server-conf:target .server-conf__snippet,
-.server-conf:target .server-conf__hide {
-    display: block;
+html {
+    color: var(--color-main);
+    font-family: "Lucida Grande", "Lucida Sans Unicode", Verdana, Arial, sans-serif;
+    font-size: 20px;
+    line-height: 26px;
+
+    background-color: var(--color-contrast);
 }
 
-.server-conf__snippet {
+h1 {
+    margin-top: -1rem;
+    margin-bottom: 2rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    font-size: 1.6em;
+    font-weight: bold;
+}
+
+a {
+    color: var(--color-secondary);
+}
+
+.link--primary {
+    padding: .5em 1em;
+
+    text-decoration: none;
+
+    border: 2px solid var(--color-secondary);
+    border-radius: .25em;
+
+    transition: background-color .2s ease-in-out;
+}
+
+.link--primary:hover,
+.link--primary:active {
+    color: var(--color-contrast);
+
+    background-color: var(--color-secondary);
+}
+
+p {
+    max-width: 30rem;
+}
+
+.paragraph--muted {
+    color: var(--color-main-muted);
+}
+
+.paragraph--alert {
+    color: var(--color-alert);
+}
+
+.paragraph--warning {
+    color: var(--color-warning);
+}
+
+.paragraph--success {
+    color: var(--color-success);
+}
+
+.paragraph--featured {
+    padding: .5em 2em;
+
+    text-align: center;
+    font-weight: bold;
+}
+
+.paragraph--featured.paragraph--alert {
+    border: 2px solid var(--color-alert);
+    border-radius: .25em;
+}
+
+.paragraph--featured.paragraph--warning {
+    border: 2px solid var(--color-warning);
+    border-radius: .25em;
+}
+
+.paragraph--featured.paragraph--success {
+    border: 2px solid var(--color-success);
+    border-radius: .25em;
+}
+
+.paragraph--centered {
+    text-align: center;
+}
+
+.paragraph--dashboard-status {
+    margin-top: -.5em;
+}
+
+.server-conf {
     overflow-x: auto;
-    padding: 1rem;
-    background-color: #eee;
+    padding: 1em;
+
+    color: var(--color-contrast);
     word-break: break-word;
+
+    background-color: var(--color-main);
+    border-radius: .25em;
+}
+
+.section--danger {
+    max-width: 30rem;
+    margin-top: 5rem;
+    padding: 2rem;
+
+    text-align: center;
+
+    border: .5rem solid var(--color-alert);
+    background-color: rgba(0, 0, 0, 0.07);
+}
+
+.section--danger h2 {
+    margin-top: 0;
 }

@@ -1,4 +1,11 @@
-<?php $this->layout('base.phtml', ['title' => _('New server')]); ?>
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Add a server to monitor'),
+        'navigation_active' => 'servers',
+    ]);
+?>
+
+<h1><?= _('Add a server to monitor') ?></h1>
 
 <form method="post" action="<?= url('create server') ?>">
     <?php if ($error): ?>
@@ -20,6 +27,7 @@
             type="text"
             value="<?= $hostname ?>"
             required
+            autofocus
         />
 
         <?php if (isset($errors['hostname'])): ?>
@@ -43,7 +51,11 @@
 
     <div class="form__actions">
         <button type="submit" class="button--primary">
-            <?= _('Create the server') ?>
+            <?= _('Monitor the server') ?>
         </button>
+
+        <a href="<?= url('servers') ?>">
+            <?= _('Back to the servers') ?>
+        </a>
     </div>
 </form>

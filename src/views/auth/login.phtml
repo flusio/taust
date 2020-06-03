@@ -1,4 +1,4 @@
-<?php $this->layout('base.phtml', ['title' => _('Login')]); ?>
+<?php $this->layout('centered.phtml', ['title' => _('Log in taust')]); ?>
 
 <form method="post" action="<?= url('create session') ?>">
     <?php if ($error): ?>
@@ -20,6 +20,7 @@
             type="text"
             value="<?= $username ?>"
             required
+            autofocus
         />
     </div>
 

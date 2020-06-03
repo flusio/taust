@@ -17,20 +17,34 @@ class Dashboard
         $server_dao = new models\dao\Server();
 
         $db_domains = $domain_dao->listAll();
-        $domains = [];
+        $domains_by_status = [
+            'unknown' => [],
+            'up' => [],
+            'down' => [],
+        ];
         foreach ($db_domains as $db_domain) {
-            $domains[] = new models\Domain($db_domain);
+            $domain = new models\Domain($db_domain);
+            $domains_by_status[$domain->status()][] = $domain;
         }
 
         $db_servers = $server_dao->listAll();
-        $servers = [];
+        $servers_by_status = [
+            'unknown' => [],
+            'up' => [],
+            'down' => [],
+        ];
         foreach ($db_servers as $db_server) {
-            $servers[] = new models\Server($db_server);
+            $server = new models\Server($db_server);
+            $servers_by_status[$server->status()][] = $server;
         }
 
+        $number_errors = count($domains_by_status['unknown']) + count($domains_by_status['down'])
+                       + count($servers_by_status['unknown']) + count($servers_by_status['down']);
+
         return Response::ok('dashboard/index.phtml', [
-            'domains' => $domains,
-            'servers' => $servers,
+            'domains_by_status' => $domains_by_status,
+            'servers_by_status' => $servers_by_status,
+            'all_good' => $number_errors === 0,
         ]);
     }
 }

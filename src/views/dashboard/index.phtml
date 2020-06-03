@@ -1,31 +1,84 @@
-<?php $this->layout('base.phtml', ['title' => _('Dashboard')]); ?>
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Dashboard'),
+        'navigation_active' => 'dashboard',
+    ]);
+?>
 
-<a href="<?= url('new domain') ?>">
-    <?= _('Add a new domain') ?>
-</a>
+<h1><?= _('Dashboard') ?></h1>
 
-<ul>
-    <?php foreach ($domains as $domain): ?>
-    <li>
-        <a href="<?= url('show domain', ['id' => $domain->id]) ?>">
-            <?= $this->protect($domain->id) ?>
-        </a>
-        (<?= _($domain->status()) ?>)
-    </li>
-    <?php endforeach; ?>
-</ul>
+<?php if ($all_good): ?>
+    <p class="paragraph--featured paragraph--success paragraph--dashboard-status">
+        <?= _('☺ All is going well!') ?>
+    </p>
+<?php else: ?>
+    <p class="paragraph--featured paragraph--warning paragraph--dashboard-status">
+        <?= _('☹ You should take a look at the following issues…') ?>
+    </p>
 
-<a href="<?= url('new server') ?>">
-    <?= _('Add a new server') ?>
-</a>
+    <?php if (count($domains_by_status['unknown']) > 0): ?>
+        <p>
+            <?= _('These domains have an “unknown” status, which means we didn’t check their heartbeats yet.') ?>
+            <?= _('You should not worry if you just added these domains. <strong>Otherwise, please check the cron task is correctly setup.</strong>') ?>
+        <p>
 
-<ul>
-    <?php foreach ($servers as $server): ?>
-        <li>
-            <a href="<?= url('show server', ['id' => $server->id]) ?>">
-                <?= $this->protect($server->hostname) ?>
-            </a>
-            (<?= _($server->status()) ?>)
-        </li>
-    <?php endforeach; ?>
-</ul>
+        <ul>
+            <?php foreach ($domains_by_status['unknown'] as $domain): ?>
+                <li>
+                    <a href="<?= url('show domain', ['id' => $domain->id]) ?>">
+                        <?= $this->protect($domain->id) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if (count($domains_by_status['down']) > 0): ?>
+        <p>
+            <?= _('These domains are “down” and <strong>you should verify manually they’re still up and take action if they are definitely down.</strong>') ?>
+        <p>
+
+        <ul>
+            <?php foreach ($domains_by_status['down'] as $domain): ?>
+                <li>
+                    <a href="<?= url('show domain', ['id' => $domain->id]) ?>">
+                        <?= $this->protect($domain->id) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if (count($servers_by_status['unknown']) > 0): ?>
+        <p>
+            <?= _('These servers have an “unknown” status, which means they didn’t sent any metrics yet.') ?>
+            <?= _('<strong>You must setup taust-client on these servers to monitor them.</strong>') ?>
+        <p>
+
+        <ul>
+            <?php foreach ($servers_by_status['unknown'] as $server): ?>
+                <li>
+                    <a href="<?= url('show server', ['id' => $server->id]) ?>">
+                        <?= $this->protect($server->hostname) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if (count($servers_by_status['down']) > 0): ?>
+        <p>
+            <?= _('These servers appear to be “down” (i.e. they didn’t sent any metrics for a while). <strong>You should verify what’s going on quickly.</strong>') ?>
+        <p>
+
+        <ul>
+            <?php foreach ($servers_by_status['down'] as $server): ?>
+                <li>
+                    <a href="<?= url('show server', ['id' => $server->id]) ?>">
+                        <?= $this->protect($server->hostname) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+<?php endif; ?>

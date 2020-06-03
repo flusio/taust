@@ -1,4 +1,11 @@
-<?php $this->layout('base.phtml', ['title' => _('New domain')]); ?>
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Add a domain to monitor'),
+        'navigation_active' => 'domains',
+    ]);
+?>
+
+<h1><?= _('Add a domain to monitor') ?></h1>
 
 <form method="post" action="<?= url('create domain') ?>">
     <?php if ($error): ?>
@@ -20,6 +27,7 @@
             type="text"
             value="<?= $id ?>"
             required
+            autofocus
         />
 
         <?php if (isset($errors['id'])): ?>
@@ -31,7 +39,11 @@
 
     <div class="form__actions">
         <button type="submit" class="button--primary">
-            <?= _('Create the domain') ?>
+            <?= _('Monitor the domain') ?>
         </button>
+
+        <a href="<?= url('domains') ?>">
+            <?= _('Back to the domains') ?>
+        </a>
     </div>
 </form>

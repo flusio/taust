@@ -1,0 +1,26 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Domains'),
+        'navigation_active' => 'domains',
+    ]);
+?>
+
+<h1><?= _('Domains') ?></h1>
+
+<p>
+    <?= _('The service automatically checks the domains are up by checking their HTTPS port (443).') ?>
+</p>
+
+<ul class="list">
+    <?php foreach ($domains as $domain): ?>
+        <li class="list__item list__item--link">
+            <a href="<?= url('show domain', ['id' => $domain->id]) ?>">
+                <?= $this->protect($domain->id) ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<a href="<?= url('new domain') ?>" class="link--primary">
+    <?= _('🤖 Add a domain to monitor') ?>
+</a>

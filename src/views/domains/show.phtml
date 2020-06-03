@@ -1,21 +1,31 @@
-<?php $this->layout('base.phtml', ['title' => _f('Domain %s', $this->protect($domain->id))]); ?>
+<?php
+    $this->layout('application.phtml', [
+        'title' => _f('Domain %s', $this->protect($domain->id)),
+        'navigation_active' => 'domains',
+    ]);
+?>
 
 <h1><?= $this->protect($domain->id) ?></h1>
 
-<form method="post" action="<?= url('delete domain', ['id' => $domain->id]) ?>">
-    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
-    <button type="submit" class="button--ghost">
-        <?= _('Delete domain') ?>
-    </button>
-</form>
+<?php if ($domain->status() === 'up'): ?>
+    <p class="paragraph--featured paragraph--success">
+        <?= _f('Status: up 😊') ?>
+    </p>
+<?php elseif ($domain->status() === 'down'): ?>
+    <p class="paragraph--featured paragraph--alert">
+        <?= _f('Status: down 😫') ?>
+    </p>
+<?php else: ?>
+    <p class="paragraph--featured paragraph--warning">
+        <?= _f('Status: unknown 😵') ?>
+    </p>
+<?php endif; ?>
 
-<p>
-    <?= _f('Status: %s', _($domain->status())) ?>
-    <?php if ($last_heartbeat): ?>
-        /
-        <?= _f('Last check: %s', $last_heartbeat['created_at']) ?>
-    <?php endif; ?>
-</p>
+<?php if ($last_heartbeat_at): ?>
+    <p class="paragraph--centered paragraph--muted">
+        <?= _f('Last ping on %s', _d($last_heartbeat_at, '%a %d %b %Y %H:%M:%S')) ?>
+    </p>
+<?php endif; ?>
 
 <?php if ($alarms): ?>
     <h2><?= _('Alarms') ?></h2>
@@ -31,3 +41,14 @@
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
+
+<section class="section--danger">
+    <h2><?= _('Danger zone 😈') ?></h2>
+
+    <form method="post" action="<?= url('delete domain', ['id' => $domain->id]) ?>">
+        <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+        <button type="submit" class="button--ghost">
+            <?= _('Stop monitoring this domain') ?>
+        </button>
+    </form>
+</section>

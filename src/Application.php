@@ -25,11 +25,13 @@ class Application
         $router->addRoute('get', '/profile', 'Users#profile', 'profile');
         $router->addRoute('post', '/profile', 'Users#updateProfile', 'update profile');
 
+        $router->addRoute('get', '/domains', 'Domains#index', 'domains');
         $router->addRoute('get', '/domains/new', 'Domains#new', 'new domain');
         $router->addRoute('post', '/domains/new', 'Domains#create', 'create domain');
         $router->addRoute('get', '/domains/:id', 'Domains#show', 'show domain');
         $router->addRoute('post', '/domains/:id/delete', 'Domains#delete', 'delete domain');
 
+        $router->addRoute('get', '/servers', 'Servers#index', 'servers');
         $router->addRoute('get', '/servers/new', 'Servers#new', 'new server');
         $router->addRoute('post', '/servers/new', 'Servers#create', 'create server');
         $router->addRoute('get', '/servers/:id', 'Servers#show', 'show server');
@@ -52,6 +54,7 @@ class Application
             'errors' => [],
             'error' => null,
             'current_user' => utils\CurrentUser::get(),
+            'navigation_active' => null,
         ]);
 
         return $this->engine->run($request);

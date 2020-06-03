@@ -1,61 +1,83 @@
-<?php $this->layout('base.phtml', ['title' => _f('Server %s', $this->protect($server->hostname))]); ?>
+<?php
+    $this->layout('application.phtml', [
+        'title' => _f('Server %s', $this->protect($server->hostname)),
+        'navigation_active' => 'servers',
+    ]);
+?>
 
 <h1><?= $this->protect($server->hostname) ?></h1>
 
-<ul>
-    <li>IP v4&nbsp;: <?= $server->ipv4 ?></li>
-    <li>IP v6&nbsp;: <?= $server->ipv6 ?></li>
-</ul>
+<?php if ($server->status() === 'up'): ?>
+    <p class="paragraph--featured paragraph--success">
+        <?= _f('Status: up 😊') ?>
+    </p>
+<?php elseif ($server->status() === 'down'): ?>
+    <p class="paragraph--featured paragraph--alert">
+        <?= _f('Status: down 😫') ?>
+    </p>
+<?php else: ?>
+    <p class="paragraph--featured paragraph--warning">
+        <?= _f('Status: unknown 😵') ?>
+    </p>
+<?php endif; ?>
+
+<?php if ($metric): ?>
+    <p class="paragraph--centered paragraph--muted">
+        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
+    </p>
+<?php endif; ?>
 
 <p>
-    <?= _f('Status: %s', _($server->status())) ?>
-    <?php if ($metric): ?>
-        /
-        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
+    <strong>IPv4:</strong> <?= $server->ipv4 ?>
+    <?php if ($server->ipv6): ?>
+        · <strong>IPv6:</strong> <?= $server->ipv6 ?>
     <?php endif; ?>
 </p>
 
-<h2><?= _f('Server configuration') ?></h2>
+<?php if (!$metric): ?>
+    <p>
+        <?= _('To start monitoring this server, you must setup <a href="https://github.com/flusio/taust-client">taust-client</a> with the following configuration:') ?>
+    </p>
 
-<div id="server-conf" class="server-conf">
-    <a class="server-conf__display" href="#server-conf">
-        <?= _('Display') ?>
-    </a>
-
-    <a class="server-conf__hide" href="#">
-        <?= _('Hide') ?>
-    </a>
-
-    <div class="server-conf__snippet">
-        ENDPOINT=<?= url_full('create metrics') ?><br />
-        AUTH_TOKEN=<?= $server->auth_token ?>
-    </div>
-</div>
+    <!-- Please avoid newline or it adds spaces on copy/paste -->
+    <div class="server-conf">ENDPOINT=<?= url_full('create metrics') ?><br />AUTH_TOKEN=<?= $server->auth_token ?></div>
+<?php endif; ?>
 
 <?php if ($metric && $server->status() === 'up'): ?>
+    <h2><?= _('Memory') ?></h2>
+
+    <ul class="list">
+        <li
+            class="list__item list__item--gauge"
+            style="--gauge-value: <?= $metric->memoryUsedPercent() ?>%;"
+        >
+            <?= _f('%s used on %s', format_bytes($metric->memoryUsed()), format_bytes($metric->memoryTotal())) ?>
+            (<?= format_number($metric->memoryUsedPercent()) ?>&nbsp;%)
+        </li>
+    </ul>
+
     <h2><?= _('CPU') ?></h2>
 
-    <ul>
+    <ul class="list">
         <?php foreach ($metric->cpuPercents() as $cpu_id => $percent): ?>
-            <li>
+            <li
+                class="list__item list__item--gauge"
+                style="--gauge-value: <?= $percent ?>%;"
+            >
                 <?= _f('CPU%d', $cpu_id + 1) ?>: <?= $percent ?>&nbsp;%
             </li>
         <?php endforeach; ?>
     </ul>
 
-    <h2><?= _('Memory') ?></h2>
-
-    <p>
-        <?= _f('%s used on %s', format_bytes($metric->memoryUsed()), format_bytes($metric->memoryTotal())) ?>
-        (<?= format_number($metric->memoryUsedPercent()) ?>&nbsp;%)
-    </p>
-
     <h2><?= _('Disks') ?></h2>
 
-    <ul>
+    <ul class="list">
         <?php foreach ($metric->disks() as $disk): ?>
-            <li>
-                <?= $disk->name ?>:
+            <li
+                class="list__item list__item--gauge"
+                style="--gauge-value: <?= $metric->diskUsedPercent($disk) ?>%;"
+            >
+                <code><?= $disk->name ?></code><br />
                 <?= _f('%s used on %s', format_bytes($metric->diskUsed($disk)), format_bytes($disk->total)) ?>
                 (<?= format_number($metric->diskUsedPercent($disk)) ?>&nbsp;%)
             </li>

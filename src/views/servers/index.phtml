@@ -1,0 +1,26 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Servers'),
+        'navigation_active' => 'servers',
+    ]);
+?>
+
+<h1><?= _('Servers') ?></h1>
+
+<p>
+    <?= _('You must setup <a href="https://github.com/flusio/taust-client"> the taust-client</a> on the servers to monitor them. They’ll send metrics every 10 seconds then.') ?>
+</p>
+
+<ul class="list">
+    <?php foreach ($servers as $server): ?>
+        <li class="list__item list__item--link">
+            <a href="<?= url('show server', ['id' => $server->id]) ?>">
+                <?= $this->protect($server->hostname) ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<a href="<?= url('new server') ?>" class="link--primary">
+    <?= _('🤖 Add a server to monitor') ?>
+</a>
