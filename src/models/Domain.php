@@ -28,10 +28,18 @@ class Domain extends \Minz\Model
     {
         $heartbeat_dao = new dao\Heartbeat();
         $last_heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($this->id);
-        if ($last_heartbeat && $last_heartbeat['is_success']) {
-            return 'up';
-        } elseif ($last_heartbeat && !$last_heartbeat['is_success']) {
-            return 'down';
+        if ($last_heartbeat) {
+            $created_at = date_create_from_format(
+                \Minz\Model::DATETIME_FORMAT,
+                $last_heartbeat['created_at']
+            );
+            if ($created_at <= \Minz\Time::ago(5, 'minutes')) {
+                return 'unknown';
+            } elseif ($last_heartbeat['is_success']) {
+                return 'up';
+            } else {
+                return 'down';
+            }
         } else {
             return 'unknown';
         }
