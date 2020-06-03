@@ -13,11 +13,16 @@ class Alarms
         }
 
         $domain_dao = new models\dao\Domain();
+        $server_dao = new models\dao\Server();
         $heartbeat_dao = new models\dao\Heartbeat();
+        $metric_dao = new models\dao\Metric();
         $alarm_dao = new models\dao\Alarm();
+
         $db_domains = $domain_dao->listAll();
+        $db_servers = $server_dao->listAll();
 
         $results = [];
+
         foreach ($db_domains as $db_domain) {
             $domain_id = $db_domain['id'];
 
@@ -42,6 +47,7 @@ class Alarms
                     $details = 'New alarm!';
                     $alarm_dao->create([
                         'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                        'type' => 'heartbeat',
                         'domain_id' => $domain_id,
                         'details' => $heartbeat['details'],
                     ]);
@@ -50,7 +56,104 @@ class Alarms
                 }
             }
 
-            $results[] = "{$domain_id}: {$details}";
+            $results[] = "Domain {$domain_id}: {$details}";
+        }
+
+        foreach ($db_servers as $db_server) {
+            $server_id = $db_server['id'];
+
+            $db_metric = $metric_dao->findLastByServerId($server_id);
+            if (!$db_metric) {
+                // TODO what to do when there're no metrics?
+                continue;
+            }
+
+            $metric = new models\Metric($db_metric);
+
+            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'cpu_usage');
+            $cpu_percents = $metric->cpuPercents();
+            $cpu_average = array_sum($cpu_percents) / count($cpu_percents);
+            if ($alarm) {
+                if ($cpu_average < 80) {
+                    $details_cpu = 'Alarm finished';
+                    $alarm_dao->update($alarm['id'], [
+                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                    ]);
+                } else {
+                    $details_cpu = 'Alarm not finished';
+                }
+            } else {
+                if ($cpu_average >= 80) {
+                    $details_cpu = 'New alarm!';
+                    $alarm_dao->create([
+                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                        'type' => 'cpu_usage',
+                        'server_id' => $server_id,
+                        'details' => "CPU average usage is more than 80% of its capacity ({$cpu_average} %).",
+                    ]);
+                } else {
+                    $details_cpu = 'All good';
+                }
+            }
+
+            $results[] = "{$db_server['hostname']} CPU: {$details_cpu}";
+
+            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'memory_usage');
+            $memory_used_percent = $metric->memoryUsedPercent();
+            if ($alarm) {
+                if ($memory_used_percent < 80) {
+                    $details_memory = 'Alarm finished';
+                    $alarm_dao->update($alarm['id'], [
+                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                    ]);
+                } else {
+                    $details_memory = 'Alarm not finished';
+                }
+            } else {
+                if ($memory_used_percent >= 80) {
+                    $details_memory = 'New alarm!';
+                    $alarm_dao->create([
+                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                        'type' => 'memory_usage',
+                        'server_id' => $server_id,
+                        'details' => "Memory usage is more than 80% of its capacity ({$memory_used_percent} %).",
+                    ]);
+                } else {
+                    $details_memory = 'All good';
+                }
+            }
+
+            $results[] = "{$db_server['hostname']} memory: {$details_memory}";
+
+            foreach ($metric->disks() as $disk) {
+                $type = 'disk_usage:' . $disk->name;
+                $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, $type);
+                $disk_used_percent = $metric->diskUsedPercent($disk);
+                if ($alarm) {
+                    if ($disk_used_percent < 80) {
+                        $details_disk = 'Alarm finished';
+                        $alarm_dao->update($alarm['id'], [
+                            'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                        ]);
+                    } else {
+                        $details_disk = 'Alarm not finished';
+                    }
+                } else {
+                    if ($disk_used_percent >= 80) {
+                        $details_disk = 'New alarm!';
+                        $alarm_dao->create([
+                            'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                            'type' => $type,
+                            'server_id' => $server_id,
+                            'details' => "Disk {$disk->name} usage is more than 80% of its capacity ({$disk_used_percent} %).",
+                        ]);
+                    } else {
+                        $details_disk = 'All good';
+                    }
+                }
+
+                $results[] = "{$db_server['hostname']} {$disk->name} disk: {$details_disk}";
+            }
         }
 
         return Response::text(200, implode("\n", $results));
