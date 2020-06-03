@@ -86,7 +86,7 @@ class Alarms
                         'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
                         'type' => 'status',
                         'server_id' => $server_id,
-                        'details' => 'The server didn’t sent any metrics for more than a minute.',
+                        'details' => 'The server sends no metrics for more than a minute.',
                     ]);
                 } else {
                     $details_status = 'All good';
