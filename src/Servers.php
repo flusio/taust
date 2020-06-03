@@ -107,4 +107,29 @@ class Servers
         $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
         return $response;
     }
+
+    public function delete($request)
+    {
+        $current_user = utils\CurrentUser::get();
+        if (!$current_user) {
+            return Response::redirect('login');
+        }
+
+        $id = $request->param('id');
+        $csrf = new \Minz\CSRF();
+
+        if (!$csrf->validateToken($request->param('csrf'))) {
+            return Response::redirect('show server', ['id' => $id]);
+        }
+
+        $server_dao = new models\dao\Server();
+        $db_server = $server_dao->find($id);
+        if (!$db_server) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        $server_dao->delete($db_server['id']);
+
+        return Response::redirect('home');
+    }
 }

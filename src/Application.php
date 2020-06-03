@@ -35,6 +35,7 @@ class Application
         $router->addRoute('get', '/servers/new', 'Servers#new', 'new server');
         $router->addRoute('post', '/servers/new', 'Servers#create', 'create server');
         $router->addRoute('get', '/servers/:id', 'Servers#show', 'show server');
+        $router->addRoute('post', '/servers/:id/delete', 'Servers#delete', 'delete server');
 
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
