@@ -28,7 +28,6 @@ class Alarms
 
             $heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($domain_id);
             if (!$heartbeat) {
-                // TODO what to do when there're no heartbeats?
                 continue;
             }
 
@@ -64,11 +63,37 @@ class Alarms
 
             $db_metric = $metric_dao->findLastByServerId($server_id);
             if (!$db_metric) {
-                // TODO what to do when there're no metrics?
                 continue;
             }
 
             $metric = new models\Metric($db_metric);
+
+            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'status');
+            $is_down = $metric->created_at <= \Minz\Time::ago(1, 'minutes');
+            if ($alarm) {
+                if (!$is_down) {
+                    $details_status = 'Alarm finished';
+                    $alarm_dao->update($alarm['id'], [
+                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                    ]);
+                } else {
+                    $details_status = 'Alarm not finished';
+                }
+            } else {
+                if ($is_down) {
+                    $details_status = 'New alarm!';
+                    $alarm_dao->create([
+                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
+                        'type' => 'status',
+                        'server_id' => $server_id,
+                        'details' => 'The server didn’t sent any metrics for more than a minute.',
+                    ]);
+                } else {
+                    $details_status = 'All good';
+                }
+            }
+
+            $results[] = "{$db_server['hostname']} status: {$details_status}";
 
             $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'cpu_usage');
             $cpu_percents = $metric->cpuPercents();
