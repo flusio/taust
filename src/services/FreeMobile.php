@@ -2,14 +2,24 @@
 
 namespace taust\services;
 
+use taust\models;
+
 class FreeMobile
 {
     public const SMS_API = 'https://smsapi.free-mobile.fr/sendmsg';
 
     public function sendAlarm($login, $key, $alarm)
     {
+        if ($alarm['domain_id']) {
+            $object = $alarm['domain_id'] . ' domain';
+        } else {
+            $server_dao = new models\dao\Server();
+            $db_server = $server_dao->find($alarm['server_id']);
+            $object = $db_server['hostname'] . ' server';
+        }
+
         $message = vsprintf(_('Hey, this is taust robot at %s.'), \Minz\Url::absoluteFor('home'));
-        $message .= vsprintf(_('It looks like you have a problem with the %s domain.'), $alarm['domain_id']);
+        $message .= vsprintf(_('It looks like you have a problem with the %s.'), $object);
 
         $query_fields = [
             'user' => $login,
