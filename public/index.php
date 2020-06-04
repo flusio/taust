@@ -29,6 +29,8 @@ $request = new \Minz\Request($http_method, $http_uri, $http_parameters, $_SERVER
 $application = new \taust\Application();
 $response = $application->run($request);
 
+$response->setHeader('Turbolinks-Location', $http_uri);
+
 // Generate the HTTP headers and output
 http_response_code($response->code());
 foreach ($response->headers() as $header) {
