@@ -21,6 +21,8 @@
     <?php endforeach; ?>
 </ul>
 
-<a href="<?= url('new domain') ?>" class="link--primary">
-    <?= _('🤖 Add a domain to monitor') ?>
-</a>
+<p class="<?= !$domains ? 'paragraph--featured' : '' ?>">
+    <a href="<?= url('new domain') ?>" class="link--primary">
+        <?= _('🤖 Add a domain to monitor') ?>
+    </a>
+</p>

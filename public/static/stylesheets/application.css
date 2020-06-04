@@ -112,6 +112,36 @@ p {
     margin-top: -.5em;
 }
 
+.setup {
+    display: flex;
+    max-width: 30rem;
+
+    justify-content: space-around;
+}
+
+.setup__link {
+    display: flex;
+    width: 10rem;
+    height: 10rem;
+
+    align-items: center;
+    justify-content: center;
+
+    color: var(--color-contrast);
+    font-size: 1.2em;
+    font-weight: bold;
+    text-decoration: none;
+
+    background-color: var(--color-main);
+    border-radius: .25rem;
+
+    transition: background-color .2s ease-in-out;
+}
+
+.setup__link:hover {
+    background-color: var(--color-secondary);
+}
+
 .server-conf {
     overflow-x: auto;
     padding: 1em;

@@ -21,6 +21,8 @@
     <?php endforeach; ?>
 </ul>
 
-<a href="<?= url('new server') ?>" class="link--primary">
-    <?= _('🤖 Add a server to monitor') ?>
-</a>
+<p class="<?= !$servers ? 'paragraph--featured' : '' ?>">
+    <a href="<?= url('new server') ?>" class="link--primary">
+        <?= _('🤖 Add a server to monitor') ?>
+    </a>
+</p>

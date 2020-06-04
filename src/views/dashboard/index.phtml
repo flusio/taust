@@ -7,7 +7,25 @@
 
 <h1><?= _('Dashboard') ?></h1>
 
-<?php if ($all_good): ?>
+<?php if ($no_setup): ?>
+    <p class="paragraph--featured paragraph--dashboard-status">
+        <?= _('Hey there! You seem to be new around here.') ?>
+    </p>
+
+    <p>
+        <?= _('Let’s start by monitoring a domain or a server. Domains are easier to setup, servers are more powerful but have to be configured with <a href="https://github.com/flusio/taust-client">a client</a>. <strong>Which one would you want to monitor?</strong>') ?>
+    </p>
+
+    <div class="setup">
+        <a class="setup__link" href="<?= url('new domain') ?>">
+            <?= _('a domain') ?>
+        </a>
+
+        <a class="setup__link" href="<?= url('new server') ?>">
+            <?= _('a server') ?>
+        </a>
+    </div>
+<?php elseif ($all_good): ?>
     <p class="paragraph--featured paragraph--success paragraph--dashboard-status">
         <?= _('All is going well! ☺') ?>
     </p>

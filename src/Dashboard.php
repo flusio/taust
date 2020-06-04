@@ -17,6 +17,10 @@ class Dashboard
         $server_dao = new models\dao\Server();
         $alarm_dao = new models\dao\Alarm();
 
+        $number_domains = $domain_dao->count();
+        $number_servers = $server_dao->count();
+        $no_setup = ($number_domains + $number_servers) === 0;
+
         $db_domains = $domain_dao->listAll();
         $domains_by_status = [
             'unknown' => [],
@@ -50,6 +54,7 @@ class Dashboard
             'servers_by_status' => $servers_by_status,
             'ongoing_alarms' => $ongoing_alarms,
             'all_good' => $number_errors === 0,
+            'no_setup' => $no_setup,
         ]);
     }
 }
