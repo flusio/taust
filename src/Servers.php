@@ -97,13 +97,11 @@ class Servers
             $metric = new models\Metric($db_metric);
         }
 
-        $response = Response::ok('servers/show.phtml', [
+        return Response::ok('servers/show.phtml', [
             'server' => $server,
             'metric' => $metric,
             'alarms' => $alarms,
         ]);
-        $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
-        return $response;
     }
 
     public function delete($request)

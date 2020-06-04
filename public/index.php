@@ -30,6 +30,9 @@ $application = new \taust\Application();
 $response = $application->run($request);
 
 $response->setHeader('Turbolinks-Location', $http_uri);
+// This is useful only on Servers#show page, but because of Turbolinks, we must
+// to be sure that the correct CSP is sent on every page.
+$response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
 
 // Generate the HTTP headers and output
 http_response_code($response->code());
