@@ -43,12 +43,17 @@ class Server extends \Minz\Model
         $hostname = isset($url_components['host']) ? $url_components['host'] : $hostname;
 
         $dns_A = dns_get_record($hostname, DNS_A);
-        $dns_AAAA = dns_get_record($hostname, DNS_AAAA);
         if ($dns_A) {
             $dns_A = $dns_A[0]['ip'];
+        } else {
+            $dns_A = null;
         }
+
+        $dns_AAAA = dns_get_record($hostname, DNS_AAAA);
         if ($dns_AAAA) {
             $dns_AAAA = $dns_AAAA[0]['ipv6'];
+        } else {
+            $dns_AAAA = null;
         }
 
         return new self([
