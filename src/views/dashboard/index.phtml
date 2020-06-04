@@ -9,11 +9,11 @@
 
 <?php if ($all_good): ?>
     <p class="paragraph--featured paragraph--success paragraph--dashboard-status">
-        <?= _('☺ All is going well!') ?>
+        <?= _('All is going well! ☺') ?>
     </p>
 <?php else: ?>
     <p class="paragraph--featured paragraph--warning paragraph--dashboard-status">
-        <?= _('☹ You should take a look at the following issues…') ?>
+        <?= _('You should take a look at the following issues ☹') ?>
     </p>
 
     <?php if (count($domains_by_status['unknown']) > 0): ?>
@@ -76,6 +76,26 @@
                 <li>
                     <a href="<?= url('show server', ['id' => $server->id]) ?>">
                         <?= $this->protect($server->hostname) ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    <?php endif; ?>
+
+    <?php if (count($ongoing_alarms) > 0): ?>
+        <p>
+            <?= _('These alarms are ongoing and you should take a look to fix them.') ?>
+        <p>
+
+        <ul>
+            <?php foreach ($ongoing_alarms as $alarm): ?>
+                <li>
+                    <?php if ($alarm['domain_id']): ?>
+                    <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                    <?php else: ?>
+                    <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                    <?php endif; ?>
+                        <?= $alarm['details'] ?>
                     </a>
                 </li>
             <?php endforeach; ?>

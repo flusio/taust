@@ -15,6 +15,7 @@ class Dashboard
 
         $domain_dao = new models\dao\Domain();
         $server_dao = new models\dao\Server();
+        $alarm_dao = new models\dao\Alarm();
 
         $db_domains = $domain_dao->listAll();
         $domains_by_status = [
@@ -38,12 +39,16 @@ class Dashboard
             $servers_by_status[$server->status()][] = $server;
         }
 
+        $ongoing_alarms = $alarm_dao->listOngoingOrderByDescCreatedAt();
+
         $number_errors = count($domains_by_status['unknown']) + count($domains_by_status['down'])
-                       + count($servers_by_status['unknown']) + count($servers_by_status['down']);
+                       + count($servers_by_status['unknown']) + count($servers_by_status['down'])
+                       + count($ongoing_alarms);
 
         return Response::ok('dashboard/index.phtml', [
             'domains_by_status' => $domains_by_status,
             'servers_by_status' => $servers_by_status,
+            'ongoing_alarms' => $ongoing_alarms,
             'all_good' => $number_errors === 0,
         ]);
     }
