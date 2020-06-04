@@ -14,7 +14,7 @@ class Domains
         }
 
         $domain_dao = new models\dao\Domain();
-        $db_domains = $domain_dao->listAll();
+        $db_domains = $domain_dao->listAllOrderById();
         $domains = [];
         foreach ($db_domains as $db_domain) {
             $domains[] = new models\Domain($db_domain);

@@ -15,7 +15,7 @@ class Servers
 
         $server_dao = new models\dao\Server();
 
-        $db_servers = $server_dao->listAll();
+        $db_servers = $server_dao->listAllOrderById();
         $servers = [];
         foreach ($db_servers as $db_server) {
             $servers[] = new models\Server($db_server);
