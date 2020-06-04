@@ -69,14 +69,24 @@ class Alarm extends \Minz\DatabaseModel
         }
     }
 
-    public function listOngoingAndNotNotified()
+    public function listToNotify()
     {
         $sql = <<<'SQL'
             SELECT * FROM alarms
-            WHERE finished_at IS NULL AND notified_at IS NULL;
+            WHERE finished_at IS NULL
+            AND notified_at IS NULL
+            AND created_at < ?;
         SQL;
 
-        $statement = $this->query($sql);
+        // we don't want to notify immediatly because the alarm could be
+        // temporary (e.g. a sudden spike in memory consumption)
+        $three_minutes_ago = \Minz\Time::ago(3, 'minutes')->format(\Minz\Model::DATETIME_FORMAT);
+        $statement = $this->prepare($sql);
+        $result = $statement->execute([$three_minutes_ago]);
+        if (!$result) {
+            throw self::sqlStatementError($statement);
+        }
+
         $result = $statement->fetchAll();
         if ($result !== false) {
             return $result;

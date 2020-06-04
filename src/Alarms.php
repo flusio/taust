@@ -219,7 +219,7 @@ class Alarms
         $free_mobile_service = new services\FreeMobile();
 
         $db_users = $user_dao->listAll();
-        $alarms = $alarm_dao->listOngoingAndNotNotified();
+        $alarms = $alarm_dao->listToNotify();
         foreach ($alarms as $alarm) {
             foreach ($db_users as $db_user) {
                 if ($db_user['email']) {
