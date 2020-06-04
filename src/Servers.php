@@ -90,9 +90,7 @@ class Servers
         }
 
         $server = new models\Server($db_server);
-        $alarms = $alarm_dao->listBy([
-            'server_id' => $server->id
-        ]);
+        $alarms = $alarm_dao->listByServerIdOrderByDescCreatedAt($server->id);
         $db_metric = $metric_dao->findLastByServerId($server->id);
         $metric = null;
         if ($db_metric) {

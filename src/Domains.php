@@ -99,9 +99,7 @@ class Domains
         }
 
         $domain = new models\Domain($db_domain);
-        $alarms = $alarm_dao->listBy([
-            'domain_id' => $domain->id
-        ]);
+        $alarms = $alarm_dao->listByDomainIdOrderByDescCreatedAt($domain->id);
         $last_heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($domain->id);
         $last_heartbeat_at = null;
         if ($last_heartbeat) {

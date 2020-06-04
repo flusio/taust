@@ -84,4 +84,48 @@ class Alarm extends \Minz\DatabaseModel
             throw self::sqlStatementError($statement);
         }
     }
+
+    public function listByDomainIdOrderByDescCreatedAt($domain_id)
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM alarms
+            WHERE domain_id = ?
+            ORDER BY created_at DESC
+        SQL;
+
+        $statement = $this->prepare($sql);
+        $result = $statement->execute([$domain_id]);
+        if (!$result) {
+            throw self::sqlStatementError($statement);
+        }
+
+        $result = $statement->fetchAll();
+        if ($result !== false) {
+            return $result;
+        } else {
+            throw self::sqlStatementError($statement);
+        }
+    }
+
+    public function listByServerIdOrderByDescCreatedAt($server_id)
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM alarms
+            WHERE server_id = ?
+            ORDER BY created_at DESC
+        SQL;
+
+        $statement = $this->prepare($sql);
+        $result = $statement->execute([$server_id]);
+        if (!$result) {
+            throw self::sqlStatementError($statement);
+        }
+
+        $result = $statement->fetchAll();
+        if ($result !== false) {
+            return $result;
+        } else {
+            throw self::sqlStatementError($statement);
+        }
+    }
 }
