@@ -37,6 +37,15 @@
 
                 <li>
                     <a
+                        class="aside__link <?= $navigation_active === 'alarms' ? 'aside__link--active' : '' ?>"
+                        href="<?= url('alarms') ?>"
+                    >
+                        <?= _('Alarms') ?>
+                    </a>
+                </li>
+
+                <li>
+                    <a
                         class="aside__link <?= $navigation_active === 'profile' ? 'aside__link--active' : '' ?>"
                         href="<?= url('profile') ?>"
                     >

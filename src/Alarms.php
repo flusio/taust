@@ -6,6 +6,23 @@ use Minz\Response;
 
 class Alarms
 {
+    public function index($request)
+    {
+        $current_user = utils\CurrentUser::get();
+        if (!$current_user) {
+            return Response::redirect('login');
+        }
+
+        $alarm_dao = new models\dao\Alarm();
+        $ongoing_alarms = $alarm_dao->listOngoingOrderByDescCreatedAt();
+        $finished_alarms = $alarm_dao->listLastFinished();
+
+        return Response::ok('alarms/index.phtml', [
+            'ongoing_alarms' => $ongoing_alarms,
+            'finished_alarms' => $finished_alarms,
+        ]);
+    }
+
     public function monitor($request)
     {
         if ($request->method() !== 'cli') {

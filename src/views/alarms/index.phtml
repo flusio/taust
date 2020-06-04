@@ -1,0 +1,75 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Alarms'),
+        'navigation_active' => 'alarms',
+    ]);
+?>
+
+<h1><?= _('Alarms') ?></h1>
+
+<?php if ($ongoing_alarms): ?>
+    <h2><?= _('Ongoing') ?></h2>
+
+    <p>
+        <?= _('These alarms are ongoing and you should take a look to fix them.') ?>
+    </p>
+
+    <ul class="list">
+        <?php foreach ($ongoing_alarms as $alarm): ?>
+            <li class="list__item list__item--link">
+                <?php if ($alarm['domain_id']): ?>
+                <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                <?php else: ?>
+                <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                <?php endif; ?>
+                    <?= $alarm['details'] ?>
+
+                    <br />
+
+                    <small>
+                        <?= $alarm['created_at'] ?>
+                        <?php if ($alarm['finished_at']): ?>
+                            · <?= _('finished') ?>
+                        <?php endif; ?>
+                    </small>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<?php if ($finished_alarms): ?>
+    <h2><?= _('Finished') ?></h2>
+
+    <p>
+        <?= _('These alarms are finished, only 50 of them are shown here. That’s what history is like.') ?>
+    </p>
+
+    <ul class="list">
+        <?php foreach ($finished_alarms as $alarm): ?>
+            <li class="list__item list__item--link list__item--muted">
+                <?php if ($alarm['domain_id']): ?>
+                <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                <?php else: ?>
+                <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                <?php endif; ?>
+                    <?= $alarm['details'] ?>
+
+                    <br />
+
+                    <small>
+                        <?= $alarm['created_at'] ?>
+                        <?php if ($alarm['finished_at']): ?>
+                            · <?= _('finished') ?>
+                        <?php endif; ?>
+                    </small>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>
+
+<?php if (!$ongoing_alarms && !$finished_alarms): ?>
+<p class="paragraph--featured">
+    <?= _('There’re nothing to see here. You’re either lucky (i.e. no errors never happened) or you haven’t configured any domains or servers yet.') ?>
+<?php endif; ?>

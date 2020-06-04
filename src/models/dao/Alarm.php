@@ -85,6 +85,41 @@ class Alarm extends \Minz\DatabaseModel
         }
     }
 
+    public function listOngoingOrderByDescCreatedAt()
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM alarms
+            WHERE finished_at IS NULL
+            ORDER BY created_at DESC;
+        SQL;
+
+        $statement = $this->query($sql);
+        $result = $statement->fetchAll();
+        if ($result !== false) {
+            return $result;
+        } else {
+            throw self::sqlStatementError($statement);
+        }
+    }
+
+    public function listLastFinished()
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM alarms
+            WHERE finished_at IS NOT NULL
+            ORDER BY created_at DESC
+            LIMIT 50;
+        SQL;
+
+        $statement = $this->query($sql);
+        $result = $statement->fetchAll();
+        if ($result !== false) {
+            return $result;
+        } else {
+            throw self::sqlStatementError($statement);
+        }
+    }
+
     public function listByDomainIdOrderByDescCreatedAt($domain_id)
     {
         $sql = <<<'SQL'

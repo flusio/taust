@@ -105,6 +105,7 @@ class Domains
         if ($last_heartbeat) {
             $last_heartbeat_at = date_create_from_format(\Minz\Model::DATETIME_FORMAT, $last_heartbeat['created_at']);
         }
+
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
             'last_heartbeat_at' => $last_heartbeat_at,

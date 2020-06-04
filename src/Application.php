@@ -37,6 +37,8 @@ class Application
         $router->addRoute('get', '/servers/:id', 'Servers#show', 'show server');
         $router->addRoute('post', '/servers/:id/delete', 'Servers#delete', 'delete server');
 
+        $router->addRoute('get', '/alarms', 'Alarms#index', 'alarms');
+
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
         $router->addRoute('cli', '/users/create', 'Users#create');
