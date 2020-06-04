@@ -95,6 +95,11 @@ class Alarms
 
             $results[] = "{$db_server['hostname']} status: {$details_status}";
 
+            if ($is_down) {
+                // Do not test an old metric, the rest is probably not accurate
+                continue;
+            }
+
             $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'cpu_usage');
             $cpu_percents = $metric->cpuPercents();
             $cpu_average = array_sum($cpu_percents) / count($cpu_percents);
