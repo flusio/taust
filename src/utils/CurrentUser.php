@@ -43,4 +43,13 @@ class CurrentUser
         unset($_SESSION['current_user_id']);
         self::$instance = null;
     }
+
+    public static function currentId()
+    {
+        if (isset($_SESSION['current_user_id'])) {
+            return $_SESSION['current_user_id'];
+        } else {
+            return null;
+        }
+    }
 }

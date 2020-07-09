@@ -54,7 +54,11 @@ class Auth
 
         utils\CurrentUser::set($user->id);
 
-        return Response::redirect('home');
+        $response = Response::redirect('home');
+        $response->setCookie('taust_session', $user->id, [
+            'expires' => \Minz\Time::fromNow(7, 'days')->getTimestamp(),
+        ]);
+        return $response;
     }
 
     public function deleteSession($request)

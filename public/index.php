@@ -22,8 +22,11 @@ $http_parameters = array_merge(
     $_POST,
     ['@input' => @file_get_contents('php://input')]
 );
+$headers = array_merge($_SERVER, [
+    'COOKIE' => $_COOKIE,
+]);
 
-$request = new \Minz\Request($http_method, $http_uri, $http_parameters, $_SERVER);
+$request = new \Minz\Request($http_method, $http_uri, $http_parameters, $headers);
 
 // Initialize the Application and execute the request to get a Response
 $application = new \taust\Application();
@@ -36,6 +39,11 @@ $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
 
 // Generate the HTTP headers and output
 http_response_code($response->code());
+
+foreach ($response->cookies() as $cookie) {
+    setcookie($cookie['name'], $cookie['value'], $cookie['options']);
+}
+
 foreach ($response->headers() as $header) {
     header($header);
 }

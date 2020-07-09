@@ -52,6 +52,11 @@ class Application
 
     public function run($request)
     {
+        if (!utils\CurrentUser::currentId()) {
+            $user_id = $request->cookie('taust_session');
+            utils\CurrentUser::set($user_id);
+        }
+
         \Minz\Output\View::declareDefaultVariables([
             'environment' => \Minz\Configuration::$environment,
             'errors' => [],
