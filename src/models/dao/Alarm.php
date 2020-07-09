@@ -29,18 +29,12 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$domain_id]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
+        $statement->execute([$domain_id]);
         $result = $statement->fetchAll();
-        if ($result !== false && count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
-        } elseif ($result !== false) {
-            return null;
         } else {
-            throw self::sqlStatementError($statement);
+            return null;
         }
     }
 
@@ -54,18 +48,12 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$server_id, $type]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
+        $statement->execute([$server_id, $type]);
         $result = $statement->fetchAll();
-        if ($result !== false && count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
-        } elseif ($result !== false) {
-            return null;
         } else {
-            throw self::sqlStatementError($statement);
+            return null;
         }
     }
 
@@ -82,17 +70,8 @@ class Alarm extends \Minz\DatabaseModel
         // temporary (e.g. a sudden spike in memory consumption)
         $three_minutes_ago = \Minz\Time::ago(3, 'minutes')->format(\Minz\Model::DATETIME_FORMAT);
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$three_minutes_ago]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        $statement->execute([$three_minutes_ago]);
+        return $statement->fetchAll();
     }
 
     public function listOngoingOrderByDescCreatedAt()
@@ -104,12 +83,7 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->query($sql);
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        return $statement->fetchAll();
     }
 
     public function listLastFinished()
@@ -122,12 +96,7 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->query($sql);
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        return $statement->fetchAll();
     }
 
     public function listByDomainIdOrderByDescCreatedAt($domain_id)
@@ -139,17 +108,8 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$domain_id]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        $statement->execute([$domain_id]);
+        return $statement->fetchAll();
     }
 
     public function listByServerIdOrderByDescCreatedAt($server_id)
@@ -161,16 +121,7 @@ class Alarm extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$server_id]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        $statement->execute([$server_id]);
+        return $statement->fetchAll();
     }
 }

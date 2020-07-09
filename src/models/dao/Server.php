@@ -17,11 +17,6 @@ class Server extends \Minz\DatabaseModel
         $sql = 'SELECT * FROM servers ORDER BY hostname';
 
         $statement = $this->query($sql);
-        $result = $statement->fetchAll();
-        if ($result !== false) {
-            return $result;
-        } else {
-            throw self::sqlStatementError($statement);
-        }
+        return $statement->fetchAll();
     }
 }

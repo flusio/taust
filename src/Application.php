@@ -60,6 +60,9 @@ class Application
             'navigation_active' => null,
         ]);
 
-        return $this->engine->run($request);
+        return $this->engine->run($request, [
+            'not_found_view_pointer' => 'not_found.phtml',
+            'internal_server_error_view_pointer' => 'internal_server_error.phtml',
+        ]);
     }
 }

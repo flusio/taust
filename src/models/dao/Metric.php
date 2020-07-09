@@ -22,18 +22,12 @@ class Metric extends \Minz\DatabaseModel
         SQL;
 
         $statement = $this->prepare($sql);
-        $result = $statement->execute([$server_id]);
-        if (!$result) {
-            throw self::sqlStatementError($statement);
-        }
-
+        $statement->execute([$server_id]);
         $result = $statement->fetchAll();
-        if ($result !== false && count($result) === 1) {
+        if (count($result) === 1) {
             return $result[0];
-        } elseif ($result !== false) {
-            return null;
         } else {
-            throw self::sqlStatementError($statement);
+            return null;
         }
     }
 }
