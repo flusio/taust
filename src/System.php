@@ -133,4 +133,15 @@ class System
         }
         return Response::text($has_error ? 500 : 200, $text);
     }
+
+    public function clearOld()
+    {
+        $metric_dao = new models\dao\Metric();
+        $heartbeat_dao = new models\dao\Heartbeat();
+
+        $metric_dao->deleteOlderThan(\Minz\Time::ago(2, 'weeks'));
+        $heartbeat_dao->deleteOlderThan(\Minz\Time::ago(2, 'weeks'));
+
+        return Response::noContent();
+    }
 }

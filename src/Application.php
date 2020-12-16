@@ -41,6 +41,7 @@ class Application
 
         $router->addRoute('cli', '/', 'System#usage');
         $router->addRoute('cli', '/system/setup', 'System#setup');
+        $router->addRoute('cli', '/system/clear-old', 'System#clearOld');
         $router->addRoute('cli', '/users/create', 'Users#create');
         $router->addRoute('cli', '/domains/heartbeats', 'Domains#heartbeats');
         $router->addRoute('cli', '/alarms/monitor', 'Alarms#monitor');

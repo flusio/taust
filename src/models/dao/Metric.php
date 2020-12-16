@@ -30,4 +30,16 @@ class Metric extends \Minz\DatabaseModel
             return null;
         }
     }
+
+    public function deleteOlderThan($datetime)
+    {
+        $sql = <<<SQL
+            DELETE FROM metrics
+            WHERE created_at < ?;
+        SQL;
+
+        $when = $datetime->format(\Minz\Model::DATETIME_FORMAT);
+        $statement = $this->prepare($sql);
+        return $statement->execute([$when]);
+    }
 }
