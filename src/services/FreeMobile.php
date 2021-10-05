@@ -10,12 +10,11 @@ class FreeMobile
 
     public function sendAlarm($login, $key, $alarm)
     {
-        if ($alarm['domain_id']) {
-            $object = $alarm['domain_id'] . ' domain';
+        if ($alarm->domain_id) {
+            $object = $alarm->domain_id . ' domain';
         } else {
-            $server_dao = new models\dao\Server();
-            $db_server = $server_dao->find($alarm['server_id']);
-            $object = $db_server['hostname'] . ' server';
+            $server = models\Server::find($alarm->server_id);
+            $object = $server->hostname . ' server';
         }
 
         $message = vsprintf(_('Hey, this is taust robot at %s.'), \Minz\Url::absoluteFor('home'));

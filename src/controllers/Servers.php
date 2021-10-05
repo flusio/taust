@@ -15,14 +15,7 @@ class Servers
             return Response::redirect('login');
         }
 
-        $server_dao = new models\dao\Server();
-
-        $db_servers = $server_dao->listAllOrderById();
-        $servers = [];
-        foreach ($db_servers as $db_server) {
-            $servers[] = new models\Server($db_server);
-        }
-
+        $servers = models\Server::daoToList('listAllOrderById');
         return Response::ok('servers/index.phtml', [
             'servers' => $servers,
         ]);
@@ -66,8 +59,7 @@ class Servers
             ]);
         }
 
-        $server_dao = new models\dao\Server();
-        $server_dao->save($server);
+        $server->save();
 
         return Response::redirect('show server', [
             'id' => $server->id,
@@ -81,23 +73,14 @@ class Servers
             return Response::redirect('login');
         }
 
-        $server_dao = new models\dao\Server();
-        $metric_dao = new models\dao\Metric();
-        $alarm_dao = new models\dao\Alarm();
-
         $id = $request->param('id');
-        $db_server = $server_dao->find($id);
-        if (!$db_server) {
+        $server = models\Server::find($id);
+        if (!$server) {
             return Response::notFound('not_found.phtml');
         }
 
-        $server = new models\Server($db_server);
-        $alarms = $alarm_dao->listByServerIdOrderByDescCreatedAt($server->id);
-        $db_metric = $metric_dao->findLastByServerId($server->id);
-        $metric = null;
-        if ($db_metric) {
-            $metric = new models\Metric($db_metric);
-        }
+        $alarms = models\Alarm::daoToList('listByServerIdOrderByDescCreatedAt', $server->id);
+        $metric = models\Metric::daoToModel('findLastByServerId', $server->id);
 
         return Response::ok('servers/show.phtml', [
             'server' => $server,
@@ -120,13 +103,12 @@ class Servers
             return Response::redirect('show server', ['id' => $id]);
         }
 
-        $server_dao = new models\dao\Server();
-        $db_server = $server_dao->find($id);
-        if (!$db_server) {
+        $server = models\Server::find($id);
+        if (!$server) {
             return Response::notFound('not_found.phtml');
         }
 
-        $server_dao->delete($db_server['id']);
+        models\Server::delete($server->id);
 
         return Response::redirect('home');
     }

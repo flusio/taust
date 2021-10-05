@@ -17,9 +17,8 @@ class Alarms
             return Response::redirect('login');
         }
 
-        $alarm_dao = new models\dao\Alarm();
-        $ongoing_alarms = $alarm_dao->listOngoingOrderByDescCreatedAt();
-        $finished_alarms = $alarm_dao->listLastFinished();
+        $ongoing_alarms = models\Alarm::daoToList('listOngoingOrderByDescCreatedAt');
+        $finished_alarms = models\Alarm::daoToList('listLastFinished');
 
         return Response::ok('alarms/index.phtml', [
             'ongoing_alarms' => $ongoing_alarms,
@@ -33,177 +32,156 @@ class Alarms
             return Response::text(400, 'This endpoint must be called from command line.');
         }
 
-        $domain_dao = new models\dao\Domain();
-        $server_dao = new models\dao\Server();
-        $heartbeat_dao = new models\dao\Heartbeat();
-        $metric_dao = new models\dao\Metric();
-        $alarm_dao = new models\dao\Alarm();
-
-        $db_domains = $domain_dao->listAll();
-        $db_servers = $server_dao->listAll();
+        $domains = models\Domain::listAll();
+        $servers = models\Server::listAll();
 
         $results = [];
 
-        foreach ($db_domains as $db_domain) {
-            $domain_id = $db_domain['id'];
-
-            $heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($domain_id);
+        foreach ($domains as $domain) {
+            $heartbeat = models\Heartbeat::daoToModel('findLastHeartbeatByDomainId', $domain->id);
             if (!$heartbeat) {
                 continue;
             }
 
-            $alarm = $alarm_dao->findOngoingByDomainId($domain_id);
+            $alarm = models\Alarm::daoToModel('findOngoingByDomainId', $domain->id);
             if ($alarm) {
-                if ($heartbeat['is_success']) {
+                if ($heartbeat->is_success) {
+                    $alarm->finish();
+                    $alarm->save();
                     $details = 'Alarm finished';
-                    $alarm_dao->update($alarm['id'], [
-                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                    ]);
                 } else {
                     $details = 'Alarm not finished';
                 }
             } else {
-                if (!$heartbeat['is_success']) {
+                if (!$heartbeat->is_success) {
+                    $alarm = models\Alarm::initFromHeartbeat($heartbeat);
+                    $alarm->save();
                     $details = 'New alarm!';
-                    $alarm_dao->create([
-                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                        'type' => 'heartbeat',
-                        'domain_id' => $domain_id,
-                        'details' => $heartbeat['details'],
-                    ]);
                 } else {
                     $details = 'All good';
                 }
             }
 
-            $results[] = "Domain {$domain_id}: {$details}";
+            $results[] = "Domain {$domain->id}: {$details}";
         }
 
-        foreach ($db_servers as $db_server) {
-            $server_id = $db_server['id'];
-
-            $db_metric = $metric_dao->findLastByServerId($server_id);
-            if (!$db_metric) {
+        foreach ($servers as $server) {
+            $metric = models\Metric::daoToModel('findLastByServerId', $server->id);
+            if (!$metric) {
                 continue;
             }
 
-            $metric = new models\Metric($db_metric);
-
-            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'status');
+            $alarm = models\Alarm::daoToModel('findOngoingByServerIdAndType', $server->id, 'status');
             $is_down = $metric->created_at <= \Minz\Time::ago(1, 'minutes');
             if ($alarm) {
                 if (!$is_down) {
+                    $alarm->finish();
+                    $alarm->save();
                     $details_status = 'Alarm finished';
-                    $alarm_dao->update($alarm['id'], [
-                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                    ]);
                 } else {
                     $details_status = 'Alarm not finished';
                 }
             } else {
                 if ($is_down) {
+                    $alarm = models\Alarm::initForServer(
+                        $server->id,
+                        'status',
+                        'The server sent no metrics for more than a minute.'
+                    );
+                    $alarm->save();
                     $details_status = 'New alarm!';
-                    $alarm_dao->create([
-                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                        'type' => 'status',
-                        'server_id' => $server_id,
-                        'details' => 'The server sent no metrics for more than a minute.',
-                    ]);
                 } else {
                     $details_status = 'All good';
                 }
             }
 
-            $results[] = "{$db_server['hostname']} status: {$details_status}";
+            $results[] = "{$server->hostname} status: {$details_status}";
 
             if ($is_down) {
                 // Do not test an old metric, the rest is probably not accurate
                 continue;
             }
 
-            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'cpu_usage');
+            $alarm = models\Alarm::daoToModel('findOngoingByServerIdAndType', $server->id, 'cpu_usage');
             $cpu_percents = $metric->cpuPercents();
             $cpu_average = array_sum($cpu_percents) / count($cpu_percents);
             if ($alarm) {
                 if ($cpu_average < 80) {
+                    $alarm->finish();
+                    $alarm->save();
                     $details_cpu = 'Alarm finished';
-                    $alarm_dao->update($alarm['id'], [
-                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                    ]);
                 } else {
                     $details_cpu = 'Alarm not finished';
                 }
             } else {
                 if ($cpu_average >= 80) {
+                    $alarm = models\Alarm::initForServer(
+                        $server->id,
+                        'cpu_usage',
+                        "CPU average usage is more than 80% of its capacity ({$cpu_average} %)."
+                    );
+                    $alarm->save();
                     $details_cpu = 'New alarm!';
-                    $alarm_dao->create([
-                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                        'type' => 'cpu_usage',
-                        'server_id' => $server_id,
-                        'details' => "CPU average usage is more than 80% of its capacity ({$cpu_average} %).",
-                    ]);
                 } else {
                     $details_cpu = 'All good';
                 }
             }
 
-            $results[] = "{$db_server['hostname']} CPU: {$details_cpu}";
+            $results[] = "{$server->hostname} CPU: {$details_cpu}";
 
-            $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, 'memory_usage');
+            $alarm = models\Alarm::daoToModel('findOngoingByServerIdAndType', $server->id, 'memory_usage');
             $memory_used_percent = $metric->memoryUsedPercent();
             if ($alarm) {
                 if ($memory_used_percent < 80) {
+                    $alarm->finish();
+                    $alarm->save();
                     $details_memory = 'Alarm finished';
-                    $alarm_dao->update($alarm['id'], [
-                        'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                    ]);
                 } else {
                     $details_memory = 'Alarm not finished';
                 }
             } else {
                 if ($memory_used_percent >= 80) {
+                    $alarm = models\Alarm::initForServer(
+                        $server->id,
+                        'memory_usage',
+                        "Memory usage is more than 80% of its capacity ({$memory_used_percent} %)."
+                    );
+                    $alarm->save();
                     $details_memory = 'New alarm!';
-                    $alarm_dao->create([
-                        'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                        'type' => 'memory_usage',
-                        'server_id' => $server_id,
-                        'details' => "Memory usage is more than 80% of its capacity ({$memory_used_percent} %).",
-                    ]);
                 } else {
                     $details_memory = 'All good';
                 }
             }
 
-            $results[] = "{$db_server['hostname']} memory: {$details_memory}";
+            $results[] = "{$server->hostname} memory: {$details_memory}";
 
             foreach ($metric->disks() as $disk) {
                 $type = 'disk_usage:' . $disk->name;
-                $alarm = $alarm_dao->findOngoingByServerIdAndType($server_id, $type);
+                $alarm = models\Alarm::daoToModel('findOngoingByServerIdAndType', $server->id, $type);
                 $disk_used_percent = $metric->diskUsedPercent($disk);
                 if ($alarm) {
                     if ($disk_used_percent < 80) {
+                        $alarm->finish();
+                        $alarm->save();
                         $details_disk = 'Alarm finished';
-                        $alarm_dao->update($alarm['id'], [
-                            'finished_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                        ]);
                     } else {
                         $details_disk = 'Alarm not finished';
                     }
                 } else {
                     if ($disk_used_percent >= 80) {
+                        $alarm = models\Alarm::initForServer(
+                            $server->id,
+                            $type,
+                            "Disk {$disk->name} usage is more than 80% of its capacity ({$disk_used_percent} %)."
+                        );
+                        $alarm->save();
                         $details_disk = 'New alarm!';
-                        $alarm_dao->create([
-                            'created_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-                            'type' => $type,
-                            'server_id' => $server_id,
-                            'details' => "Disk {$disk->name} usage is more than 80% of its capacity ({$disk_used_percent} %).",
-                        ]);
                     } else {
                         $details_disk = 'All good';
                     }
                 }
 
-                $results[] = "{$db_server['hostname']} {$disk->name} disk: {$details_disk}";
+                $results[] = "{$server->hostname} {$disk->name} disk: {$details_disk}";
             }
         }
 
@@ -216,32 +194,28 @@ class Alarms
             return Response::text(400, 'This endpoint must be called from command line.');
         }
 
-        $user_dao = new models\dao\User();
-        $alarm_dao = new models\dao\Alarm();
-
         $alarms_mailer = new mailers\Alarms();
         $free_mobile_service = new services\FreeMobile();
 
-        $db_users = $user_dao->listAll();
-        $alarms = $alarm_dao->listToNotify();
+        $users = models\User::listAll();
+        $alarms = models\Alarm::daoToList('listToNotify');
         foreach ($alarms as $alarm) {
-            foreach ($db_users as $db_user) {
-                if ($db_user['email']) {
-                    $alarms_mailer->sendAlarm($db_user['email'], $alarm);
+            foreach ($users as $user) {
+                if ($user->email) {
+                    $alarms_mailer->sendAlarm($user->email, $alarm);
                 }
 
-                if ($db_user['free_mobile_login'] && $db_user['free_mobile_key']) {
+                if ($user->free_mobile_login && $user->free_mobile_key) {
                     $free_mobile_service->sendAlarm(
-                        $db_user['free_mobile_login'],
-                        $db_user['free_mobile_key'],
+                        $user->free_mobile_login,
+                        $user->free_mobile_key,
                         $alarm
                     );
                 }
             }
 
-            $alarm_dao->update($alarm['id'], [
-                'notified_at' => \Minz\Time::now()->format(\Minz\Model::DATETIME_FORMAT),
-            ]);
+            $alarm->notify();
+            $alarm->save();
         }
 
         $alarms_count = count($alarms);

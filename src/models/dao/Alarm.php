@@ -6,16 +6,7 @@ class Alarm extends \Minz\DatabaseModel
 {
     public function __construct()
     {
-        $properties = [
-            'id',
-            'created_at',
-            'notified_at',
-            'finished_at',
-            'type',
-            'details',
-            'domain_id',
-            'server_id',
-        ];
+        $properties = array_keys(\taust\models\Alarm::PROPERTIES);
         parent::__construct('alarms', 'id', $properties);
     }
 

@@ -36,17 +36,14 @@ class Auth
             ]);
         }
 
-        $user_dao = new models\dao\User();
-
-        $db_user = $user_dao->findBy(['username' => trim($username)]);
-        if (!$db_user) {
+        $user = models\User::findBy(['username' => trim($username)]);
+        if (!$user) {
             return Response::badRequest('auth/login.phtml', [
                 'username' => $username,
                 'error' => _('Wrong credentials!'),
             ]);
         }
 
-        $user = new models\User($db_user);
         if (!$user->verifyPassword($password)) {
             return Response::badRequest('auth/login.phtml', [
                 'username' => $username,
@@ -77,6 +74,8 @@ class Auth
 
         utils\CurrentUser::reset();
 
-        return Response::redirect('login');
+        $response = Response::redirect('login');
+        $response->removeCookie('taust_session');
+        return $response;
     }
 }

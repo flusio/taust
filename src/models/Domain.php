@@ -4,6 +4,8 @@ namespace taust\models;
 
 class Domain extends \Minz\Model
 {
+    use DaoConnector;
+
     public const PROPERTIES = [
         'id' => [
             'type' => 'string',
@@ -26,16 +28,11 @@ class Domain extends \Minz\Model
 
     public function status()
     {
-        $heartbeat_dao = new dao\Heartbeat();
-        $last_heartbeat = $heartbeat_dao->findLastHeartbeatByDomainId($this->id);
+        $last_heartbeat = Heartbeat::daoToModel('findLastHeartbeatByDomainId', $this->id);
         if ($last_heartbeat) {
-            $created_at = date_create_from_format(
-                \Minz\Model::DATETIME_FORMAT,
-                $last_heartbeat['created_at']
-            );
-            if ($created_at <= \Minz\Time::ago(5, 'minutes')) {
+            if ($last_heartbeat->created_at <= \Minz\Time::ago(5, 'minutes')) {
                 return 'unknown';
-            } elseif ($last_heartbeat['is_success']) {
+            } elseif ($last_heartbeat->is_success) {
                 return 'up';
             } else {
                 return 'down';

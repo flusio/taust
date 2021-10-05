@@ -23,8 +23,7 @@ class Users
             return Response::text(400, 'Can’t create a user: ' . implode(' ', $errors));
         }
 
-        $user_dao = new models\dao\User();
-        $user_dao->save($user);
+        $user->save();
 
         return Response::text(200, "User {$user->username} created.");
     }
@@ -78,8 +77,7 @@ class Users
             ]);
         }
 
-        $user_dao = new models\dao\User();
-        $user_dao->save($current_user);
+        $current_user->save();
 
         return Response::redirect('profile');
     }

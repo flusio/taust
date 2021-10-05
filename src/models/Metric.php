@@ -4,6 +4,8 @@ namespace taust\models;
 
 class Metric extends \Minz\Model
 {
+    use DaoConnector;
+
     public const PROPERTIES = [
         'id' => [
             'type' => 'integer',

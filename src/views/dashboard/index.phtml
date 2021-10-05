@@ -108,12 +108,12 @@
         <ul>
             <?php foreach ($ongoing_alarms as $alarm): ?>
                 <li>
-                    <?php if ($alarm['domain_id']): ?>
-                    <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                    <?php if ($alarm->domain_id): ?>
+                    <a href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarms">
                     <?php else: ?>
-                    <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                    <a href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarms">
                     <?php endif; ?>
-                        <?= $alarm['details'] ?>
+                        <?= $alarm->details ?>
                     </a>
                 </li>
             <?php endforeach; ?>

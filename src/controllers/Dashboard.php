@@ -15,37 +15,31 @@ class Dashboard
             return Response::redirect('login');
         }
 
-        $domain_dao = new models\dao\Domain();
-        $server_dao = new models\dao\Server();
-        $alarm_dao = new models\dao\Alarm();
-
-        $number_domains = $domain_dao->count();
-        $number_servers = $server_dao->count();
+        $number_domains = models\Domain::count();
+        $number_servers = models\Server::count();
         $no_setup = ($number_domains + $number_servers) === 0;
 
-        $db_domains = $domain_dao->listAll();
+        $domains = models\Domain::listAll();
         $domains_by_status = [
             'unknown' => [],
             'up' => [],
             'down' => [],
         ];
-        foreach ($db_domains as $db_domain) {
-            $domain = new models\Domain($db_domain);
+        foreach ($domains as $domain) {
             $domains_by_status[$domain->status()][] = $domain;
         }
 
-        $db_servers = $server_dao->listAll();
+        $servers = models\Server::listAll();
         $servers_by_status = [
             'unknown' => [],
             'up' => [],
             'down' => [],
         ];
-        foreach ($db_servers as $db_server) {
-            $server = new models\Server($db_server);
+        foreach ($servers as $server) {
             $servers_by_status[$server->status()][] = $server;
         }
 
-        $ongoing_alarms = $alarm_dao->listOngoingOrderByDescCreatedAt();
+        $ongoing_alarms = models\Alarm::daoToList('listOngoingOrderByDescCreatedAt');
 
         $number_errors = count($domains_by_status['unknown']) + count($domains_by_status['down'])
                        + count($servers_by_status['unknown']) + count($servers_by_status['down'])

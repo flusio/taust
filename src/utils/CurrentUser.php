@@ -22,13 +22,12 @@ class CurrentUser
             return self::$instance;
         }
 
-        $user_dao = new models\dao\User();
-        $db_user = $user_dao->find($_SESSION['current_user_id']);
-        if (!$db_user) {
+        $user = models\User::find($_SESSION['current_user_id']);
+        if (!$user) {
             return null;
         }
 
-        self::$instance = new models\User($db_user);
+        self::$instance = $user;
         return self::$instance;
     }
 

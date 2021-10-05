@@ -137,11 +137,8 @@ class System
 
     public function clearOld()
     {
-        $metric_dao = new models\dao\Metric();
-        $heartbeat_dao = new models\dao\Heartbeat();
-
-        $metric_dao->deleteOlderThan(\Minz\Time::ago(2, 'weeks'));
-        $heartbeat_dao->deleteOlderThan(\Minz\Time::ago(2, 'weeks'));
+        models\Metric::daoCall('deleteOlderThan', \Minz\Time::ago(2, 'weeks'));
+        models\Heartbeat::daoCall('deleteOlderThan', \Minz\Time::ago(2, 'weeks'));
 
         return Response::noContent();
     }

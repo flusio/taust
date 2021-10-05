@@ -6,7 +6,7 @@ class Heartbeat extends \Minz\DatabaseModel
 {
     public function __construct()
     {
-        $properties = ['id', 'created_at', 'is_success', 'details', 'domain_id'];
+        $properties = array_keys(\taust\models\Heartbeat::PROPERTIES);
         parent::__construct('heartbeats', 'id', $properties);
     }
 

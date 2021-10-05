@@ -17,17 +17,17 @@
     <ul class="list">
         <?php foreach ($ongoing_alarms as $alarm): ?>
             <li class="list__item list__item--link">
-                <?php if ($alarm['domain_id']): ?>
-                <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                <?php if ($alarm->domain_id): ?>
+                <a href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarms">
                 <?php else: ?>
-                <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                <a href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarms">
                 <?php endif; ?>
-                    <?= $alarm['details'] ?>
+                    <?= $alarm->details ?>
 
                     <br />
 
                     <small>
-                        <?= $alarm['created_at'] ?>
+                        <?= _d($alarm->created_at, '%F %T') ?>
                     </small>
                 </a>
             </li>
@@ -45,17 +45,17 @@
     <ul class="list">
         <?php foreach ($finished_alarms as $alarm): ?>
             <li class="list__item list__item--link list__item--muted">
-                <?php if ($alarm['domain_id']): ?>
-                <a href="<?= url('show domain', ['id' => $alarm['domain_id']]) ?>#alarms">
+                <?php if ($alarm->domain_id): ?>
+                <a href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarms">
                 <?php else: ?>
-                <a href="<?= url('show server', ['id' => $alarm['server_id']]) ?>#alarms">
+                <a href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarms">
                 <?php endif; ?>
-                    <?= $alarm['details'] ?>
+                    <?= $alarm->details ?>
 
                     <br />
 
                     <small>
-                        <?= $alarm['created_at'] ?> · <?= _('finished') ?>
+                        <?= _d($alarm->created_at, '%F %T') ?> · <?= _('finished') ?>
                     </small>
                 </a>
             </li>

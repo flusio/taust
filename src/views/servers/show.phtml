@@ -96,14 +96,14 @@
 
     <ul class="list">
         <?php foreach ($alarms as $alarm): ?>
-            <li class="list__item <?= $alarm['finished_at'] ? 'list__item--muted' : '' ?>">
-                <?= $alarm['details'] ?>
+            <li class="list__item <?= $alarm->finished_at ? 'list__item--muted' : '' ?>">
+                <?= $alarm->details ?>
 
                 <br />
 
                 <small>
-                    <?= $alarm['created_at'] ?>
-                    <?php if ($alarm['finished_at']): ?>
+                    <?= _d($alarm->created_at, '%F %T') ?>
+                    <?php if ($alarm->finished_at): ?>
                         · <?= _('finished') ?>
                     <?php endif; ?>
                 </small>
