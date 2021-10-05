@@ -46,8 +46,8 @@
 
                 <li>
                     <a
-                        class="aside__link <?= $navigation_active === 'profile' ? 'aside__link--active' : '' ?>"
-                        href="<?= url('profile') ?>"
+                        class="aside__link <?= $navigation_active === 'user' ? 'aside__link--active' : '' ?>"
+                        href="<?= url('user') ?>"
                     >
                         <?= _f('Profile (%s)', $this->protect($current_user->username)) ?>
                     </a>

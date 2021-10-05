@@ -1,7 +1,7 @@
 <?php
     $this->layout('application.phtml', [
         'title' => _('Your profile'),
-        'navigation_active' => 'profile',
+        'navigation_active' => 'user',
     ]);
 ?>
 
@@ -9,7 +9,7 @@
     <?= _f('Your profile (%s)', $this->protect($current_user->username)) ?>
 </h1>
 
-<form method="post" action="<?= url('update profile') ?>">
+<form method="post" action="<?= url('update user') ?>">
     <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
 
     <p>

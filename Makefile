@@ -21,7 +21,7 @@ stop: ## Stop and clean Docker server
 
 .PHONY: setup
 setup: .env ## Setup the application system
-	$(CLI) --request /system/setup
+	$(CLI) system setup
 
 .PHONY: update
 update: setup ## Update the application
@@ -29,10 +29,10 @@ update: setup ## Update the application
 .PHONY: reset
 reset: ## Reset the database
 	rm data/migrations_version.txt
-	$(CLI) --request /system/setup
+	$(CLI) system setup
 
 user: ## Create a user
-	$(CLI) --request /users/create -pusername=alice -ppassword=mysecret > /dev/null
+	$(CLI) users create --username=alice --password=mysecret > /dev/null
 	@echo "User alice (password: mysecret) created"
 
 .PHONY: help
