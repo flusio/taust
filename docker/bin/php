@@ -1,3 +1,11 @@
 #!/bin/bash
 
-USER=$(id -u):$(id -g) docker-compose -f ./docker/docker-compose.yml run --rm --no-deps php php $*
+taust-compose () {
+    docker-compose -p taust -f ./docker/docker-compose.yml "$@"
+}
+
+if [ -z `taust-compose ps -q php` ] || [ -z `docker ps -q --no-trunc | grep $(taust-compose ps -q php)` ]; then
+    USER=$(id -u):$(id -g) taust-compose run --rm --no-deps php php "$@"
+else
+    USER=$(id -u):$(id -g) taust-compose exec php php "$@"
+fi
