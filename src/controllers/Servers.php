@@ -1,8 +1,10 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\models;
+use taust\utils;
 
 class Servers
 {
@@ -46,9 +48,9 @@ class Servers
         }
 
         $hostname = $request->param('hostname');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::badRequest('servers/new.phtml', [
                 'hostname' => $hostname,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
@@ -112,9 +114,9 @@ class Servers
         }
 
         $id = $request->param('id');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::redirect('show server', ['id' => $id]);
         }
 

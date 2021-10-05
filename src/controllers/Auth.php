@@ -1,8 +1,10 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\models;
+use taust\utils;
 
 class Auth
 {
@@ -25,9 +27,9 @@ class Auth
 
         $username = $request->param('username');
         $password = $request->param('password');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::badRequest('auth/login.phtml', [
                 'username' => $username,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
@@ -68,8 +70,8 @@ class Auth
             return Response::redirect('login');
         }
 
-        $csrf = new \Minz\CSRF();
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        $csrf = $request->param('csrf');
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::redirect('home');
         }
 

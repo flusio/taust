@@ -68,6 +68,7 @@ class Application
 
         return $this->engine->run($request, [
             'not_found_view_pointer' => 'not_found.phtml',
+            'controller_namespace' => '\\taust\\controllers',
         ]);
     }
 }

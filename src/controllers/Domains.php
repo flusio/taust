@@ -1,8 +1,10 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\models;
+use taust\utils;
 
 class Domains
 {
@@ -45,9 +47,9 @@ class Domains
         }
 
         $id = $request->param('id');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::badRequest('domains/new.phtml', [
                 'id' => $id,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
@@ -121,9 +123,9 @@ class Domains
         }
 
         $id = $request->param('id');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::redirect('show domain', ['id' => $id]);
         }
 

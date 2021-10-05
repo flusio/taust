@@ -1,8 +1,12 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\mailers;
+use taust\models;
+use taust\services;
+use taust\utils;
 
 class Alarms
 {

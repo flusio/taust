@@ -1,8 +1,9 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\models;
 
 class Metrics
 {

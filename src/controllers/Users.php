@@ -1,8 +1,10 @@
 <?php
 
-namespace taust;
+namespace taust\controllers;
 
 use Minz\Response;
+use taust\models;
+use taust\utils;
 
 class Users
 {
@@ -51,9 +53,9 @@ class Users
         $email = $request->param('email');
         $free_mobile_login = $request->param('free_mobile_login');
         $free_mobile_key = $request->param('free_mobile_key');
-        $csrf = new \Minz\CSRF();
+        $csrf = $request->param('csrf');
 
-        if (!$csrf->validateToken($request->param('csrf'))) {
+        if (!\Minz\CSRF::validate($csrf)) {
             return Response::badRequest('users/profile.phtml', [
                 'email' => $email,
                 'free_mobile_login' => $free_mobile_login,
