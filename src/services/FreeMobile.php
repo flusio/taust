@@ -11,10 +11,10 @@ class FreeMobile
     public function sendAlarm($login, $key, $alarm)
     {
         if ($alarm->domain_id) {
-            $object = $alarm->domain_id . ' domain';
+            $object = "{$alarm->domain_id} domain (no heartbeats)";
         } else {
             $server = models\Server::find($alarm->server_id);
-            $object = $server->hostname . ' server';
+            $object = "{$server->hostname} server ({$alarm->type})";
         }
 
         $message = vsprintf(_('Hey, this is taust robot at %s.'), \Minz\Url::absoluteFor('home'));
