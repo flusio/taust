@@ -1,0 +1,25 @@
+<li id="alarm-<?= $alarm->id ?>" class="list__item <?= $alarm->finished_at ? 'list__item--muted' : '' ?>">
+    <?= $alarm->details ?>
+
+    <br />
+
+    <small>
+        <?php if ($alarm->domain_id): ?>
+            <a
+                <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
+                href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarm-<?= $alarm->id ?>"
+                data-turbolinks="false"
+            ><?= _d($alarm->created_at, '%F %T') ?></a>
+        <?php else: ?>
+            <a
+                <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
+                href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarm-<?= $alarm->id ?>"
+                data-turbolinks="false"
+            ><?= _d($alarm->created_at, '%F %T') ?></a>
+        <?php endif; ?>
+
+        <?php if ($alarm->finished_at): ?>
+            · <?= _('finished') ?>
+        <?php endif; ?>
+    </small>
+</li>

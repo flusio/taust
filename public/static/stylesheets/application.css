@@ -62,6 +62,10 @@ a {
     background-color: var(--color-secondary);
 }
 
+.link--muted {
+    color: var(--color-main-muted);
+}
+
 p {
     max-width: 30rem;
 }
