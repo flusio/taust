@@ -115,4 +115,17 @@ class Alarm extends \Minz\DatabaseModel
         $statement->execute([$server_id]);
         return $statement->fetchAll();
     }
+
+    public function deleteFinishedOlderThan($datetime)
+    {
+        $sql = <<<SQL
+            DELETE FROM alarms
+            WHERE created_at < ?
+            AND finished_at IS NOT NULL;
+        SQL;
+
+        $when = $datetime->format(\Minz\Model::DATETIME_FORMAT);
+        $statement = $this->prepare($sql);
+        return $statement->execute([$when]);
+    }
 }

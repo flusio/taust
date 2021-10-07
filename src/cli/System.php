@@ -123,6 +123,7 @@ class System
     {
         models\Metric::daoCall('deleteOlderThan', \Minz\Time::ago(2, 'weeks'));
         models\Heartbeat::daoCall('deleteOlderThan', \Minz\Time::ago(2, 'weeks'));
+        models\Alarm::daoCall('deleteFinishedOlderThan', \Minz\Time::ago(2, 'weeks'));
 
         return Response::noContent();
     }
