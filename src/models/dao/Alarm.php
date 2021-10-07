@@ -15,7 +15,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE domain_id = ? AND finished_at IS NULL
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id
             LIMIT 1
         SQL;
 
@@ -34,7 +34,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE server_id = ? AND type = ? AND finished_at IS NULL
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id
             LIMIT 1
         SQL;
 
@@ -70,7 +70,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE finished_at IS NULL
-            ORDER BY created_at DESC;
+            ORDER BY created_at DESC, id;
         SQL;
 
         $statement = $this->query($sql);
@@ -82,7 +82,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE finished_at IS NOT NULL
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id
             LIMIT 50;
         SQL;
 
@@ -95,7 +95,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE domain_id = ?
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id
         SQL;
 
         $statement = $this->prepare($sql);
@@ -108,7 +108,7 @@ class Alarm extends \Minz\DatabaseModel
         $sql = <<<'SQL'
             SELECT * FROM alarms
             WHERE server_id = ?
-            ORDER BY created_at DESC
+            ORDER BY created_at DESC, id
         SQL;
 
         $statement = $this->prepare($sql);

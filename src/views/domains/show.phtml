@@ -38,7 +38,7 @@
 
     <ul class="list">
         <?php foreach ($alarms as $alarm): ?>
-            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm]) ?>
+            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm, 'from' => url('show domain', ['id' => $domain->id]) . '#alarms']) ?>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
@@ -48,7 +48,7 @@
 
     <form method="post" action="<?= url('delete domain', ['id' => $domain->id]) ?>">
         <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
-        <button type="submit" class="button--ghost">
+        <button type="submit">
             <?= _('Stop monitoring this domain') ?>
         </button>
     </form>

@@ -16,7 +16,7 @@
 
     <ul class="list">
         <?php foreach ($ongoing_alarms as $alarm): ?>
-            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm, 'mode' => 'link']) ?>
+            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm, 'from' => url('alarms')]) ?>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>
@@ -30,7 +30,7 @@
 
     <ul class="list">
         <?php foreach ($finished_alarms as $alarm): ?>
-            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm, 'mode' => 'link']) ?>
+            <?= $this->include('alarms/_alarm.phtml', ['alarm' => $alarm, 'from' => url('alarms')]) ?>
         <?php endforeach; ?>
     </ul>
 <?php endif; ?>

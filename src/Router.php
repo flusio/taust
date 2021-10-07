@@ -40,6 +40,7 @@ class Router
         $router->addRoute('post', '/servers/:id/delete', 'Servers#delete', 'delete server');
 
         $router->addRoute('get', '/alarms', 'Alarms#index', 'alarms');
+        $router->addRoute('post', '/alarms/:id/finish', 'Alarms#finish', 'finish alarm');
 
         return $router;
     }

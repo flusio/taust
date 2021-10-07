@@ -3,23 +3,36 @@
 
     <br />
 
-    <small>
-        <?php if ($alarm->domain_id): ?>
-            <a
-                <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
-                href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarm-<?= $alarm->id ?>"
-                data-turbolinks="false"
-            ><?= _d($alarm->created_at, '%F %T') ?></a>
-        <?php else: ?>
-            <a
-                <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
-                href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarm-<?= $alarm->id ?>"
-                data-turbolinks="false"
-            ><?= _d($alarm->created_at, '%F %T') ?></a>
-        <?php endif; ?>
+    <div class="list__footer">
+        <div>
+            <?php if ($alarm->domain_id): ?>
+                <a
+                    <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
+                    href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarm-<?= $alarm->id ?>"
+                    data-turbolinks="false"
+                ><?= _d($alarm->created_at, '%F %T') ?></a>
+            <?php else: ?>
+                <a
+                    <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
+                    href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarm-<?= $alarm->id ?>"
+                    data-turbolinks="false"
+                ><?= _d($alarm->created_at, '%F %T') ?></a>
+            <?php endif; ?>
 
-        <?php if ($alarm->finished_at): ?>
-            · <?= _('finished') ?>
+            <?php if ($alarm->finished_at): ?>
+                · <?= _('finished') ?>
+            <?php endif; ?>
+        </div>
+
+        <?php if (!$alarm->finished_at): ?>
+            <form method="post" action="<?= url('finish alarm', ['id' => $alarm->id]) ?>">
+                <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                <input type="hidden" name="from" value="<?= $from ?>" />
+
+                <button type="submit" class="button--ghost">
+                    <?= _('Ignore') ?>
+                </button>
+            </form>
         <?php endif; ?>
-    </small>
+    </div>
 </li>
