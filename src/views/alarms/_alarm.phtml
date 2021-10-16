@@ -20,7 +20,7 @@
             <?php endif; ?>
 
             <?php if ($alarm->finished_at): ?>
-                · <?= _('finished') ?>
+                · <span title="<?= _d($alarm->finished_at, '%F %T') ?>"><?= _('finished') ?></span>
             <?php endif; ?>
         </div>
 
