@@ -51,8 +51,11 @@ CREATE TABLE alarms (
 CREATE TABLE pages (
     id TEXT PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL,
-    title TEXT NOT NULL
+    title TEXT NOT NULL,
+    hostname TEXT NOT NULL DEFAULT ''
 );
+
+CREATE UNIQUE INDEX idx_pages_hostname ON pages(hostname);
 
 CREATE TABLE pages_to_domains (
     id SERIAL PRIMARY KEY,

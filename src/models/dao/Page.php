@@ -17,4 +17,19 @@ class Page extends \Minz\DatabaseModel
         $statement = $this->query($sql);
         return $statement->fetchAll();
     }
+
+    public function listByHostnames()
+    {
+        $sql = "SELECT * FROM pages WHERE hostname != ''";
+
+        $statement = $this->query($sql);
+        $db_pages = $statement->fetchAll();
+        $db_pages_by_hostnames = [];
+
+        foreach ($db_pages as $db_page) {
+            $db_pages_by_hostnames[$db_page['hostname']] = $db_page;
+        }
+
+        return $db_pages_by_hostnames;
+    }
 }

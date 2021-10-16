@@ -104,6 +104,7 @@ class Pages
             'server_ids' => array_column($page->servers(), 'id'),
             'servers' => $servers,
             'domains' => $domains,
+            'hostname' => $page->hostname,
         ]);
     }
 
@@ -118,6 +119,7 @@ class Pages
         $csrf = $request->param('csrf');
         $domain_ids = $request->paramArray('domain_ids', []);
         $server_ids = $request->paramArray('server_ids', []);
+        $hostname = $request->param('hostname');
 
         $page = models\Page::find($id);
         $servers = models\Server::daoToList('listAllOrderById');
@@ -134,9 +136,30 @@ class Pages
                 'server_ids' => $server_ids,
                 'servers' => $servers,
                 'domains' => $domains,
+                'hostname' => $hostname,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
             ]);
         }
+
+        $existing_hostname = models\Page::findBy([
+            'hostname' => $hostname,
+        ]);
+        if ($existing_hostname) {
+            return Response::badRequest('pages/edit.phtml', [
+                'page' => $page,
+                'domain_ids' => $domain_ids,
+                'server_ids' => $server_ids,
+                'servers' => $servers,
+                'domains' => $domains,
+                'hostname' => $hostname,
+                'errors' => [
+                    'hostname' => _('A page already has the same hostname.'),
+                ],
+            ]);
+        }
+
+        $page->hostname = $hostname;
+        $page->save();
 
         models\PageToDomain::set($page->id, $domain_ids);
         models\PageToServer::set($page->id, $server_ids);

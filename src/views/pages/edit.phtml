@@ -54,9 +54,28 @@
         <?php endif; ?>
     </div>
 
+    <div class="form-group <?= isset($errors['hostname']) ? 'form-group--invalid' : '' ?>">
+        <label for="hostname">
+            <?= _('Hostname (optional)') ?>
+        </label>
+
+        <input
+            id="hostname"
+            name="hostname"
+            type="text"
+            value="<?= $hostname ?>"
+        />
+
+        <?php if (isset($errors['hostname'])): ?>
+            <p class="form-group__error">
+                <?= $errors['hostname'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
     <div class="form__actions">
         <button type="submit" class="button--primary">
-            <?= _('Attach domains & servers') ?>
+            <?= _('Save changes') ?>
         </button>
     </div>
 </form>

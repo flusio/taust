@@ -219,8 +219,8 @@ trait DaoConnector
     {
         $db_models = self::daoCall($name, ...$arguments);
         $models = [];
-        foreach ($db_models as $db_model) {
-            $models[] = new self($db_model);
+        foreach ($db_models as $key => $db_model) {
+            $models[$key] = new self($db_model);
         }
         return $models;
     }

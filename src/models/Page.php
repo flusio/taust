@@ -23,6 +23,10 @@ class Page extends \Minz\Model
             'required' => true,
             'validator' => '\taust\models\Page::validateTitle',
         ],
+
+        'hostname' => [
+            'type' => 'string',
+        ],
     ];
 
     public static function init($title)
@@ -30,6 +34,7 @@ class Page extends \Minz\Model
         return new self([
             'id' => bin2hex(random_bytes(16)),
             'title' => $title,
+            'hostname' => '',
         ]);
     }
 
