@@ -42,6 +42,14 @@ class Router
         $router->addRoute('get', '/alarms', 'Alarms#index', 'alarms');
         $router->addRoute('post', '/alarms/:id/finish', 'Alarms#finish', 'finish alarm');
 
+        $router->addRoute('get', '/pages', 'Pages#index', 'pages');
+        $router->addRoute('get', '/pages/new', 'Pages#new', 'new page');
+        $router->addRoute('post', '/pages/new', 'Pages#create', 'create page');
+        $router->addRoute('get', '/pages/:id', 'Pages#show', 'show page');
+        $router->addRoute('get', '/pages/:id/edit', 'Pages#edit', 'edit page');
+        $router->addRoute('post', '/pages/:id/edit', 'Pages#update', 'update page');
+        $router->addRoute('post', '/pages/:id/delete', 'Pages#delete', 'delete page');
+
         return $router;
     }
 

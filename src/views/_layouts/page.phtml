@@ -1,0 +1,11 @@
+<?php $this->layout('base.phtml', ['title' => $title]); ?>
+
+<div class="layout layout--page">
+    <main class="layout__content">
+        <h1 class="layout__title">
+            <?= $title ?>
+        </h1>
+
+        <?= $this->safe('content') ?>
+    </main>
+</div>

@@ -1,0 +1,49 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Create a status page'),
+        'navigation_active' => 'pages',
+    ]);
+?>
+
+<h1><?= _('Create a status page') ?></h1>
+
+<form method="post" action="<?= url('create page') ?>">
+    <?php if ($error): ?>
+        <p class="form__error">
+            <?= $error ?>
+        </p>
+    <?php endif; ?>
+
+    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+
+    <div class="form-group <?= isset($errors['title']) ? 'form-group--invalid' : '' ?>">
+        <label for="title">
+            <?= _('Title') ?>
+        </label>
+
+        <input
+            id="title"
+            name="title"
+            type="text"
+            value="<?= $title ?>"
+            required
+            autofocus
+        />
+
+        <?php if (isset($errors['title'])): ?>
+            <p class="form-group__error">
+                <?= $errors['title'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form__actions">
+        <button type="submit" class="button--primary">
+            <?= _('Create the page') ?>
+        </button>
+
+        <a href="<?= url('pages') ?>">
+            <?= _('Back to the pages') ?>
+        </a>
+    </div>
+</form>

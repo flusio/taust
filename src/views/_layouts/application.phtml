@@ -46,6 +46,15 @@
 
                 <li>
                     <a
+                        class="aside__link <?= $navigation_active === 'pages' ? 'aside__link--active' : '' ?>"
+                        href="<?= url('pages') ?>"
+                    >
+                        <?= _('Status pages') ?>
+                    </a>
+                </li>
+
+                <li>
+                    <a
                         class="aside__link <?= $navigation_active === 'user' ? 'aside__link--active' : '' ?>"
                         href="<?= url('user') ?>"
                     >

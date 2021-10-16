@@ -1,0 +1,73 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _f('Page %s', $this->protect($page->title)),
+        'navigation_active' => 'pages',
+    ]);
+?>
+
+<h1>
+    <a target="_blank" rel="noopener noreferrer" href="<?= url('show page', ['id' => $page->id]) ?>">
+        <?= $this->protect($page->title) ?>
+    </a>
+</h1>
+
+<form method="post" action="<?= url('update page', ['id' => $page->id]) ?>">
+    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+
+    <div class="form-group <?= isset($errors['domain_ids']) ? 'form-group--invalid' : '' ?>">
+        <label for="domain-ids">
+            <?= _('Domains') ?>
+        </label>
+
+        <select id="domain-ids" name="domain_ids[]" multiple required>
+            <?php foreach ($domains as $domain): ?>
+                <option <?= in_array($domain->id, $domain_ids) ? 'selected' : '' ?> value="<?= $domain->id ?>">
+                    <?= protect($domain->id) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <?php if (isset($errors['domain_ids'])): ?>
+            <p class="form-group__error">
+                <?= $errors['domain_ids'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= isset($errors['server_ids']) ? 'form-group--invalid' : '' ?>">
+        <label for="server-ids">
+            <?= _('Servers') ?>
+        </label>
+
+        <select id="server-ids" name="server_ids[]" multiple required>
+            <?php foreach ($servers as $server): ?>
+                <option <?= in_array($server->id, $server_ids) ? 'selected' : '' ?> value="<?= $server->id ?>">
+                    <?= protect($server->hostname) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+
+        <?php if (isset($errors['server_ids'])): ?>
+            <p class="form-group__error">
+                <?= $errors['server_ids'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form__actions">
+        <button type="submit" class="button--primary">
+            <?= _('Attach domains & servers') ?>
+        </button>
+    </div>
+</form>
+
+<section class="section--danger">
+    <h2><?= _('Danger zone 😈') ?></h2>
+
+    <form method="post" action="<?= url('delete page', ['id' => $page->id]) ?>">
+        <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+        <button type="submit">
+            <?= _('Delete this status page') ?>
+        </button>
+    </form>
+</section>

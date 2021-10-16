@@ -47,3 +47,27 @@ CREATE TABLE alarms (
     domain_id TEXT REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE,
     server_id TEXT REFERENCES servers ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+CREATE TABLE pages (
+    id TEXT PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    title TEXT NOT NULL
+);
+
+CREATE TABLE pages_to_domains (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    page_id TEXT REFERENCES pages ON DELETE CASCADE ON UPDATE CASCADE,
+    domain_id TEXT REFERENCES domains ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE UNIQUE INDEX idx_pages_to_domains ON pages_to_domains(page_id, domain_id);
+
+CREATE TABLE pages_to_servers (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    page_id TEXT REFERENCES pages ON DELETE CASCADE ON UPDATE CASCADE,
+    server_id TEXT REFERENCES servers ON DELETE CASCADE ON UPDATE CASCADE
+);
+
+CREATE UNIQUE INDEX idx_pages_to_servers ON pages_to_servers(page_id, server_id);

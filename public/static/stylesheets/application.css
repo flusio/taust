@@ -70,19 +70,23 @@ p {
     max-width: 30rem;
 }
 
-.paragraph--muted {
+.paragraph--muted,
+.text--muted {
     color: var(--color-main-muted);
 }
 
-.paragraph--alert {
+.paragraph--alert,
+.text--alert {
     color: var(--color-alert);
 }
 
-.paragraph--warning {
+.paragraph--warning,
+.text--warning {
     color: var(--color-warning);
 }
 
-.paragraph--success {
+.paragraph--success,
+.text--success {
     color: var(--color-success);
 }
 

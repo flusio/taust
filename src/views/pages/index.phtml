@@ -1,0 +1,28 @@
+<?php
+    $this->layout('application.phtml', [
+        'title' => _('Status pages'),
+        'navigation_active' => 'pages',
+    ]);
+?>
+
+<h1><?= _('Status pages') ?></h1>
+
+<p>
+    <?= _('Share your public status page to your users so they know when your service is down.') ?>
+</p>
+
+<ul class="list">
+    <?php foreach ($pages as $page): ?>
+        <li class="list__item list__item--link">
+            <a href="<?= url('edit page', ['id' => $page->id]) ?>">
+                <?= $this->protect($page->title) ?>
+            </a>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<p class="<?= !$pages ? 'paragraph--featured' : '' ?>">
+    <a href="<?= url('new page') ?>" class="link--primary">
+        <?= _('🤓 Create a status page') ?>
+    </a>
+</p>

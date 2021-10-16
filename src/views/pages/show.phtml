@@ -1,0 +1,56 @@
+<?php
+    $this->layout('page.phtml', [
+        'title' => $this->protect($page->title),
+    ]);
+?>
+
+<h2><?= _('Domains') ?></h2>
+
+<ul class="list">
+    <?php foreach ($domains as $domain): ?>
+        <li class="list__item list__item--row">
+            <a target="_blank" rel="noopener noreferrer" href="https://<?= $this->protect($domain->id) ?>">
+                <?= $this->protect($domain->id) ?>
+            </a>
+
+            <?php $status = $domain->status(); ?>
+            <?php if ($status === 'up'): ?>
+                <span class="text--success">
+                    <?= _('up 😊') ?>
+                </span>
+            <?php elseif ($status === 'down'): ?>
+                <span class="text--alert">
+                    <strong><?= _('down 😫') ?></strong>
+                </span>
+            <?php else: ?>
+                <span class="text--warning">
+                    <strong><?= _('unknown 😵') ?></strong>
+                </span>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+</ul>
+
+<h2><?= _('Servers') ?></h2>
+<ul class="list">
+    <?php foreach ($servers as $server): ?>
+        <li class="list__item list__item--row">
+            <?= $this->protect($server->hostname) ?>
+
+            <?php $status = $server->status(); ?>
+            <?php if ($status === 'up'): ?>
+                <span class="text--success">
+                    <?= _('up 😊') ?>
+                </span>
+            <?php elseif ($status === 'down'): ?>
+                <span class="text--alert">
+                    <strong><?= _('down 😫') ?></strong>
+                </span>
+            <?php else: ?>
+                <span class="text--warning">
+                    <strong><?= _('unknown 😵') ?></strong>
+                </span>
+            <?php endif; ?>
+        </li>
+    <?php endforeach; ?>
+</ul>

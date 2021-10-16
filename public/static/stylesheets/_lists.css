@@ -65,6 +65,13 @@
     content: '';
 }
 
+.list__item--row {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+}
+
 .list__footer {
     display: flex;
     margin-top: 0.5rem;
