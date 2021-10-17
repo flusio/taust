@@ -55,8 +55,6 @@ CREATE TABLE pages (
     hostname TEXT NOT NULL DEFAULT ''
 );
 
-CREATE UNIQUE INDEX idx_pages_hostname ON pages(hostname);
-
 CREATE TABLE pages_to_domains (
     id SERIAL PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL,

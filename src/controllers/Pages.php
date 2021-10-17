@@ -141,10 +141,10 @@ class Pages
             ]);
         }
 
-        $existing_hostname = models\Page::findBy([
+        $existing_page = models\Page::findBy([
             'hostname' => $hostname,
         ]);
-        if ($existing_hostname) {
+        if ($existing_page && $hostname !== '') {
             return Response::badRequest('pages/edit.phtml', [
                 'page' => $page,
                 'domain_ids' => $domain_ids,
