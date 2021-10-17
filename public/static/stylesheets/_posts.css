@@ -1,0 +1,46 @@
+.posts {
+    margin-top: 5rem;
+}
+
+.post {
+    max-width: 30rem;
+    padding: 1rem;
+
+    background-color: var(--color-secondary-shadow);
+    border-radius: 0.25rem;
+}
+
+.post + .post {
+    margin-top: 3rem;
+}
+
+.post__header {
+    display: flex;
+
+    align-items: flex-start;
+}
+
+.post__title {
+    margin-top: 0;
+    margin-bottom: 0;
+
+    flex: 1;
+
+    line-height: 1.2;
+}
+
+.post__info {
+    padding-left: 0.25em;
+
+    color: var(--color-main-muted);
+    text-align: right;
+}
+
+.post__info > * + * {
+    margin-top: 0.75em;
+}
+
+.post__content {
+    font-size: 1.2em;
+    line-height: 1.4;
+}

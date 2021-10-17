@@ -62,7 +62,7 @@ class Pages
 
         $page->save();
 
-        return Response::redirect('edit page', [
+        return Response::redirect('announcements', [
             'id' => $page->id,
         ]);
     }
@@ -79,6 +79,7 @@ class Pages
             'page' => $page,
             'domains' => $page->domains(),
             'servers' => $page->servers(),
+            'announcements' => $page->announcements(),
         ]);
     }
 

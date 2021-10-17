@@ -14,7 +14,7 @@
 <ul class="list">
     <?php foreach ($pages as $page): ?>
         <li class="list__item list__item--link">
-            <a href="<?= url('edit page', ['id' => $page->id]) ?>">
+            <a href="<?= url('announcements', ['id' => $page->id]) ?>">
                 <?= $this->protect($page->title) ?>
             </a>
         </li>

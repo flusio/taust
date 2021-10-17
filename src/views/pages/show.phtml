@@ -54,3 +54,9 @@
         </li>
     <?php endforeach; ?>
 </ul>
+
+<section class="posts">
+    <?php foreach ($announcements as $announcement): ?>
+        <?= $this->include('pages/announcements/_announcement.phtml', ['announcement' => $announcement]) ?>
+    <?php endforeach; ?>
+</section>

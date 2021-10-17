@@ -50,6 +50,9 @@ class Router
         $router->addRoute('post', '/pages/:id/edit', 'Pages#update', 'update page');
         $router->addRoute('post', '/pages/:id/delete', 'Pages#delete', 'delete page');
 
+        $router->addRoute('get', '/pages/:id/announcements', 'pages/Announcements#index', 'announcements');
+        $router->addRoute('post', '/pages/:id/announcements', 'pages/Announcements#create', 'create announcement');
+
         return $router;
     }
 

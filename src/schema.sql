@@ -72,3 +72,15 @@ CREATE TABLE pages_to_servers (
 );
 
 CREATE UNIQUE INDEX idx_pages_to_servers ON pages_to_servers(page_id, server_id);
+
+CREATE TABLE announcements (
+    id TEXT PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    planned_at TIMESTAMPTZ NOT NULL,
+    type TEXT NOT NULL,
+    status TEXT NOT NULL,
+    page_id TEXT NOT NULL REFERENCES pages ON DELETE CASCADE ON UPDATE CASCADE,
+
+    title TEXT NOT NULL,
+    content TEXT NOT NULL
+);

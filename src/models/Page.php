@@ -48,6 +48,11 @@ class Page extends \Minz\Model
         return Server::daoToList('listByPageId', $this->id);
     }
 
+    public function announcements()
+    {
+        return Announcement::daoToList('listByPageId', $this->id);
+    }
+
     public function validate()
     {
         $formatted_errors = [];

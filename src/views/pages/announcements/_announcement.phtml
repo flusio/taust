@@ -1,0 +1,23 @@
+<article class="post">
+    <header class="post__header">
+        <h2 class="post__title"><?= $this->protect($announcement->title) ?></h2>
+
+        <div class="post__info">
+            <div>
+                <?php if ($announcement->type === 'maintenance'): ?>
+                    <?= _('🔧 Maintenance') ?>
+                <?php else: ?>
+                    <?= _('🔥 Incident') ?>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <?= _d($announcement->planned_at, '%a %e %b, %H:%M') ?>
+            </div>
+        </div>
+    </header>
+
+    <p class="post__content">
+        <?= nl2br($announcement->content) ?>
+    </p>
+</article>
