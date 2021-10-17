@@ -59,12 +59,20 @@
             <?= _('Hostname (optional)') ?>
         </label>
 
-        <input
-            id="hostname"
-            name="hostname"
-            type="text"
-            value="<?= $hostname ?>"
-        />
+        <div class="form-group__stack">
+            <input
+                id="hostname"
+                name="hostname"
+                type="text"
+                value="<?= $hostname ?>"
+            />
+
+            <?php if ($hostname): ?>
+                <a class="link--primary" target="_blank" rel="noopener noreferrer" href="<?= $hostname ?>">
+                    <?= _('open') ?>
+                </a>
+            <?php endif; ?>
+        </div>
 
         <?php if (isset($errors['hostname'])): ?>
             <p class="form-group__error">

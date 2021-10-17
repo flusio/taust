@@ -61,6 +61,10 @@ select {
     align-items: baseline;
 }
 
+.form-group__stack > * + * {
+    margin-left: 0.5em;
+}
+
 .form-group__caption {
     padding-left: 0.5em;
     padding-right: 0.5em;
