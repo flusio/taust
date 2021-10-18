@@ -27,9 +27,9 @@
         </p>
     <?php endif; ?>
 
-    <p class="post__content">
-        <?= nl2br($announcement->content) ?>
-    </p>
+    <div class="post__content">
+        <?= $announcement->htmlContent() ?>
+    </div>
 
     <?php if ($current_user): ?>
         <footer class="post__actions">

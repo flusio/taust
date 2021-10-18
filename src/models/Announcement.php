@@ -71,4 +71,10 @@ class Announcement extends \Minz\Model
             'content' => $content,
         ]);
     }
+
+    public function htmlContent()
+    {
+        $parsedown = new \Parsedown();
+        return $parsedown->text($this->content);
+    }
 }
