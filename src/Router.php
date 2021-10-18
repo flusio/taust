@@ -62,6 +62,22 @@ class Router
     }
 
     /**
+     * Get the application router for a page
+     *
+     * @param string $page_id
+     *
+     * @return \Minz\Router
+     */
+    public static function loadForPage($page_id)
+    {
+        $router = new \Minz\Router();
+
+        $router->addRoute('get', '/', 'Pages#show', 'home');
+
+        return $router;
+    }
+
+    /**
      * Get the CLI router (includes application routes)
      *
      * @return \Minz\Router

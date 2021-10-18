@@ -13,12 +13,10 @@ include $app_path . '/autoload.php';
 \Minz\Environment::initialize();
 \Minz\Environment::startSession();
 
-$application = new \taust\Application();
-
 // Get the http information and create a Request
 $request_method = strtolower($_SERVER['REQUEST_METHOD']);
 $http_method = $request_method === 'head' ? 'get' : $request_method;
-$real_http_uri = $_SERVER['REQUEST_URI'];
+$http_uri = $_SERVER['REQUEST_URI'];
 $http_parameters = array_merge(
     $_GET,
     $_POST,
@@ -28,21 +26,12 @@ $headers = array_merge($_SERVER, [
     'COOKIE' => $_COOKIE,
 ]);
 
-$pages_by_hostnames = \taust\models\Page::daoToList('listByHostnames');
-$hostname = $headers['HTTP_HOST'] ?? '';
-if (isset($pages_by_hostnames[$hostname])) {
-    $page = $pages_by_hostnames[$hostname];
-    $http_uri = \Minz\Url::for('show page', ['id' => $page->id]);
-    $http_uri = $http_uri . $real_http_uri;
-} else {
-    $http_uri = $real_http_uri;
-}
-
 $request = new \Minz\Request($http_method, $http_uri, $http_parameters, $headers);
 
+$application = new \taust\Application($headers['HTTP_HOST']);
 $response = $application->run($request);
 
-$response->setHeader('Turbolinks-Location', $real_http_uri);
+$response->setHeader('Turbolinks-Location', $http_uri);
 // This is useful only on Servers#show page, but because of Turbolinks, we must
 // to be sure that the correct CSP is sent on every page.
 $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
