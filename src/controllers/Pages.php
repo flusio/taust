@@ -147,7 +147,7 @@ class Pages
         $existing_page = models\Page::findBy([
             'hostname' => $hostname,
         ]);
-        if ($existing_page && $hostname !== '') {
+        if ($existing_page && $existing_page->id !== $page->id && $hostname !== '') {
             return Response::badRequest('pages/edit.phtml', [
                 'page' => $page,
                 'domain_ids' => $domain_ids,
