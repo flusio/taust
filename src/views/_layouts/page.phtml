@@ -3,7 +3,13 @@
 <div class="layout layout--page">
     <main class="layout__content">
         <h1 class="layout__title">
-            <?= $title ?>
+            <?php if ($current_user): ?>
+                <a href="<?= url('edit page', ['id' => $page->id]) ?>">
+                    <?= $title ?>
+                </a>
+            <?php else: ?>
+                <?= $title ?>
+            <?php endif; ?>
         </h1>
 
         <?= $this->safe('content') ?>

@@ -46,18 +46,16 @@ class Router
         $router->addRoute('get', '/pages/new', 'Pages#new', 'new page');
         $router->addRoute('post', '/pages/new', 'Pages#create', 'create page');
         $router->addRoute('get', '/pages/:id', 'Pages#show', 'show page');
+        $router->addRoute('post', '/pages/:id', 'pages/Announcements#create', 'create announcement');
         $router->addRoute('get', '/pages/:id/edit', 'Pages#edit', 'edit page');
         $router->addRoute('post', '/pages/:id/edit', 'Pages#update', 'update page');
         $router->addRoute('post', '/pages/:id/delete', 'Pages#delete', 'delete page');
 
-        $router->addRoute('get', '/pages/:id/announcements', 'pages/Announcements#index', 'announcements');
-        $router->addRoute('post', '/pages/:id/announcements', 'pages/Announcements#create', 'create announcement');
-
         $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
-        $router->addRoute('get', '/announcements/:id/edit', 'Announcements#edit', 'edit announcement');
-        $router->addRoute('post', '/announcements/:id/edit', 'Announcements#update', 'update announcement');
-        $router->addRoute('post', '/announcements/:id/status', 'Announcements#updateStatus', 'update announcement status');
-        $router->addRoute('post', '/announcements/:id/delete', 'Announcements#delete', 'delete announcement');
+        $router->addRoute('get', '/a/:id/edit', 'Announcements#edit', 'edit announcement');
+        $router->addRoute('post', '/a/:id/edit', 'Announcements#update', 'update announcement');
+        $router->addRoute('post', '/a/:id/status', 'Announcements#updateStatus', 'update announcement status');
+        $router->addRoute('post', '/a/:id/delete', 'Announcements#delete', 'delete announcement');
 
         return $router;
     }

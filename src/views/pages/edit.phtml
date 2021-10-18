@@ -6,32 +6,10 @@
 ?>
 
 <h1>
-    <a target="_blank" rel="noopener noreferrer" href="<?= url('show page', ['id' => $page->id]) ?>">
+    <a href="<?= url('show page', ['id' => $page->id]) ?>">
         <?= $this->protect($page->title) ?>
     </a>
 </h1>
-
-<nav class="subnavigation">
-    <ul class="subnavigation__container">
-        <li class="subnavigation__item">
-            <a
-                class="subnavigation__link"
-                href="<?= url('announcements', ['id' => $page->id]) ?>"
-            >
-                <?= _('Announcements') ?>
-            </a>
-        </li>
-
-        <li class="subnavigation__item">
-            <a
-                class="subnavigation__link subnavigation__link--active"
-                href="<?= url('edit page', ['id' => $page->id]) ?>"
-            >
-                <?= _('Configuration') ?>
-            </a>
-        </li>
-    </ul>
-</nav>
 
 <form method="post" action="<?= url('update page', ['id' => $page->id]) ?>">
     <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />

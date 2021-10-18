@@ -62,9 +62,7 @@ class Pages
 
         $page->save();
 
-        return Response::redirect('announcements', [
-            'id' => $page->id,
-        ]);
+        return Response::redirect('edit page', ['id' => $page->id]);
     }
 
     public function show($request)
@@ -80,6 +78,10 @@ class Pages
             'domains' => $page->domains(),
             'servers' => $page->servers(),
             'announcements' => $page->announcements(),
+            'type' => 'maintenance',
+            'planned_at' => \Minz\Time::now(),
+            'title' => '',
+            'content' => '',
         ]);
     }
 

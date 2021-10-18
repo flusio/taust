@@ -8,29 +8,6 @@ use taust\utils;
 
 class Announcements
 {
-    public function index($request)
-    {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
-
-        $id = $request->param('id');
-        $page = models\Page::find($id);
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        return Response::ok('pages/announcements/index.phtml', [
-            'page' => $page,
-            'announcements' => $page->announcements(),
-            'type' => 'maintenance',
-            'planned_at' => \Minz\Time::now(),
-            'title' => '',
-            'content' => '',
-        ]);
-    }
-
     public function create($request)
     {
         $current_user = utils\CurrentUser::get();
@@ -52,8 +29,10 @@ class Announcements
         $csrf = $request->param('csrf');
 
         if (!\Minz\CSRF::validate($csrf)) {
-            return Response::badRequest('pages/announcements/index.phtml', [
+            return Response::badRequest('pages/show.phtml', [
                 'page' => $page,
+                'domains' => $page->domains(),
+                'servers' => $page->servers(),
                 'announcements' => $page->announcements(),
                 'type' => $type,
                 'planned_at' => $planned_at,
@@ -81,8 +60,10 @@ class Announcements
 
         $errors = $announcement->validate();
         if ($errors) {
-            return Response::badRequest('pages/announcements/index.phtml', [
+            return Response::badRequest('pages/show.phtml', [
                 'page' => $page,
+                'domains' => $page->domains(),
+                'servers' => $page->servers(),
                 'announcements' => $page->announcements(),
                 'type' => $type,
                 'planned_at' => $planned_at,
@@ -94,6 +75,6 @@ class Announcements
 
         $announcement->save();
 
-        return Response::redirect('announcements', ['id' => $page->id]);;
+        return Response::redirect('show page', ['id' => $page->id]);;
     }
 }

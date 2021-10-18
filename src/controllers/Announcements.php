@@ -103,7 +103,7 @@ class Announcements
 
         $announcement->save();
 
-        return Response::redirect('announcements', ['id' => $page->id]);
+        return Response::redirect('show page', ['id' => $page->id]);
     }
 
     public function updateStatus($request)
@@ -125,7 +125,7 @@ class Announcements
         $status = $request->param('status');
 
         if (!\Minz\CSRF::validate($csrf)) {
-            return Response::redirect('announcements', ['id' => $page_id]);
+            return Response::redirect('show page', ['id' => $page->id]);
         }
 
         if ($status === 'ongoing') {
@@ -136,7 +136,7 @@ class Announcements
 
         $announcement->save();
 
-        return Response::redirect('announcements', ['id' => $page->id]);
+        return Response::redirect('show page', ['id' => $page->id]);
     }
 
     public function delete($request)
@@ -157,11 +157,11 @@ class Announcements
         $page_id = $announcement->page_id;
 
         if (!\Minz\CSRF::validate($csrf)) {
-            return Response::redirect('announcements', ['id' => $page_id]);
+            return Response::redirect('show page', ['id' => $page_id]);
         }
 
         models\Announcement::delete($announcement->id);
 
-        return Response::redirect('announcements', ['id' => $page_id]);
+        return Response::redirect('show page', ['id' => $page_id]);
     }
 }

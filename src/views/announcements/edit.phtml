@@ -1,37 +1,10 @@
 <?php
-    $this->layout('application.phtml', [
-        'title' => _f('Page %s', $this->protect($page->title)),
+    $this->layout('announcement.phtml', [
+        'title' => _f('Edit %s', $this->protect($announcement->title)),
         'navigation_active' => 'pages',
+        'page' => $page,
     ]);
 ?>
-
-<h1>
-    <a target="_blank" rel="noopener noreferrer" href="<?= url('show page', ['id' => $page->id]) ?>">
-        <?= $this->protect($page->title) ?>
-    </a>
-</h1>
-
-<nav class="subnavigation">
-    <ul class="subnavigation__container">
-        <li class="subnavigation__item">
-            <a
-                class="subnavigation__link subnavigation__link--active"
-                href="<?= url('announcements', ['id' => $page->id]) ?>"
-            >
-                <?= _('Announcements') ?>
-            </a>
-        </li>
-
-        <li class="subnavigation__item">
-            <a
-                class="subnavigation__link"
-                href="<?= url('edit page', ['id' => $page->id]) ?>"
-            >
-                <?= _('Configuration') ?>
-            </a>
-        </li>
-    </ul>
-</nav>
 
 <form method="post" action="<?= url('update announcement', ['id' => $announcement->id]) ?>">
     <?php if ($error): ?>
