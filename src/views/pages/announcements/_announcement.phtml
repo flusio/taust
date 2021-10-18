@@ -17,7 +17,49 @@
         </div>
     </header>
 
+    <?php if ($announcement->status === 'finished'): ?>
+        <p class="post__notice">
+            <?php if ($announcement->type === 'maintenance'): ?>
+                <?= _('This maintenance is over.') ?>
+            <?php else: ?>
+                <?= _('This incident is over.') ?>
+            <?php endif; ?>
+        </p>
+    <?php endif; ?>
+
     <p class="post__content">
         <?= nl2br($announcement->content) ?>
     </p>
+
+    <?php if ($current_user): ?>
+        <footer class="post__actions">
+            <form method="post" action="<?= url('update announcement status', ['id' => $announcement->id]) ?>">
+                <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                <?php if ($announcement->status === 'ongoing'): ?>
+                    <input type="hidden" name="status" value="finished" />
+                    <button type="submit">
+                        <?= _('✔ Finish') ?>
+                    </button>
+                <?php else: ?>
+                    <input type="hidden" name="status" value="ongoing" />
+                    <button type="submit" class="button--ghost">
+                        <?= _('↻ Reactivate') ?>
+                    </button>
+                <?php endif; ?>
+            </form>
+
+            <div class="post__actions-group">
+                <a class="link--primary" href="<?= url('edit announcement', ['id' => $announcement->id]) ?>">
+                    <?= _('Edit') ?>
+                </a>
+
+                <form method="post" action="<?= url('delete announcement', ['id' => $announcement->id]) ?>">
+                    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                    <button type="submit">
+                        <?= _('Delete') ?>
+                    </button>
+                </form>
+            </div>
+        </footer>
+    <?php endif; ?>
 </article>

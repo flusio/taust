@@ -26,6 +26,7 @@
 
     flex: 1;
 
+    font-size: 1.2em;
     line-height: 1.2;
 }
 
@@ -40,7 +41,49 @@
     margin-top: 0.75em;
 }
 
+.post__notice {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+
+    color: var(--color-success);
+}
+
 .post__content {
     font-size: 1.2em;
     line-height: 1.4;
+}
+
+.post__actions {
+    display: flex;
+    margin-right: -1rem;
+    margin-left: -1rem;
+    margin-bottom: -1rem;
+    padding: 0.5rem 1rem;
+
+    align-items: stretch;
+    justify-content: space-between;
+
+    border-top: 2px solid var(--color-contrast);
+}
+
+.post__actions > * + * {
+    margin-left: 0.5rem;
+}
+
+.post__actions button {
+    height: 100%;
+}
+
+.post__actions-group {
+    display: flex;
+
+    align-items: stretch;
+}
+
+.post__actions-group > * + * {
+    margin-left: 0.5rem;
 }
