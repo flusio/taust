@@ -7,7 +7,8 @@ form {
     margin-bottom: 1rem;
     padding: 0.5rem;
 
-    border: 2px solid rgba(0, 0, 0, 0.4);
+    background-color: var(--color-secondary-shadow);
+    border: 2px solid rgba(0, 0, 0, 0.6);
     border-radius: 0.25rem;
 }
 
@@ -38,7 +39,7 @@ textarea {
     font-size: 1em;
     font-family: inherit;
 
-    border: 2px solid rgba(0, 0, 0, .3);
+    border: 2px solid rgba(0, 0, 0, .5);
     border-radius: .25em;
 
     transition: border-color .2s ease-in-out;
@@ -49,7 +50,8 @@ textarea {
     min-height: 8rem;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
     border-color: var(--color-secondary);
 }
 
@@ -62,7 +64,7 @@ select {
     font-size: 1em;
     text-overflow: ellipsis;
 
-    border: 2px solid rgba(0, 0, 0, .3);
+    border: 2px solid rgba(0, 0, 0, .5);
     border-radius: .25em;
 }
 
