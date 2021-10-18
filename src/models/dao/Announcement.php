@@ -10,16 +10,20 @@ class Announcement extends \Minz\DatabaseModel
         parent::__construct('announcements', 'id', $properties);
     }
 
-    public function listByPageId($page_id)
+    public function listByPageIdAfter($page_id, $after)
     {
         $sql = <<<'SQL'
             SELECT * FROM announcements
             WHERE page_id = ?
+            AND planned_at >= ?
             ORDER BY planned_at DESC
         SQL;
 
         $statement = $this->prepare($sql);
-        $statement->execute([$page_id]);
+        $statement->execute([
+            $page_id,
+            $after->format(\Minz\Model::DATETIME_FORMAT),
+        ]);
         return $statement->fetchAll();
     }
 }

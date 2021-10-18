@@ -159,7 +159,33 @@
         </details>
     <?php endif; ?>
 
-    <?php foreach ($announcements as $announcement): ?>
-        <?= $this->include('pages/announcements/_announcement.phtml', ['announcement' => $announcement]) ?>
-    <?php endforeach; ?>
+    <?php if (isset($announcements_by_days['future'])): ?>
+        <h2 class="posts__day"><?= _('Planned maintenance') ?></h2>
+
+        <?php foreach ($announcements_by_days['future'] as $announcement): ?>
+            <?= $this->include('pages/announcements/_announcement.phtml', ['announcement' => $announcement]) ?>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php $days_iterator = \Minz\Time::relative('today'); ?>
+    <?php $one_week = \Minz\Time::relative('today -1 week'); ?>
+    <?php while ($days_iterator > $one_week): ?>
+        <?php $day = $days_iterator->format('Y-m-d'); ?>
+
+        <h2 class="posts__day"><?= _d($days_iterator) ?></h2>
+
+        <?php if (isset($announcements_by_days[$day])): ?>
+            <?php foreach ($announcements_by_days[$day] as $announcement): ?>
+                <?= $this->include('pages/announcements/_announcement.phtml', ['announcement' => $announcement]) ?>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <article class="post post--placeholder">
+                <p>
+                    <?= _('No incidents reported.') ?>
+                </p>
+            </article>
+        <?php endif; ?>
+
+        <?php $days_iterator->modify('-1 day'); ?>
+    <?php endwhile; ?>
 </section>

@@ -77,7 +77,7 @@ class Pages
             'page' => $page,
             'domains' => $page->domains(),
             'servers' => $page->servers(),
-            'announcements' => $page->announcements(),
+            'announcements_by_days' => $page->weekAnnouncements(),
             'type' => 'maintenance',
             'planned_at' => \Minz\Time::now(),
             'title' => '',

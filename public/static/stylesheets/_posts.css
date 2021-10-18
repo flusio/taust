@@ -2,12 +2,23 @@
     margin-top: 5rem;
 }
 
+.posts__day {
+    max-width: 30rem;
+    margin-top: 5rem;
+
+    text-align: center;
+}
+
 .post {
     max-width: 30rem;
     padding: 1rem;
 
     background-color: var(--color-secondary-shadow);
     border-radius: 0.25rem;
+}
+
+.post--placeholder {
+    font-style: italic;
 }
 
 .post + .post {
@@ -29,6 +40,7 @@
     flex: 1;
 
     font-size: 1.2em;
+    font-weight: bold;
     line-height: 1.2;
 }
 

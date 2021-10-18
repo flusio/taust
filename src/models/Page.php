@@ -48,9 +48,23 @@ class Page extends \Minz\Model
         return Server::daoToList('listByPageId', $this->id);
     }
 
-    public function announcements()
+    public function weekAnnouncements()
     {
-        return Announcement::daoToList('listByPageId', $this->id);
+        $after = \Minz\Time::relative('today -1 week');
+        $announcements = Announcement::daoToList('listByPageIdAfter', $this->id, $after);
+
+        $tomorrow = \Minz\Time::relative('tomorrow');
+        $announcements_by_days = [];
+        foreach ($announcements as $announcement) {
+            if ($announcement->planned_at >= $tomorrow) {
+                $day = 'future';
+            } else {
+                $day = $announcement->planned_at->format('Y-m-d');
+            }
+            $announcements_by_days[$day][] = $announcement;
+        }
+
+        return $announcements_by_days;
     }
 
     public function validate()
