@@ -33,101 +33,105 @@
     </ul>
 </nav>
 
-<form method="post" action="<?= url('create announcement', ['id' => $page->id]) ?>">
-    <?php if ($error): ?>
-        <p class="form__error">
-            <?= $error ?>
-        </p>
-    <?php endif; ?>
+<details class="form__displayer">
+    <summary>Publish an announcement</summary>
 
-    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
-
-    <div class="form-group <?= isset($errors['type']) ? 'form-group--invalid' : '' ?>">
-        <label for="type">
-            <?= _('Type') ?>
-        </label>
-
-        <select id="type" name="type" required>
-            <option <?= $type === 'maintenance' ? 'selected' : '' ?> value="maintenance">
-                <?= _('🔧 Maintenance') ?>
-            </option>
-
-            <option <?= $type === 'incident' ? 'selected' : '' ?> value="incident">
-                <?= _('🔥 Incident') ?>
-            </option>
-        </select>
-
-        <?php if (isset($errors['type'])): ?>
-            <p class="form-group__error">
-                <?= $errors['type'] ?>
+    <form method="post" action="<?= url('create announcement', ['id' => $page->id]) ?>">
+        <?php if ($error): ?>
+            <p class="form__error">
+                <?= $error ?>
             </p>
         <?php endif; ?>
-    </div>
 
-    <div class="form-group <?= isset($errors['planned_at']) ? 'form-group--invalid' : '' ?>">
-        <label for="planned-at">
-            <?= _('Date') ?>
-        </label>
+        <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
 
-        <input
-            id="planned-at"
-            name="planned_at"
-            type="datetime-local"
-            value="<?= _d($planned_at, '%FT%H:%M') ?>"
-            required
-        />
+        <div class="form-group <?= isset($errors['type']) ? 'form-group--invalid' : '' ?>">
+            <label for="type">
+                <?= _('Type') ?>
+            </label>
 
-        <?php if (isset($errors['planned_at'])): ?>
-            <p class="form-group__error">
-                <?= $errors['planned_at'] ?>
-            </p>
-        <?php endif; ?>
-    </div>
+            <select id="type" name="type" required>
+                <option <?= $type === 'maintenance' ? 'selected' : '' ?> value="maintenance">
+                    <?= _('🔧 Maintenance') ?>
+                </option>
 
-    <div class="form-group <?= isset($errors['title']) ? 'form-group--invalid' : '' ?>">
-        <label for="title">
-            <?= _('Title') ?>
-        </label>
+                <option <?= $type === 'incident' ? 'selected' : '' ?> value="incident">
+                    <?= _('🔥 Incident') ?>
+                </option>
+            </select>
 
-        <input
-            id="title"
-            name="title"
-            type="text"
-            value="<?= $title ?>"
-            required
-        />
+            <?php if (isset($errors['type'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['type'] ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-        <?php if (isset($errors['title'])): ?>
-            <p class="form-group__error">
-                <?= $errors['title'] ?>
-            </p>
-        <?php endif; ?>
-    </div>
+        <div class="form-group <?= isset($errors['planned_at']) ? 'form-group--invalid' : '' ?>">
+            <label for="planned-at">
+                <?= _('Date') ?>
+            </label>
 
-    <div class="form-group <?= isset($errors['content']) ? 'form-group--invalid' : '' ?>">
-        <label for="content">
-            <?= _('Content') ?>
-        </label>
+            <input
+                id="planned-at"
+                name="planned_at"
+                type="datetime-local"
+                value="<?= _d($planned_at, '%FT%H:%M') ?>"
+                required
+            />
 
-        <textarea
-            id="content"
-            name="content"
-            required
-        ><?= $content ?></textarea>
+            <?php if (isset($errors['planned_at'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['planned_at'] ?>
+                </p>
+            <?php endif; ?>
+        </div>
 
-        <?php if (isset($errors['content'])): ?>
-            <p class="form-group__error">
-                <?= $errors['content'] ?>
-            </p>
-        <?php endif; ?>
-    </div>
+        <div class="form-group <?= isset($errors['title']) ? 'form-group--invalid' : '' ?>">
+            <label for="title">
+                <?= _('Title') ?>
+            </label>
 
-    <div class="form__actions">
-        <button type="submit" class="button--primary">
-            <?= _('Publish announcement') ?>
-        </button>
-    </div>
-</form>
+            <input
+                id="title"
+                name="title"
+                type="text"
+                value="<?= $title ?>"
+                required
+            />
+
+            <?php if (isset($errors['title'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['title'] ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <div class="form-group <?= isset($errors['content']) ? 'form-group--invalid' : '' ?>">
+            <label for="content">
+                <?= _('Content') ?>
+            </label>
+
+            <textarea
+                id="content"
+                name="content"
+                required
+            ><?= $content ?></textarea>
+
+            <?php if (isset($errors['content'])): ?>
+                <p class="form-group__error">
+                    <?= $errors['content'] ?>
+                </p>
+            <?php endif; ?>
+        </div>
+
+        <div class="form__actions">
+            <button type="submit" class="button--primary">
+                <?= _('Publish announcement') ?>
+            </button>
+        </div>
+    </form>
+</details>
 
 <section class="posts">
     <?php foreach ($announcements as $announcement): ?>

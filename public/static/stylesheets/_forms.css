@@ -2,6 +2,25 @@ form {
     max-width: 30rem;
 }
 
+.form__displayer {
+    max-width: 30rem;
+    padding: 0.5rem;
+
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 0.25rem;
+}
+
+.form__displayer summary {
+    list-style-type: "+ ";
+    cursor: pointer;
+}
+
+.form__displayer[open] summary {
+    color: var(--color-main-muted);
+
+    list-style-type: "- ";
+}
+
 label {
     display: block;
     margin-bottom: .5em;
