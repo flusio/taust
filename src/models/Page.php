@@ -48,6 +48,18 @@ class Page extends \Minz\Model
         return Server::daoToList('listByPageId', $this->id);
     }
 
+    public function announcementsByYears()
+    {
+        $announcements = Announcement::daoToList('listByPageId', $this->id);
+        $announcements_by_years = [];
+        foreach ($announcements as $announcement) {
+            $year = $announcement->planned_at->format('Y');
+            $announcements_by_years[$year][] = $announcement;
+        }
+
+        return $announcements_by_years;
+    }
+
     public function weekAnnouncements()
     {
         $after = \Minz\Time::relative('today -1 week');

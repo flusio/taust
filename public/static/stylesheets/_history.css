@@ -1,0 +1,21 @@
+.history__list {
+    margin-bottom: 4rem;
+    padding-left: 0;
+}
+
+.history__item {
+    display: flex;
+
+    align-items: baseline;
+}
+
+.history__item + .history__item {
+    margin-top: 1rem;
+}
+
+.history__date {
+    width: 4.5rem;
+    margin-right: 1rem;
+
+    text-align: right;
+}

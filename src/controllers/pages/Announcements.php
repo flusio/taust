@@ -8,6 +8,20 @@ use taust\utils;
 
 class Announcements
 {
+    public function index($request)
+    {
+        $id = $request->param('id');
+        $page = models\Page::find($id);
+        if (!$page) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        return Response::ok('pages/announcements/index.phtml', [
+            'page' => $page,
+            'announcements_by_years' => $page->announcementsByYears(),
+        ]);
+    }
+
     public function create($request)
     {
         $current_user = utils\CurrentUser::get();

@@ -1,0 +1,25 @@
+<?php
+    $this->layout('announcement.phtml', [
+        'title' => _('History of announcements'),
+        'page' => $page,
+    ]);
+?>
+
+<h1><?= _('History of announcements') ?></h1>
+
+<?php foreach ($announcements_by_years as $year => $announcements): ?>
+    <h2 class="history__year"><?= $year ?></h2>
+
+    <ul class="history__list">
+        <?php foreach ($announcements as $announcement): ?>
+            <li class="history__item">
+                <span class="history__date"><?= _d($announcement->planned_at, '%d %h') ?></span>
+                <div class="history__title">
+                    <a href="<?= url('show announcement', ['id' => $announcement->id]) ?>">
+                        <?= $this->protect($announcement->title) ?>
+                    </a>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endforeach; ?>

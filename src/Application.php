@@ -35,7 +35,7 @@ class Application
             utils\CurrentUser::set($user_id);
         }
 
-        if ($this->page && $request->path() === '/') {
+        if ($this->page && !$request->param('id')) {
             $request->setParam('id', $this->page->id);
         }
 

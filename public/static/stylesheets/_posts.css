@@ -9,6 +9,16 @@
     text-align: center;
 }
 
+.posts__history {
+    display: block;
+    max-width: 30rem;
+    margin-top: 4rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    text-align: center;
+}
+
 .post {
     max-width: 30rem;
     padding: 1rem;

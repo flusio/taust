@@ -188,4 +188,14 @@
 
         <?php $days_iterator->modify('-1 day'); ?>
     <?php endwhile; ?>
+
+    <?php if ($is_app_page): ?>
+        <a class="posts__history" href="<?= url('page announcements') ?>">
+            <?= _('Announcements history') ?>
+        </a>
+    <?php else: ?>
+        <a class="posts__history" href="<?= url('page announcements', ['id' => $page->id]) ?>">
+            <?= _('Announcements history') ?>
+        </a>
+    <?php endif; ?>
 </section>
