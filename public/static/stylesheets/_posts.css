@@ -23,6 +23,8 @@
 .post__title {
     margin-top: 0;
     margin-bottom: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 
     flex: 1;
 
@@ -35,6 +37,10 @@
 
     color: var(--color-main-muted);
     text-align: right;
+}
+
+.post__info > * {
+    display: block;
 }
 
 .post__info > * + * {

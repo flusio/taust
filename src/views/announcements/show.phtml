@@ -1,0 +1,41 @@
+<?php
+    $this->layout('announcement.phtml', [
+        'title' => $this->protect($announcement->title),
+        'page' => $page,
+        'navigation_active' => 'pages',
+    ]);
+?>
+
+<article class="post">
+    <header class="post__header">
+        <h1 class="post__title"><?= $this->protect($announcement->title) ?></h1>
+
+        <div class="post__info">
+            <div>
+                <?php if ($announcement->type === 'maintenance'): ?>
+                    <?= _('🔧 Maintenance') ?>
+                <?php else: ?>
+                    <?= _('🔥 Incident') ?>
+                <?php endif; ?>
+            </div>
+
+            <div>
+                <?= _d($announcement->planned_at, '%a %e %b, %H:%M') ?>
+            </div>
+        </div>
+    </header>
+
+    <?php if ($announcement->status === 'finished'): ?>
+        <p class="post__notice">
+            <?php if ($announcement->type === 'maintenance'): ?>
+                <?= _('This maintenance is over.') ?>
+            <?php else: ?>
+                <?= _('This incident is over.') ?>
+            <?php endif; ?>
+        </p>
+    <?php endif; ?>
+
+    <div class="post__content">
+        <?= $announcement->htmlContent() ?>
+    </div>
+</article>

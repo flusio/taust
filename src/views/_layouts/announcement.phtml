@@ -1,0 +1,19 @@
+<?php $this->layout('base.phtml', ['title' => $title]); ?>
+
+<div class="layout layout--page">
+    <main class="layout__content">
+        <nav class="layout__back">
+            <?php if ($is_app_page): ?>
+                <a href="<?= url('home') ?>">
+                    <?= $this->protect($page->title) ?>
+                </a>
+            <?php else: ?>
+                <a href="<?= url('show page', ['id' => $page->id]) ?>">
+                    <?= $this->protect($page->title) ?>
+                </a>
+            <?php endif; ?>
+        </nav>
+
+        <?= $this->safe('content') ?>
+    </main>
+</div>

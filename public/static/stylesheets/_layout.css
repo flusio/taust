@@ -45,6 +45,20 @@ body {
     margin-right: auto;
 }
 
+.layout__back a {
+    display: block;
+    max-width: 30rem;
+    margin-top: -1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+
+    font-weight: bold;
+}
+
+.layout__back a::before {
+    content: '↩ ';
+}
+
 .aside--layout {
     min-width: 13rem;
 

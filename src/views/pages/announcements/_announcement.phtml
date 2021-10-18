@@ -11,9 +11,9 @@
                 <?php endif; ?>
             </div>
 
-            <div>
+            <a href="<?= url('show announcement', ['id' => $announcement->id]) ?>">
                 <?= _d($announcement->planned_at, '%a %e %b, %H:%M') ?>
-            </div>
+            </a>
         </div>
     </header>
 

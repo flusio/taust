@@ -8,6 +8,22 @@ use taust\utils;
 
 class Announcements
 {
+    public function show($request)
+    {
+        $id = $request->param('id');
+        $announcement = models\Announcement::find($id);
+        if (!$announcement) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        $page = models\Page::find($announcement->page_id);
+
+        return Response::ok('announcements/show.phtml', [
+            'page' => $page,
+            'announcement' => $announcement,
+        ]);
+    }
+
     public function edit($request)
     {
         $current_user = utils\CurrentUser::get();

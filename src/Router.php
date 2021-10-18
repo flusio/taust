@@ -53,6 +53,7 @@ class Router
         $router->addRoute('get', '/pages/:id/announcements', 'pages/Announcements#index', 'announcements');
         $router->addRoute('post', '/pages/:id/announcements', 'pages/Announcements#create', 'create announcement');
 
+        $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
         $router->addRoute('get', '/announcements/:id/edit', 'Announcements#edit', 'edit announcement');
         $router->addRoute('post', '/announcements/:id/edit', 'Announcements#update', 'update announcement');
         $router->addRoute('post', '/announcements/:id/status', 'Announcements#updateStatus', 'update announcement status');
@@ -73,6 +74,7 @@ class Router
         $router = new \Minz\Router();
 
         $router->addRoute('get', '/', 'Pages#show', 'home');
+        $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
 
         return $router;
     }
