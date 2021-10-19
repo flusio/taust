@@ -16,10 +16,10 @@
 
     <div class="form-group <?= isset($errors['domain_ids']) ? 'form-group--invalid' : '' ?>">
         <label for="domain-ids">
-            <?= _('Domains') ?>
+            <?= _('Domains (optional)') ?>
         </label>
 
-        <select id="domain-ids" name="domain_ids[]" multiple required>
+        <select id="domain-ids" name="domain_ids[]" multiple>
             <?php foreach ($domains as $domain): ?>
                 <option <?= in_array($domain->id, $domain_ids) ? 'selected' : '' ?> value="<?= $domain->id ?>">
                     <?= protect($domain->id) ?>
@@ -36,10 +36,10 @@
 
     <div class="form-group <?= isset($errors['server_ids']) ? 'form-group--invalid' : '' ?>">
         <label for="server-ids">
-            <?= _('Servers') ?>
+            <?= _('Servers (optional)') ?>
         </label>
 
-        <select id="server-ids" name="server_ids[]" multiple required>
+        <select id="server-ids" name="server_ids[]" multiple>
             <?php foreach ($servers as $server): ?>
                 <option <?= in_array($server->id, $server_ids) ? 'selected' : '' ?> value="<?= $server->id ?>">
                     <?= protect($server->hostname) ?>
