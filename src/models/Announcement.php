@@ -2,6 +2,8 @@
 
 namespace taust\models;
 
+use taust\utils;
+
 class Announcement extends \Minz\Model
 {
     use DaoConnector;
@@ -49,7 +51,7 @@ class Announcement extends \Minz\Model
     public static function initIncident($page_id, $planned_at, $title, $content)
     {
         return new self([
-            'id' => bin2hex(random_bytes(16)),
+            'id' => utils\Random::timebased(),
             'planned_at' => $planned_at,
             'type' => 'incident',
             'status' => 'ongoing',
@@ -62,7 +64,7 @@ class Announcement extends \Minz\Model
     public static function initMaintenance($page_id, $planned_at, $title, $content)
     {
         return new self([
-            'id' => bin2hex(random_bytes(16)),
+            'id' => utils\Random::timebased(),
             'planned_at' => $planned_at,
             'type' => 'maintenance',
             'status' => 'ongoing',

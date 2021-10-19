@@ -2,6 +2,8 @@
 
 namespace taust\models;
 
+use taust\utils;
+
 class User extends \Minz\Model
 {
     use DaoConnector;
@@ -46,7 +48,7 @@ class User extends \Minz\Model
     public static function init($username, $password)
     {
         return new self([
-            'id' => bin2hex(random_bytes(16)),
+            'id' => utils\Random::timebased(),
             'username' => trim($username),
             'password_hash' => $password ? password_hash($password, PASSWORD_BCRYPT) : '',
         ]);

@@ -2,6 +2,8 @@
 
 namespace taust\models;
 
+use taust\utils;
+
 class Server extends \Minz\Model
 {
     use DaoConnector;
@@ -59,11 +61,11 @@ class Server extends \Minz\Model
         }
 
         return new self([
-            'id' => bin2hex(random_bytes(16)),
+            'id' => utils\Random::timebased(),
             'hostname' => $hostname,
             'ipv4' => $dns_A,
             'ipv6' => $dns_AAAA,
-            'auth_token' => bin2hex(random_bytes(64)),
+            'auth_token' => utils\Random::hex(128),
         ]);
     }
 

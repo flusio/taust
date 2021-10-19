@@ -2,6 +2,8 @@
 
 namespace taust\models;
 
+use taust\utils;
+
 class Page extends \Minz\Model
 {
     use DaoConnector;
@@ -32,7 +34,7 @@ class Page extends \Minz\Model
     public static function init($title)
     {
         return new self([
-            'id' => bin2hex(random_bytes(16)),
+            'id' => utils\Random::timebased(),
             'title' => $title,
             'hostname' => '',
         ]);
