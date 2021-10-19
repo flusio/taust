@@ -52,7 +52,8 @@ CREATE TABLE pages (
     id TEXT PRIMARY KEY,
     created_at TIMESTAMPTZ NOT NULL,
     title TEXT NOT NULL,
-    hostname TEXT NOT NULL DEFAULT ''
+    hostname TEXT NOT NULL DEFAULT '',
+    style TEXT NOT NULL DEFAULT ''
 );
 
 CREATE TABLE pages_to_domains (

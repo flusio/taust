@@ -5,7 +5,11 @@
         <meta name="viewport" content="initial-scale=1.0" />
         <link rel="shortcut icon" href="<?= url_public('favicon.ico') ?>">
 
-        <link rel="stylesheet" href="<?= url_static('stylesheets/application.css') ?>" data-turbolinks-track="reload">
+        <?php if (isset($custom_style_url)): ?>
+            <link rel="stylesheet" href="<?= $custom_style_url ?>" data-turbolinks-track="reload">
+        <?php else: ?>
+            <link rel="stylesheet" href="<?= url_static('stylesheets/application.css') ?>" data-turbolinks-track="reload">
+        <?php endif; ?>
 
         <script src="<?= url_static('javascripts/turbolinks.js') ?>" defer data-turbolinks-track="reload"></script>
 

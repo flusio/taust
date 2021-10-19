@@ -29,6 +29,10 @@ class Page extends \Minz\Model
         'hostname' => [
             'type' => 'string',
         ],
+
+        'style' => [
+            'type' => 'string',
+        ],
     ];
 
     public static function init($title)
@@ -37,6 +41,7 @@ class Page extends \Minz\Model
             'id' => utils\Random::timebased(),
             'title' => $title,
             'hostname' => '',
+            'style' => '',
         ]);
     }
 

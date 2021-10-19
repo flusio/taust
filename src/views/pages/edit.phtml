@@ -81,6 +81,20 @@
         <?php endif; ?>
     </div>
 
+    <div class="form-group <?= isset($errors['style']) ? 'form-group--invalid' : '' ?>">
+        <label for="style">
+            <?= _('Custom style (optional)') ?>
+        </label>
+
+        <textarea id="style" name="style" spellcheck="false"><?= $style ?></textarea>
+
+        <?php if (isset($errors['style'])): ?>
+            <p class="form-group__error">
+                <?= $errors['style'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
     <div class="form__actions">
         <button type="submit" class="button--primary">
             <?= _('Save changes') ?>

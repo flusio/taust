@@ -101,6 +101,19 @@ class Pages
         return $response;
     }
 
+    public function style($request)
+    {
+        $id = $request->param('id');
+        $page = models\Page::find($id);
+        if (!$page) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        $response = Response::text(200, $page->style);
+        $response->setHeader('Content-Type', 'text/css');
+        return $response;
+    }
+
     public function edit($request)
     {
         $current_user = utils\CurrentUser::get();
@@ -124,6 +137,7 @@ class Pages
             'servers' => $servers,
             'domains' => $domains,
             'hostname' => $page->hostname,
+            'style' => $page->style,
         ]);
     }
 
@@ -139,6 +153,7 @@ class Pages
         $domain_ids = $request->paramArray('domain_ids', []);
         $server_ids = $request->paramArray('server_ids', []);
         $hostname = $request->param('hostname');
+        $style = $request->param('style');
 
         $page = models\Page::find($id);
         $servers = models\Server::daoToList('listAllOrderById');
@@ -156,6 +171,7 @@ class Pages
                 'servers' => $servers,
                 'domains' => $domains,
                 'hostname' => $hostname,
+                'style' => $style,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
             ]);
         }
@@ -171,6 +187,7 @@ class Pages
                 'servers' => $servers,
                 'domains' => $domains,
                 'hostname' => $hostname,
+                'style' => $style,
                 'errors' => [
                     'hostname' => _('A page already has the same hostname.'),
                 ],
@@ -178,6 +195,7 @@ class Pages
         }
 
         $page->hostname = $hostname;
+        $page->style = $style;
         $page->save();
 
         models\PageToDomain::set($page->id, $domain_ids);

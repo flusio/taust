@@ -5,12 +5,21 @@
         $feed_url = url_full('page feed', ['id' => $page->id]);
     }
 
+    if ($page->style && $is_app_page) {
+        $custom_style_url = url('page style');
+    } elseif ($page->style) {
+        $custom_style_url = url('page style', ['id' => $page->id]);
+    } else {
+        $custom_style_url = null;
+    }
+
     $this->layout('base.phtml', [
         'title' => $title,
         'feed' => [
             'url' => $feed_url,
             'title' => $this->protect($page->title),
         ],
+        'custom_style_url' => $custom_style_url,
     ]);
 ?>
 

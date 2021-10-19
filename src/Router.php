@@ -47,6 +47,7 @@ class Router
         $router->addRoute('post', '/pages/new', 'Pages#create', 'create page');
         $router->addRoute('get', '/pages/:id', 'Pages#show', 'show page');
         $router->addRoute('get', '/pages/:id/feed', 'Pages#feed', 'page feed');
+        $router->addRoute('get', '/pages/:id/style', 'Pages#style', 'page style');
         $router->addRoute('post', '/pages/:id', 'pages/Announcements#create', 'create announcement');
         $router->addRoute('get', '/pages/:id/announcements', 'pages/Announcements#index', 'page announcements');
         $router->addRoute('get', '/pages/:id/edit', 'Pages#edit', 'edit page');
@@ -76,6 +77,7 @@ class Router
 
         $router->addRoute('get', '/', 'Pages#show', 'home');
         $router->addRoute('get', '/feed', 'Pages#feed', 'page feed');
+        $router->addRoute('get', '/style', 'Pages#style', 'page style');
         $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
         $router->addRoute('get', '/announcements', 'pages/Announcements#index', 'page announcements');
 
