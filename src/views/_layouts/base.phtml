@@ -9,6 +9,10 @@
 
         <script src="<?= url_static('javascripts/turbolinks.js') ?>" defer data-turbolinks-track="reload"></script>
 
+        <?php if (isset($feed)): ?>
+            <link href="<?= $feed['url'] ?>" type="application/atom+xml" rel="alternate" title="<?= $feed['title'] ?>" />
+        <?php endif; ?>
+
         <title><?= $title ?> · taust</title>
     </head>
 

@@ -50,6 +50,11 @@ class Page extends \Minz\Model
         return Server::daoToList('listByPageId', $this->id);
     }
 
+    public function announcements()
+    {
+        return Announcement::daoToList('listByPageId', $this->id);
+    }
+
     public function announcementsByYears()
     {
         $announcements = Announcement::daoToList('listByPageId', $this->id);
@@ -79,6 +84,13 @@ class Page extends \Minz\Model
         }
 
         return $announcements_by_days;
+    }
+
+    public function tagUri()
+    {
+        $host = \Minz\Configuration::$url_options['host'];
+        $date = $this->created_at->format('Y-m-d');
+        return "tag:{$host},{$date}:pages/{$this->id}";
     }
 
     public function validate()

@@ -79,4 +79,11 @@ class Announcement extends \Minz\Model
         $parsedown = new \Parsedown();
         return $parsedown->text($this->content);
     }
+
+    public function tagUri()
+    {
+        $host = \Minz\Configuration::$url_options['host'];
+        $date = $this->created_at->format('Y-m-d');
+        return "tag:{$host},{$date}:announcements/{$this->id}";
+    }
 }

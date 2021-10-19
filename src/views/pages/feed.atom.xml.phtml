@@ -1,0 +1,38 @@
+<?= '<?xml version="1.0" encoding="UTF-8" ?>' . "\n" ?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <title><?= protect($page->title) ?></title>
+
+    <?php if ($is_app_page): ?>
+        <link href="<?= url_full('home') ?>" rel="alternate" type="text/html" />
+        <link href="<?= url_full('page feed') ?>" rel="self" type="application/atom+xml" />
+    <?php else: ?>
+        <link href="<?= url_full('show page', ['id' => $page->id]) ?>" rel="alternate" type="text/html" />
+        <link href="<?= url_full('page feed', ['id' => $page->id]) ?>" rel="self" type="application/atom+xml" />
+    <?php endif; ?>
+
+    <id><?= $page->tagUri() ?></id>
+    <author>
+        <name><?= _('The taust robot') ?></name>
+    </author>
+    <generator>taust</generator>
+
+    <?php if (isset($announcements[0])): ?>
+        <updated><?= $announcements[0]->created_at->format(\DateTimeInterface::ATOM) ?></updated>
+    <?php else: ?>
+        <updated><?= \Minz\Time::now()->format(\DateTimeInterface::ATOM) ?></updated>
+    <?php endif; ?>
+
+    <?php foreach ($announcements as $announcement): ?>
+        <entry>
+            <title>[<?= _d($announcement->planned_at, '%e %h %Y') ?>] <?= protect($announcement->title) ?></title>
+            <id><?= $announcement->tagUri() ?></id>
+
+            <link href="<?= url_full('show announcement', ['id' => $announcement->id]) ?>" rel="alternate" type="text/html" />
+
+            <published><?= $announcement->created_at->format(\DateTimeInterface::ATOM) ?></published>
+            <updated><?= $announcement->created_at->format(\DateTimeInterface::ATOM) ?></updated>
+
+            <content type="html"><![CDATA[<?= $announcement->htmlContent() ?>]]></content>
+        </entry>
+    <?php endforeach; ?>
+</feed>

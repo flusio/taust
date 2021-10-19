@@ -1,4 +1,18 @@
-<?php $this->layout('base.phtml', ['title' => $title]); ?>
+<?php
+    if ($is_app_page) {
+        $feed_url = url_full('page feed');
+    } else {
+        $feed_url = url_full('page feed', ['id' => $page->id]);
+    }
+
+    $this->layout('base.phtml', [
+        'title' => $title,
+        'feed' => [
+            'url' => $feed_url,
+            'title' => $this->protect($page->title),
+        ],
+    ]);
+?>
 
 <div class="layout layout--page">
     <main class="layout__content">

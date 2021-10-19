@@ -85,6 +85,22 @@ class Pages
         ]);
     }
 
+    public function feed($request)
+    {
+        $id = $request->param('id');
+        $page = models\Page::find($id);
+        if (!$page) {
+            return Response::notFound('not_found.phtml');
+        }
+
+        $response = Response::ok('pages/feed.atom.xml.phtml', [
+            'page' => $page,
+            'announcements' => $page->announcements(),
+        ]);
+        $response->setHeader('Content-Type', 'application/atom+xml;charset=UTF-8');
+        return $response;
+    }
+
     public function edit($request)
     {
         $current_user = utils\CurrentUser::get();
