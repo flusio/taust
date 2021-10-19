@@ -103,7 +103,7 @@ class Announcements
 
         $announcement->save();
 
-        return Response::redirect('show page', ['id' => $page->id]);
+        return Response::redirect('show announcement', ['id' => $announcement->id]);
     }
 
     public function updateStatus($request)
@@ -136,7 +136,7 @@ class Announcements
 
         $announcement->save();
 
-        return Response::redirect('show page', ['id' => $page->id]);
+        return Response::redirect('show announcement', ['id' => $announcement->id]);
     }
 
     public function delete($request)

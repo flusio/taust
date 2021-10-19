@@ -38,4 +38,42 @@
     <div class="post__content">
         <?= $announcement->htmlContent() ?>
     </div>
+
+    <?php if ($current_user): ?>
+        <footer class="post__actions">
+            <form method="post" action="<?= url('update announcement status', ['id' => $announcement->id]) ?>">
+                <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                <?php if ($announcement->status === 'ongoing'): ?>
+                    <input type="hidden" name="status" value="finished" />
+                    <button type="submit">
+                        <?= _('✔ Finish') ?>
+                    </button>
+                <?php else: ?>
+                    <input type="hidden" name="status" value="ongoing" />
+                    <button type="submit" class="button--ghost">
+                        <?= _('↻ Reactivate') ?>
+                    </button>
+                <?php endif; ?>
+            </form>
+
+            <div class="post__actions-group">
+                <a class="link--primary" href="<?= url('edit announcement', ['id' => $announcement->id]) ?>">
+                    <?= _('Edit') ?>
+                </a>
+
+                <form
+                    method="post"
+                    action="<?= url('delete announcement', ['id' => $announcement->id]) ?>"
+                    data-controller="confirmation"
+                    data-action="confirmation#confirm"
+                    data-confirmation-message-value="<?= _('Are you sure that you want to delete this announcement?') ?>"
+                >
+                    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                    <button type="submit">
+                        <?= _('Delete') ?>
+                    </button>
+                </form>
+            </div>
+        </footer>
+    <?php endif; ?>
 </article>
