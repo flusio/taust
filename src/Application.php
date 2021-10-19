@@ -19,7 +19,12 @@ class Application
         $pages_by_hostnames = models\Page::daoToList('listByHostnames');
         if (isset($pages_by_hostnames[$app_hostname])) {
             $parsed_hostname = parse_url($app_hostname);
-            \Minz\Configuration::$url_options['host'] = $parsed_hostname['host'];
+            if (isset($parsed_hostname['host'])) {
+                \Minz\Configuration::$url_options['host'] = $parsed_hostname['host'];
+            } else {
+                \Minz\Configuration::$url_options['host'] = $app_hostname;
+            }
+
             if (isset($parsed_hostname['port'])) {
                 \Minz\Configuration::$url_options['port'] = $parsed_hostname['port'];
             }
