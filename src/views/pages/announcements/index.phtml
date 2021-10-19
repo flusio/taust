@@ -15,6 +15,12 @@
             <li class="history__item">
                 <span class="history__date"><?= _d($announcement->planned_at, '%d %h') ?></span>
                 <div class="history__title">
+                    <?php if ($announcement->type === 'maintenance'): ?>
+                        <span title="<?= _('Maintenance') ?>">🔧</span>
+                    <?php else: ?>
+                        <span title="<?= _('Incident') ?>">🔥</span>
+                    <?php endif; ?>
+
                     <a href="<?= url('show announcement', ['id' => $announcement->id]) ?>">
                         <?= $this->protect($announcement->title) ?>
                     </a>
