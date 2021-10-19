@@ -63,7 +63,7 @@
 <section class="posts">
     <?php if ($current_user): ?>
         <details class="form__displayer" <?= ($error || $errors) ? 'open' : '' ?>>
-            <summary>Publish an announcement</summary>
+            <summary><?= _('Publish an announcement') ?></summary>
 
             <form method="post" action="<?= url('create announcement', ['id' => $page->id]) ?>">
                 <?php if ($error): ?>
