@@ -55,7 +55,7 @@
     <ul class="list">
         <li
             class="list__item list__item--gauge"
-            style="--gauge-value: <?= $metric->memoryUsedPercent() ?>%;"
+            style="--gauge-value: <?= format_number($metric->memoryUsedPercent(), 2, '') ?>%;"
         >
             <?= _f('%s used on %s', format_bytes($metric->memoryUsed()), format_bytes($metric->memoryTotal())) ?>
             (<?= format_number($metric->memoryUsedPercent()) ?>&nbsp;%)
@@ -68,9 +68,9 @@
         <?php foreach ($metric->cpuPercents() as $cpu_id => $percent): ?>
             <li
                 class="list__item list__item--gauge"
-                style="--gauge-value: <?= $percent ?>%;"
+                style="--gauge-value: <?= format_number($percent, 2, '') ?>%;"
             >
-                <?= _f('CPU%d', $cpu_id + 1) ?>: <?= $percent ?>&nbsp;%
+                <?= _f('CPU%d', $cpu_id + 1) ?>: <?= format_number($percent, 1) ?>&nbsp;%
             </li>
         <?php endforeach; ?>
     </ul>
@@ -81,7 +81,7 @@
         <?php foreach ($metric->disks() as $disk): ?>
             <li
                 class="list__item list__item--gauge"
-                style="--gauge-value: <?= $metric->diskUsedPercent($disk) ?>%;"
+                style="--gauge-value: <?= format_number($metric->diskUsedPercent($disk), 2, '') ?>%;"
             >
                 <code><?= $disk->name ?></code><br />
                 <?= _f('%s used on %s', format_bytes($metric->diskUsed($disk)), format_bytes($disk->total)) ?>

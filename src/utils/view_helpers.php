@@ -1,8 +1,8 @@
 <?php
 
-function format_number($number)
+function format_number($number, $precision = 2, $thousands_separator = '&nbsp;')
 {
-    return number_format($number, 2, '.', '&nbsp;');
+    return number_format($number, $precision, '.', $thousands_separator);
 }
 
 function format_bytes($size, $precision = 2)
@@ -10,7 +10,7 @@ function format_bytes($size, $precision = 2)
     $base = log($size, 1024);
     $suffixes = array('', 'K', 'M', 'G', 'T');
 
-    return round(pow(1024, $base - floor($base)), $precision) . '&nbsp;' . $suffixes[floor($base)];
+    return format_number(pow(1024, $base - floor($base)), $precision) . '&nbsp;' . $suffixes[floor($base)];
 }
 
 function locale_to_bcp_47($locale)
