@@ -50,7 +50,13 @@
 <section class="section--danger">
     <h2><?= _('Danger zone 😈') ?></h2>
 
-    <form method="post" action="<?= url('delete domain', ['id' => $domain->id]) ?>">
+    <form
+        method="post"
+        action="<?= url('delete domain', ['id' => $domain->id]) ?>"
+        data-controller="confirmation"
+        data-action="confirmation#confirm"
+        data-confirmation-message-value="<?= _('Are you sure that you want to stop to monitor this domain?') ?>"
+    >
         <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
         <button type="submit">
             <?= _('Stop monitoring this domain') ?>

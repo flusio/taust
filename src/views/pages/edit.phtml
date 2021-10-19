@@ -91,7 +91,13 @@
 <section class="section--danger">
     <h2><?= _('Danger zone 😈') ?></h2>
 
-    <form method="post" action="<?= url('delete page', ['id' => $page->id]) ?>">
+    <form
+        method="post"
+        action="<?= url('delete page', ['id' => $page->id]) ?>"
+        data-controller="confirmation"
+        data-action="confirmation#confirm"
+        data-confirmation-message-value="<?= _('Are you sure that you want to delete this page?') ?>"
+    >
         <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
         <button type="submit">
             <?= _('Delete this status page') ?>

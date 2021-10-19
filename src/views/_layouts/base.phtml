@@ -9,6 +9,11 @@
 
         <script src="<?= url_static('javascripts/turbolinks.js') ?>" defer data-turbolinks-track="reload"></script>
 
+        <?php if ($current_user): ?>
+            <script type="module" src="<?= url_static('javascripts/stimulus.3.0.1.js') ?>" defer data-turbolinks-track="reload"></script>
+            <script type="module" src="<?= url_static('javascripts/application.js') ?>" defer data-turbolinks-track="reload"></script>
+        <?php endif; ?>
+
         <?php if (isset($feed)): ?>
             <link href="<?= $feed['url'] ?>" type="application/atom+xml" rel="alternate" title="<?= $feed['title'] ?>" />
         <?php endif; ?>
