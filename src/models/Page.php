@@ -33,6 +33,11 @@ class Page extends \Minz\Model
         'style' => [
             'type' => 'string',
         ],
+
+        'locale' => [
+            'type' => 'string',
+            'required' => true,
+        ],
     ];
 
     public static function init($title)
@@ -42,6 +47,7 @@ class Page extends \Minz\Model
             'title' => $title,
             'hostname' => '',
             'style' => '',
+            'locale' => 'auto',
         ]);
     }
 

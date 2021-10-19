@@ -138,6 +138,7 @@ class Pages
             'domains' => $domains,
             'hostname' => $page->hostname,
             'style' => $page->style,
+            'locale' => $page->locale,
         ]);
     }
 
@@ -154,6 +155,7 @@ class Pages
         $server_ids = $request->paramArray('server_ids', []);
         $hostname = $request->param('hostname');
         $style = $request->param('style');
+        $locale = $request->param('locale');
 
         $page = models\Page::find($id);
         $servers = models\Server::daoToList('listAllOrderById');
@@ -172,6 +174,7 @@ class Pages
                 'domains' => $domains,
                 'hostname' => $hostname,
                 'style' => $style,
+                'locale' => $locale,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
             ]);
         }
@@ -188,6 +191,7 @@ class Pages
                 'domains' => $domains,
                 'hostname' => $hostname,
                 'style' => $style,
+                'locale' => $locale,
                 'errors' => [
                     'hostname' => _('A page already has the same hostname.'),
                 ],
@@ -196,6 +200,7 @@ class Pages
 
         $page->hostname = $hostname;
         $page->style = $style;
+        $page->locale = $locale;
         $page->save();
 
         models\PageToDomain::set($page->id, $domain_ids);

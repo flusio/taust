@@ -95,6 +95,32 @@
         <?php endif; ?>
     </div>
 
+    <div class="form-group <?= isset($errors['locale']) ? 'form-group--invalid' : '' ?>">
+        <label for="locale">
+            <?= _('Page language') ?>
+        </label>
+
+        <select id="locale" name="locale" required>
+            <option <?= $locale === 'auto' ? 'selected' : '' ?> value="auto">
+                <?= _('Autodetected') ?>
+            </option>
+
+            <option <?= $locale === 'en_GB' ? 'selected' : '' ?> value="en_GB">
+                English
+            </option>
+
+            <option <?= $locale === 'fr_FR' ? 'selected' : '' ?> value="fr_FR">
+                Français
+            </option>
+        </select>
+
+        <?php if (isset($errors['locale'])): ?>
+            <p class="form-group__error">
+                <?= $errors['locale'] ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
     <div class="form__actions">
         <button type="submit" class="button--primary">
             <?= _('Save changes') ?>

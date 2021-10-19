@@ -1,0 +1,672 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: taust\n"
+"POT-Creation-Date: 2021-10-19 12:28+0200\n"
+"PO-Revision-Date: 2021-10-19 12:31+0200\n"
+"Last-Translator: Marien Fressinaud <dev@marienfressinaud.fr>\n"
+"Language-Team: \n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.0\n"
+"X-Poedit-Basepath: ../../../src\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Poedit-KeywordsList: _f;_n:1,2;_nf:1,2\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: controllers/Announcements.php:82 controllers/Auth.php:35
+#: controllers/Domains.php:49 controllers/Pages.php:50
+#: controllers/Pages.php:178 controllers/Servers.php:49
+#: controllers/Users.php:42 controllers/pages/Announcements.php:55
+msgid "A security verification failed: you should retry to submit the form."
+msgstr ""
+"Une vérification de sécurité a échoué : vous devriez essayer de resoumettre "
+"le formulaire."
+
+#: controllers/Auth.php:43 controllers/Auth.php:50
+msgid "Wrong credentials!"
+msgstr "Mauvais identifiants !"
+
+#: controllers/Domains.php:67
+msgid "This domain already exists."
+msgstr "Ce domaine existe déjà."
+
+#: controllers/Pages.php:196
+msgid "A page already has the same hostname."
+msgstr "Une page possède déjà ce nom d’hôte."
+
+#: mailers/Alarms.php:11
+msgid "[taust] A new problem has been detected"
+msgstr "[taust] Un nouveau problème a été détecté"
+
+#: models/Domain.php:54
+msgid "The domain is required."
+msgstr "Le domaine est requis."
+
+#: models/Domain.php:56
+msgid "This domain is invalid."
+msgstr "Ce domaine est invalide."
+
+#: models/Page.php:115
+msgid "The title is required."
+msgstr "Le titre est requis."
+
+#: models/Page.php:117
+#, php-format
+msgid "The title must be less than %d characters."
+msgstr "Le titre doit faire moins de %d caractères."
+
+#: models/Server.php:94
+msgid "The hostname is required."
+msgstr "Le nom d’hôte est requis."
+
+#: models/Server.php:96
+msgid "This hostname is invalid."
+msgstr "Ce nom d’hôte est invalide."
+
+#: models/Server.php:98
+msgid "This server doesn’t declare any DNS A record."
+msgstr "Ce serveur ne déclare aucun enregistrement DNS de type A."
+
+#: models/Server.php:100
+msgid "This server declares an invalid DNS A record."
+msgstr "Ce serveur déclare un enregistrement DNS de type A invalide."
+
+#: models/Server.php:102
+msgid "This server declares an invalid DNS AAAA record."
+msgstr "Ce serveur déclare un enregistrement DNS de type AAAA invalide."
+
+#: models/User.php:71
+msgid "The username is required."
+msgstr "Le nom d’utilisateur‧ice est requis."
+
+#: models/User.php:73
+msgid "This username is invalid."
+msgstr "Ce nom d’utilisateur‧ice est invalide."
+
+#: models/User.php:76
+msgid "The password is required."
+msgstr "Le mot de passe est requis."
+
+#: models/User.php:78
+msgid "This email is invalid."
+msgstr "Cette adresse email est invalide."
+
+#: models/User.php:80
+msgid "This login is invalid."
+msgstr "Ce login est invalide."
+
+#: models/User.php:82
+msgid "This key is invalid."
+msgstr "Cette clé est invalide."
+
+#: services/FreeMobile.php:20
+#, php-format
+msgid "Hey, this is taust robot at %s."
+msgstr "Salut, c’est le robot taust de %s."
+
+#: services/FreeMobile.php:21
+#, php-format
+msgid "It looks like you have a problem with the %s."
+msgstr "Il semblerait que vous ayez un problème avec le %s."
+
+#: views/_layouts/application.phtml:16 views/dashboard/index.phtml:3
+#: views/dashboard/index.phtml:8
+msgid "Dashboard"
+msgstr "Tableau de bord"
+
+#: views/_layouts/application.phtml:25 views/domains/index.phtml:3
+#: views/domains/index.phtml:8 views/pages/show.phtml:9
+msgid "Domains"
+msgstr "Domaines"
+
+#: views/_layouts/application.phtml:34 views/pages/show.phtml:38
+#: views/servers/index.phtml:3 views/servers/index.phtml:8
+msgid "Servers"
+msgstr "Serveurs"
+
+#: views/_layouts/application.phtml:43 views/alarms/index.phtml:3
+#: views/alarms/index.phtml:8 views/domains/show.phtml:41
+#: views/servers/show.phtml:95
+msgid "Alarms"
+msgstr "Alarmes"
+
+#: views/_layouts/application.phtml:52 views/pages/index.phtml:3
+#: views/pages/index.phtml:8
+msgid "Status pages"
+msgstr "Pages de statut"
+
+#: views/_layouts/application.phtml:61
+#, php-format
+msgid "Profile (%s)"
+msgstr "Profil (%s)"
+
+#: views/_layouts/application.phtml:69
+msgid "Logout"
+msgstr "Se déconnecter"
+
+#: views/alarms/_alarm.phtml:23
+msgid "finished"
+msgstr "terminé"
+
+#: views/alarms/_alarm.phtml:33
+msgid "Ignore"
+msgstr "Ignorer"
+
+#: views/alarms/index.phtml:11
+msgid "Ongoing"
+msgstr "En cours"
+
+#: views/alarms/index.phtml:14 views/dashboard/index.phtml:105
+msgid "These alarms are ongoing and you should take a look to fix them."
+msgstr "Ces alarmes sont en cours et vous devriez vous en occuper."
+
+#: views/alarms/index.phtml:25
+msgid "Finished"
+msgstr "Terminées"
+
+#: views/alarms/index.phtml:28
+msgid ""
+"These alarms are finished, only 50 of them are shown here. That’s what "
+"history is like."
+msgstr ""
+"Ces alarmes sont terminées, seulement 50 d’entre elles sont montrées ici. "
+"C’est à ça que l’histoire ressemble."
+
+#: views/alarms/index.phtml:40
+msgid ""
+"There’re nothing to see here. You’re either lucky (i.e. no errors never "
+"happened) or you haven’t configured any domains or servers yet."
+msgstr ""
+"Il n’y a rien à voir ici. Soit vous êtes chanceu‧se (i.e. aucune erreur n’a "
+"jamais été détectée), soit vous n’avez configuré aucun domaine ou serveur "
+"pour l’instant."
+
+#: views/announcements/edit.phtml:3
+#, php-format
+msgid "Edit %s"
+msgstr "Modifier %s"
+
+#: views/announcements/edit.phtml:20 views/pages/show.phtml:79
+msgid "Type"
+msgstr "Type"
+
+#: views/announcements/edit.phtml:25 views/announcements/show.phtml:16
+#: views/pages/announcements/_announcement.phtml:8 views/pages/show.phtml:84
+msgid "🔧 Maintenance"
+msgstr "🔧 Maintenance"
+
+#: views/announcements/edit.phtml:29 views/announcements/show.phtml:18
+#: views/pages/announcements/_announcement.phtml:10 views/pages/show.phtml:88
+msgid "🔥 Incident"
+msgstr "🔥 Incident"
+
+#: views/announcements/edit.phtml:42 views/pages/show.phtml:101
+msgid "Date"
+msgstr "Date"
+
+#: views/announcements/edit.phtml:62 views/pages/new.phtml:21
+#: views/pages/show.phtml:121
+msgid "Title"
+msgstr "Titre"
+
+#: views/announcements/edit.phtml:82 views/pages/show.phtml:141
+msgid "Content"
+msgstr "Contenu"
+
+#: views/announcements/edit.phtml:100 views/pages/edit.phtml:126
+msgid "Save changes"
+msgstr "Enregistrer les changements"
+
+#: views/announcements/show.phtml:31
+#: views/pages/announcements/_announcement.phtml:23
+msgid "This maintenance is over."
+msgstr "Cette maintenance est terminée."
+
+#: views/announcements/show.phtml:33
+#: views/pages/announcements/_announcement.phtml:25
+msgid "This incident is over."
+msgstr "Cet incident est terminé."
+
+#: views/auth/login.phtml:1
+msgid "Log in taust"
+msgstr "Se connecter à taust"
+
+#: views/auth/login.phtml:14
+msgid "Username"
+msgstr "Nom d’utilisateur‧ice"
+
+#: views/auth/login.phtml:29
+msgid "Password"
+msgstr "Mot de passe"
+
+#: views/auth/login.phtml:42
+msgid "Login"
+msgstr "Login"
+
+#: views/dashboard/index.phtml:12
+msgid "Hey there! You seem to be new around here."
+msgstr "Salut ! Il semblerait que vous soyez nouve‧lle ici."
+
+#: views/dashboard/index.phtml:16
+msgid ""
+"Let’s start by monitoring a domain or a server. Domains are easier to setup, "
+"servers are more powerful but have to be configured with <a href=\"https://"
+"github.com/flusio/taust-client\">a client</a>. <strong>Which one would you "
+"want to monitor?</strong>"
+msgstr ""
+"Commençons par superviser un domaine ou un serveur. Les domaines sont plus "
+"simples à configurer, les serveurs sont plus puissants mais nécessitent "
+"d’être configurés avec <a href=\"https://github.com/flusio/taust-client\">un "
+"client</a>. <strong>Que voulez-vous superviser ?</strong>"
+
+#: views/dashboard/index.phtml:21
+msgid "a domain"
+msgstr "un domaine"
+
+#: views/dashboard/index.phtml:25
+msgid "a server"
+msgstr "un serveur"
+
+#: views/dashboard/index.phtml:30
+msgid "All is going well! ☺"
+msgstr "Tout se passe bien ! ☺"
+
+#: views/dashboard/index.phtml:34
+msgid "You should take a look at the following issues ☹"
+msgstr "Vous devriez vous occuper des problèmes suivants ☹"
+
+#: views/dashboard/index.phtml:39
+msgid ""
+"These domains have an “unknown” status, which means we didn’t check their "
+"heartbeats yet."
+msgstr ""
+"Ces domains sont dans un état « inconnu », ce qui signifie que nous n’avons "
+"pas encore vérifié leur <i lang=\"en\">heartbeat</i>."
+
+#: views/dashboard/index.phtml:40
+msgid ""
+"You should not worry if you just added these domains. <strong>Otherwise, "
+"please check the cron task is correctly setup.</strong>"
+msgstr ""
+"Vous n’avez pas à vous préoccuper de ces domaines si vous venez juste de les "
+"ajouter. <strong>Dans le cas contraire, veuillez vérifier que vous avez bien "
+"configuré la tâche cron.</strong>"
+
+#: views/dashboard/index.phtml:56
+msgid ""
+"These domains are “down” and <strong>you should verify manually they’re "
+"still up and take action if they are definitely down.</strong>"
+msgstr ""
+"Ces domaines sont « en panne » et <strong>vous devriez vérifier manuellement "
+"qu’ils fonctionnent et corriger la situation dans le cas contraire.</strong>"
+
+#: views/dashboard/index.phtml:72
+msgid ""
+"These servers have an “unknown” status, which means they didn’t sent any "
+"metrics yet."
+msgstr ""
+"Ces serveurs sont dans un état « inconnu », ce qui signifie qu’ils n’ont pas "
+"encore envoyés de métriques."
+
+#: views/dashboard/index.phtml:73
+msgid ""
+"<strong>You must setup taust-client on these servers to monitor them.</"
+"strong>"
+msgstr ""
+"<strong>Vous devez configurer taust-client sur ces serveurs pour les "
+"superviser.</strong>"
+
+#: views/dashboard/index.phtml:89
+msgid ""
+"These servers appear to be “down” (i.e. they didn’t sent any metrics for a "
+"while). <strong>You should verify what’s going on quickly.</strong>"
+msgstr ""
+"Ces serveurs sont « en panne » (i.e. ils n’ont pas envoyés de métriques "
+"depuis un moment). <strong>Vous devriez vérifier ce qu’il se passe "
+"rapidement.</strong>"
+
+#: views/domains/index.phtml:11
+msgid ""
+"The service automatically checks the domains are up by checking their HTTPS "
+"port (443)."
+msgstr ""
+"Le service vérifie automatiquement que les domaines sont en état de marche "
+"en vérifiant leur port HTTPS (443)."
+
+#: views/domains/index.phtml:26
+msgid "🤖 Add a domain to monitor"
+msgstr "🤖 Ajouter un domaine à superviser"
+
+#: views/domains/new.phtml:3 views/domains/new.phtml:8
+msgid "Add a domain to monitor"
+msgstr "Ajouter un domaine à superviser"
+
+#: views/domains/new.phtml:21
+msgid "Domain name"
+msgstr "Nom de domaine"
+
+#: views/domains/new.phtml:42
+msgid "Monitor the domain"
+msgstr "Superviser le domaine"
+
+#: views/domains/new.phtml:46
+msgid "Back to the domains"
+msgstr "Retour aux domaines"
+
+#: views/domains/show.phtml:3
+#, php-format
+msgid "Domain %s"
+msgstr "Domaine %s"
+
+#: views/domains/show.phtml:16 views/servers/show.phtml:12
+msgid "Status: up 😊"
+msgstr "Statut : fonctionne 😊"
+
+#: views/domains/show.phtml:20 views/servers/show.phtml:16
+msgid "Status: down 😫"
+msgstr "Statut : en panne 😫"
+
+#: views/domains/show.phtml:24 views/servers/show.phtml:20
+msgid "Status: unknown 😵"
+msgstr "Statut : inconnu 😵"
+
+#: views/domains/show.phtml:30 views/servers/show.phtml:26
+#, php-format
+msgid "Last ping on %s"
+msgstr "Dernier ping le %s"
+
+#: views/domains/show.phtml:36 views/servers/show.phtml:39
+msgid "↻ Refresh the page"
+msgstr "↻ Rafraîchir la page"
+
+#: views/domains/show.phtml:51 views/pages/edit.phtml:132
+#: views/servers/show.phtml:105
+msgid "Danger zone 😈"
+msgstr "Zone de danger 😈"
+
+#: views/domains/show.phtml:58
+msgid "Are you sure that you want to stop to monitor this domain?"
+msgstr ""
+"Êtes-vous certain‧e que vous souhaitez arrêter de superviser ce domaine ?"
+
+#: views/domains/show.phtml:62
+msgid "Stop monitoring this domain"
+msgstr "Arrêter de superviser ce domaine"
+
+#: views/mailers/alarms/alarm.phtml:2
+msgid "Hey there!"
+msgstr "Salut !"
+
+#: views/mailers/alarms/alarm.phtml:6
+#, php-format
+msgid ""
+"It really looks like you have a problem with the %s, here’s the error: %s"
+msgstr ""
+"Il semblerait vraiment que vous ayez un problème avec le %s, voici "
+"l’erreur : %s"
+
+#: views/mailers/alarms/alarm.phtml:7
+#, php-format
+msgid "I have detected the problem at %s on %s."
+msgstr "J’ai détecté le problème à %s le %s."
+
+#: views/mailers/alarms/alarm.phtml:11
+msgid ""
+"You’ll not get any more alerts concerning this issue, so be sure to fix it "
+"as soon as possible!"
+msgstr ""
+"Vous ne recevrez plus d’alertes concernant ce problème, donc assurez-vous de "
+"le corriger aussi rapidement que possible !"
+
+#: views/mailers/alarms/alarm.phtml:15
+msgid "Lovingly yours,"
+msgstr "Affectueusement vôtre,"
+
+#: views/mailers/alarms/alarm.phtml:17
+msgid "The taust robot."
+msgstr "Le robot taust."
+
+#: views/not_found.phtml:1
+msgid "Page not found"
+msgstr "Page non trouvée"
+
+#: views/not_found.phtml:4
+msgid "This page doesn’t exist."
+msgstr "Cette page n’existe pas."
+
+#: views/not_found.phtml:9
+msgid "Back to the home page"
+msgstr "Retour à la page d’accueil"
+
+#: views/pages/announcements/_announcement.phtml:41
+msgid "✔ Finish"
+msgstr "✔ Terminer"
+
+#: views/pages/announcements/_announcement.phtml:46
+msgid "↻ Reactivate"
+msgstr "↻ Réactiver"
+
+#: views/pages/announcements/_announcement.phtml:53
+msgid "Edit"
+msgstr "Modifier"
+
+#: views/pages/announcements/_announcement.phtml:61
+msgid "Are you sure that you want to delete this announcement?"
+msgstr "Êtes-vous certain‧e que vous souhaitez supprimer cette annonce ?"
+
+#: views/pages/announcements/_announcement.phtml:65
+msgid "Delete"
+msgstr "Supprimer"
+
+#: views/pages/announcements/index.phtml:3
+#: views/pages/announcements/index.phtml:8
+msgid "History of announcements"
+msgstr "Historique des annonces"
+
+#: views/pages/edit.phtml:3
+#, php-format
+msgid "Page %s"
+msgstr "Page %s"
+
+#: views/pages/edit.phtml:19
+msgid "Domains (optional)"
+msgstr "Domaines (facultatif)"
+
+#: views/pages/edit.phtml:39
+msgid "Servers (optional)"
+msgstr "Serveurs (facultatif)"
+
+#: views/pages/edit.phtml:59
+msgid "Hostname (optional)"
+msgstr "Nom d’hôte (facultatif)"
+
+#: views/pages/edit.phtml:72
+msgid "open"
+msgstr "ouvrir"
+
+#: views/pages/edit.phtml:86
+msgid "Custom style (optional)"
+msgstr "Style personnalisé (facultatif)"
+
+#: views/pages/edit.phtml:100
+msgid "Page language"
+msgstr "Langue de la page"
+
+#: views/pages/edit.phtml:105
+msgid "Autodetected"
+msgstr "Autodétectée"
+
+#: views/pages/edit.phtml:139
+msgid "Are you sure that you want to delete this page?"
+msgstr "Êtes-vous certain‧e que vous souhaitez supprimer cette page ?"
+
+#: views/pages/edit.phtml:143
+msgid "Delete this status page"
+msgstr "Supprimer cette page de statut"
+
+#: views/pages/feed.atom.xml.phtml:15
+msgid "The taust robot"
+msgstr "Le robot taust"
+
+#: views/pages/index.phtml:11
+msgid ""
+"Share your public status page to your users so they know when your service "
+"is down."
+msgstr ""
+"Partagez vos pages de statut publiques avec vos utilisateur‧ices afin qu’ils "
+"et elles sachent que votre service est en panne."
+
+#: views/pages/index.phtml:26
+msgid "🤓 Create a status page"
+msgstr "🤓 Créer une page de statut"
+
+#: views/pages/new.phtml:3 views/pages/new.phtml:8
+msgid "Create a status page"
+msgstr "Créer une page de statut"
+
+#: views/pages/new.phtml:42
+msgid "Create the page"
+msgstr "Créer la page"
+
+#: views/pages/new.phtml:46
+msgid "Back to the pages"
+msgstr "Retour aux pages"
+
+#: views/pages/show.phtml:21 views/pages/show.phtml:47
+msgid "up 😊"
+msgstr "fonctionne 😊"
+
+#: views/pages/show.phtml:25 views/pages/show.phtml:51
+msgid "down 😫"
+msgstr "en panne 😫"
+
+#: views/pages/show.phtml:29 views/pages/show.phtml:55
+msgid "unknown 😵"
+msgstr "inconnu 😵"
+
+#: views/pages/show.phtml:159
+msgid "Publish announcement"
+msgstr "Publier une annonce"
+
+#: views/pages/show.phtml:167
+msgid "Planned maintenance"
+msgstr "Maintenance planifiée"
+
+#: views/pages/show.phtml:188
+msgid "No incidents reported."
+msgstr "Aucun incident signalé."
+
+#: views/pages/show.phtml:198 views/pages/show.phtml:202
+msgid "Announcements history"
+msgstr "Historiques des annonces"
+
+#: views/servers/index.phtml:11
+msgid ""
+"You must setup <a href=\"https://github.com/flusio/taust-client\"> the taust-"
+"client</a> on the servers to monitor them. They’ll send metrics every 10 "
+"seconds then."
+msgstr ""
+"Vous devez configurer <a href=\"https://github.com/flusio/taust-client"
+"\">taust-client</a> sur les serveurs pour les superviser. Ils enverront "
+"ensuite des métriques toutes les 10 secondes."
+
+#: views/servers/index.phtml:26
+msgid "🤖 Add a server to monitor"
+msgstr "🤖 Ajouter un server à superviser"
+
+#: views/servers/new.phtml:3 views/servers/new.phtml:8
+msgid "Add a server to monitor"
+msgstr "Ajouter un server à superviser"
+
+#: views/servers/new.phtml:21
+msgid "Hostname"
+msgstr "Nom d’hôte"
+
+#: views/servers/new.phtml:54
+msgid "Monitor the server"
+msgstr "Superviser le serveur"
+
+#: views/servers/new.phtml:58
+msgid "Back to the servers"
+msgstr "Retour aux serveurs"
+
+#: views/servers/show.phtml:3
+#, php-format
+msgid "Server %s"
+msgstr "Serveur %s"
+
+#: views/servers/show.phtml:45
+msgid ""
+"To start monitoring this server, you must setup <a href=\"https://github.com/"
+"flusio/taust-client\">taust-client</a> with the following configuration:"
+msgstr ""
+"Pour commencer à superviser ce serveur, vous devez configurer <a href="
+"\"https://github.com/flusio/taust-client\">taust-client</a> avec la "
+"configuration suivante :"
+
+#: views/servers/show.phtml:53
+msgid "Memory"
+msgstr "Mémoire"
+
+#: views/servers/show.phtml:60 views/servers/show.phtml:87
+#, php-format
+msgid "%s used on %s"
+msgstr "%s utilisés sur %s"
+
+#: views/servers/show.phtml:65
+msgid "CPU"
+msgstr "CPU"
+
+#: views/servers/show.phtml:73
+#, php-format
+msgid "CPU%d"
+msgstr "CPU %d"
+
+#: views/servers/show.phtml:78
+msgid "Disks"
+msgstr "Disques"
+
+#: views/servers/show.phtml:112
+msgid "Are you sure that you want to stop to monitor this server?"
+msgstr ""
+"Êtes-vous certain‧e que vous souhaitez arrêter de superviser ce serveur ?"
+
+#: views/servers/show.phtml:116
+msgid "Stop monitoring this server"
+msgstr "Arrêter de superviser ce serveur"
+
+#: views/users/show.phtml:3
+msgid "Your profile"
+msgstr "Votre profil"
+
+#: views/users/show.phtml:9
+#, php-format
+msgid "Your profile (%s)"
+msgstr "Votre profil (%s)"
+
+#: views/users/show.phtml:16
+msgid "You’ll receive alarms notifications by setting these information."
+msgstr ""
+"Vous recevrez des notifications d’alertes en indiquant ces informations."
+
+#: views/users/show.phtml:27
+msgid "Email address"
+msgstr "Adresse email"
+
+#: views/users/show.phtml:46
+msgid "Free mobile login"
+msgstr "Login Free mobile"
+
+#: views/users/show.phtml:65
+msgid "Free mobile key"
+msgstr "Clé Free mobile"
+
+#: views/users/show.phtml:84
+msgid "Update your profile"
+msgstr "Mettre à jour votre profil"
+
+#: views/users/show.phtml:88
+msgid "Back to the dashboard"
+msgstr "Retour au tableau de bord"

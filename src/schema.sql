@@ -53,7 +53,8 @@ CREATE TABLE pages (
     created_at TIMESTAMPTZ NOT NULL,
     title TEXT NOT NULL,
     hostname TEXT NOT NULL DEFAULT '',
-    style TEXT NOT NULL DEFAULT ''
+    style TEXT NOT NULL DEFAULT '',
+    locale TEXT NOT NULL DEFAULT 'auto'
 );
 
 CREATE TABLE pages_to_domains (

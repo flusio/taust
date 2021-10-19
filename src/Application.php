@@ -41,6 +41,15 @@ class Application
             utils\CurrentUser::set($user_id);
         }
 
+        $available_locales = utils\Locale::availableLocales();
+        if ($this->page && isset($available_locales[$this->page->locale])) {
+            $locale = $this->page->locale;
+        } else {
+            $http_accept_language = $request->header('HTTP_ACCEPT_LANGUAGE');
+            $locale = utils\Locale::best($http_accept_language);
+        }
+        utils\Locale::setCurrentLocale($locale);
+
         if ($this->page && !$request->param('id')) {
             $request->setParam('id', $this->page->id);
         }
@@ -50,6 +59,7 @@ class Application
             'errors' => [],
             'error' => null,
             'current_user' => utils\CurrentUser::get(),
+            'current_locale' => $locale,
             'navigation_active' => null,
             'is_app_page' => $this->page !== null,
         ]);

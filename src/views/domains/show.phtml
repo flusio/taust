@@ -13,15 +13,15 @@
 
 <?php if ($domain->status() === 'up'): ?>
     <p class="paragraph--featured paragraph--success">
-        <?= _f('Status: up 😊') ?>
+        <?= _('Status: up 😊') ?>
     </p>
 <?php elseif ($domain->status() === 'down'): ?>
     <p class="paragraph--featured paragraph--alert">
-        <?= _f('Status: down 😫') ?>
+        <?= _('Status: down 😫') ?>
     </p>
 <?php else: ?>
     <p class="paragraph--featured paragraph--warning">
-        <?= _f('Status: unknown 😵') ?>
+        <?= _('Status: unknown 😵') ?>
     </p>
 <?php endif; ?>
 
