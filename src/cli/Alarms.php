@@ -85,7 +85,7 @@ class Alarms
             $cpu_percents = $metric->cpuPercents();
             $cpu_average = array_sum($cpu_percents) / count($cpu_percents);
             if ($alarm) {
-                if ($cpu_average < 80) {
+                if ($cpu_average < 90) {
                     $alarm->finish();
                     $alarm->save();
                     $details_cpu = 'Alarm finished';
@@ -93,11 +93,11 @@ class Alarms
                     $details_cpu = 'Alarm not finished';
                 }
             } else {
-                if ($cpu_average >= 80) {
+                if ($cpu_average >= 90) {
                     $alarm = models\Alarm::initForServer(
                         $server->id,
                         'cpu_usage',
-                        "CPU average usage is more than 80% of its capacity ({$cpu_average} %)."
+                        "CPU average usage is more than 90% of its capacity ({$cpu_average} %)."
                     );
                     $alarm->save();
                     $details_cpu = 'New alarm!';
@@ -111,7 +111,7 @@ class Alarms
             $alarm = models\Alarm::daoToModel('findOngoingByServerIdAndType', $server->id, 'memory_usage');
             $memory_used_percent = $metric->memoryUsedPercent();
             if ($alarm) {
-                if ($memory_used_percent < 80) {
+                if ($memory_used_percent < 90) {
                     $alarm->finish();
                     $alarm->save();
                     $details_memory = 'Alarm finished';
@@ -119,11 +119,11 @@ class Alarms
                     $details_memory = 'Alarm not finished';
                 }
             } else {
-                if ($memory_used_percent >= 80) {
+                if ($memory_used_percent >= 90) {
                     $alarm = models\Alarm::initForServer(
                         $server->id,
                         'memory_usage',
-                        "Memory usage is more than 80% of its capacity ({$memory_used_percent} %)."
+                        "Memory usage is more than 90% of its capacity ({$memory_used_percent} %)."
                     );
                     $alarm->save();
                     $details_memory = 'New alarm!';
