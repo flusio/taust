@@ -30,7 +30,7 @@ class FreeMobile
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_URL, self::SMS_API . '?' . $query);
         curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'taust/dev (https://github.com/flusio/taust)');
+        curl_setopt($curl_session, CURLOPT_USERAGENT, 'taust/dev (https://github.com/flusio/taust)');
         curl_exec($curl_session);
 
         $http_code = curl_getinfo($curl_session, CURLINFO_RESPONSE_CODE);
