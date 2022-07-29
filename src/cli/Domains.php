@@ -16,6 +16,7 @@ class Domains
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
+        curl_setopt($curl_handle, CURLOPT_USERAGENT, 'taust/dev (https://github.com/flusio/taust)');
 
         $results = [];
         $domains = models\Domain::listAll();
