@@ -34,6 +34,7 @@ setup: .env ## Setup the application system
 .PHONY: lint
 lint: ## Run the linter on the PHP files
 	$(PHP) ./vendor/bin/phpstan analyse --memory-limit 1G -c phpstan.neon
+	$(PHP) ./vendor/bin/phpcs --standard=PSR12 ./src
 
 .PHONY: help
 help:
