@@ -10,30 +10,22 @@ else
 	CLI = ./docker/bin/cli
 endif
 
-.PHONY: start
-start: .env ## Start a development server (use Docker)
+.PHONY: docker-start
+docker-start: .env ## Start a development server
 	@echo "Running webserver on http://localhost:8000"
 	docker-compose -p taust -f docker/docker-compose.yml up
 
-.PHONY: stop
-stop: ## Stop and clean Docker server
+.PHONY: docker-build
+docker-build: ## Rebuild the Docker image
+	docker-compose -p taust -f docker/docker-compose.yml build
+
+.PHONY: docker-clean
+docker-clean: ## Clean the Docker stuff
 	docker-compose -p taust -f docker/docker-compose.yml down
 
 .PHONY: setup
 setup: .env ## Setup the application system
 	$(CLI) system setup
-
-.PHONY: update
-update: setup ## Update the application
-
-.PHONY: reset
-reset: ## Reset the database
-	rm data/migrations_version.txt
-	$(CLI) system setup
-
-user: ## Create a user
-	$(CLI) users create --username=alice --password=mysecret > /dev/null
-	@echo "User alice (password: mysecret) created"
 
 .PHONY: help
 help:
