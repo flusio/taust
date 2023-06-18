@@ -1,0 +1,11 @@
+<?php $this->layout('centered.phtml', ['title' => _('Internal server error!')]); ?>
+
+<pre>
+    <?= (string) $error ?>
+</pre>
+
+<p>
+    <a href="<?= url('home') ?>">
+        <?= _('Back to the home page') ?>
+    </a>
+</p>

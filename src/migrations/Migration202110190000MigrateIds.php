@@ -2,11 +2,13 @@
 
 namespace taust\migrations;
 
-use taust\utils;
-
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Migration202110190000MigrateIds
 {
-    public function migrate()
+    public function migrate(): bool
     {
         $database = \Minz\Database::get();
 
@@ -19,7 +21,7 @@ class Migration202110190000MigrateIds
             $database->beginTransaction();
 
             foreach ($statement->fetchAll() as $row) {
-                $new_id = utils\Random::timebased();
+                $new_id = \Minz\Random::timebased();
 
                 $statement = $database->prepare(<<<SQL
                     UPDATE {$table} SET id = ? WHERE id = ?;
@@ -33,4 +35,3 @@ class Migration202110190000MigrateIds
         return true;
     }
 }
-

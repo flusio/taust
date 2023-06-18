@@ -13,6 +13,17 @@ services:
         links:
             - database
 
+    job_worker:
+        image: taust_php:dev
+        build: .
+        restart: unless-stopped
+        command: php cli jobs watch
+        volumes:
+            - ..:/var/www/html:z
+        user: $USER
+        links:
+            - database
+
     nginx:
         image: nginx:alpine
         restart: unless-stopped

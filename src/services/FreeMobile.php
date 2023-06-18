@@ -2,23 +2,41 @@
 
 namespace taust\services;
 
+use Minz\Output\ViewHelpers;
 use taust\models;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class FreeMobile
 {
     public const SMS_API = 'https://smsapi.free-mobile.fr/sendmsg';
 
-    public function sendAlarm($login, $key, $alarm)
+    public function sendAlarm(string $login, string $key, models\Alarm $alarm): int
     {
         if ($alarm->domain_id) {
             $object = "{$alarm->domain_id} domain (no heartbeats)";
-        } else {
+        } elseif ($alarm->server_id) {
             $server = models\Server::find($alarm->server_id);
+
+            if (!$server) {
+                throw new \Exception("Alarm #{$alarm->id} has invalid server.");
+            }
+
             $object = "{$server->hostname} server ({$alarm->type})";
+        } else {
+            throw new \Exception("Alarm #{$alarm->id} has no domain nor server associated.");
         }
 
-        $message = vsprintf(_('Hey, this is taust robot at %s.'), \Minz\Url::absoluteFor('home'));
-        $message .= vsprintf(_('It looks like you have a problem with the %s.'), $object);
+        $message = ViewHelpers::formatGettext(
+            'Hey, this is taust robot at %s.',
+            \Minz\Url::absoluteFor('home')
+        );
+        $message .= ViewHelpers::formatGettext(
+            'It looks like you have a problem with the %s.',
+            $object
+        );
 
         $query_fields = [
             'user' => $login,

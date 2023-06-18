@@ -13,7 +13,7 @@
     <ul class="history__list">
         <?php foreach ($announcements as $announcement): ?>
             <li class="history__item">
-                <span class="history__date"><?= _d($announcement->planned_at, '%d %h') ?></span>
+                <span class="history__date"><?= _d($announcement->planned_at, 'dd MMM') ?></span>
                 <div class="history__title">
                     <?php if ($announcement->type === 'maintenance'): ?>
                         <span title="<?= _('Maintenance') ?>">🔧</span>

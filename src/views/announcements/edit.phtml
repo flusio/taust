@@ -13,7 +13,7 @@
         </p>
     <?php endif; ?>
 
-    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
 
     <div class="form-group <?= isset($errors['type']) ? 'form-group--invalid' : '' ?>">
         <label for="type">
@@ -46,7 +46,7 @@
             id="planned-at"
             name="planned_at"
             type="datetime-local"
-            value="<?= _d($planned_at, '%FT%H:%M') ?>"
+            value="<?= _d($planned_at, "yyyy-MM-dd'T'HH:mm") ?>"
             required
         />
 

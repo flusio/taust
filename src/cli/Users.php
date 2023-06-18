@@ -2,17 +2,37 @@
 
 namespace taust\cli;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Users
 {
-    public function create($request)
+    /**
+     * @request_param string username
+     *     Only ASCII letters, numbers, underscore and dash
+     * @request_param string password
+     *
+     * @response 400
+     *     If the username or the password are incorrect.
+     * @response 200
+     *     On success.
+     */
+    public function create(Request $request): Response
     {
-        $username = $request->param('username');
-        $password = $request->param('password');
+        /** @var string */
+        $username = $request->param('username', '');
 
-        $user = models\User::init($username, $password);
+        /** @var string */
+        $password = $request->param('password', '');
+
+        $user = new models\User($username, $password);
+
+        /** @var array<string, string> */
         $errors = $user->validate();
         if ($errors) {
             return Response::text(400, 'Can’t create a user: ' . implode(' ', $errors));

@@ -2,27 +2,44 @@
 
 namespace taust\controllers;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 use taust\utils;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Pages
 {
-    public function index()
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function index(): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $pages = models\Page::daoToList('listAllOrderByTitle');
+        $pages = models\Page::listAllOrderByTitle();
 
         return Response::ok('pages/index.phtml', [
             'pages' => $pages,
         ]);
     }
 
-    public function new()
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function new(): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
@@ -34,24 +51,38 @@ class Pages
         ]);
     }
 
-    public function create($request)
+    /**
+     * @request_param string title
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 400
+     *     If one of the parameters is invalid.
+     * @response 302 /pages/:id/edit
+     *     On success.
+     */
+    public function create(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $title = $request->param('title');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $title = $request->param('title', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::badRequest('pages/new.phtml', [
                 'title' => $title,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
             ]);
         }
 
-        $page = models\Page::init($title);
+        $page = new models\Page($title);
         $errors = $page->validate();
         if ($errors) {
             return Response::badRequest('pages/new.phtml', [
@@ -65,10 +96,21 @@ class Pages
         return Response::redirect('edit page', ['id' => $page->id]);
     }
 
-    public function show($request)
+    /**
+     * @request_param string id
+     *
+     * @response 404
+     *     If the page doesn't exist.
+     * @response 200
+     *     On success.
+     */
+    public function show(Request $request): Response
     {
-        $id = $request->param('id');
+        /** @var string */
+        $id = $request->param('id', '');
+
         $page = models\Page::find($id);
+
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
@@ -85,26 +127,46 @@ class Pages
         ]);
     }
 
-    public function feed($request)
+    /**
+     * @request_param string id
+     *
+     * @response 404
+     *     If the server doesn't exist.
+     * @response 200
+     *     On success.
+     */
+    public function feed(Request $request): Response
     {
-        $id = $request->param('id');
+        /** @var string */
+        $id = $request->param('id', '');
+
         $page = models\Page::find($id);
+
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
 
-        $response = Response::ok('pages/feed.atom.xml.phtml', [
+        return Response::ok('pages/feed.atom.xml.phtml', [
             'page' => $page,
             'announcements' => $page->announcements(),
         ]);
-        $response->setHeader('Content-Type', 'application/atom+xml;charset=UTF-8');
-        return $response;
     }
 
-    public function style($request)
+    /**
+     * @request_param string id
+     *
+     * @response 404
+     *     If the server doesn't exist.
+     * @response 200
+     *     On success.
+     */
+    public function style(Request $request): Response
     {
-        $id = $request->param('id');
+        /** @var string */
+        $id = $request->param('id', '');
+
         $page = models\Page::find($id);
+
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
@@ -114,21 +176,34 @@ class Pages
         return $response;
     }
 
-    public function edit($request)
+    /**
+     * @request_param string id
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 404
+     *     If the server doesn't exist.
+     * @response 200
+     *     On success.
+     */
+    public function edit(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
+        /** @var string */
+        $id = $request->param('id', '');
+
         $page = models\Page::find($id);
+
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
 
-        $servers = models\Server::daoToList('listAllOrderById');
-        $domains = models\Domain::daoToList('listAllOrderById');
+        $servers = models\Server::listAllOrderById();
+        $domains = models\Domain::listAllOrderById();
 
         return Response::ok('pages/edit.phtml', [
             'page' => $page,
@@ -142,30 +217,61 @@ class Pages
         ]);
     }
 
-    public function update($request)
+    /**
+     * @request_param string id
+     * @request_param string[] domain_ids
+     * @request_param string[] server_ids
+     * @request_param string hostname
+     * @request_param string style
+     * @request_param string locale
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 404
+     *     If the server doesn't exist.
+     * @response 400
+     *     If one of the parameters is invalid.
+     * @response 302 /pages/:id/edit
+     *     On success.
+     */
+    public function update(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $id = $request->param('id', '');
+
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        /** @var string[] */
         $domain_ids = $request->paramArray('domain_ids', []);
+
+        /** @var string[] */
         $server_ids = $request->paramArray('server_ids', []);
-        $hostname = $request->param('hostname');
-        $style = $request->param('style');
-        $locale = $request->param('locale');
+
+        /** @var string */
+        $hostname = $request->param('hostname', '');
+
+        /** @var string */
+        $style = $request->param('style', '');
+
+        /** @var string */
+        $locale = $request->param('locale', '');
 
         $page = models\Page::find($id);
-        $servers = models\Server::daoToList('listAllOrderById');
-        $domains = models\Domain::daoToList('listAllOrderById');
+        $servers = models\Server::listAllOrderById();
+        $domains = models\Domain::listAllOrderById();
 
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::badRequest('pages/edit.phtml', [
                 'page' => $page,
                 'domain_ids' => $domain_ids,
@@ -209,21 +315,38 @@ class Pages
         return Response::redirect('edit page', ['id' => $page->id]);
     }
 
-    public function delete($request)
+    /**
+     * @request_param string id
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 302 /pages/:id/edit
+     *     If the CSRF is invalid.
+     * @response 404
+     *     If the server doesn't exist.
+     * @response 302 /pages
+     *     On success.
+     */
+    public function delete(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $id = $request->param('id', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::redirect('edit server', ['id' => $id]);
         }
 
         $page = models\Page::find($id);
+
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }

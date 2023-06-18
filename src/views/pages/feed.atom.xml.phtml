@@ -24,7 +24,7 @@
 
     <?php foreach ($announcements as $announcement): ?>
         <entry>
-            <title>[<?= _d($announcement->planned_at, '%e %h %Y') ?>] <?= protect($announcement->title) ?></title>
+            <title>[<?= _d($announcement->planned_at, 'd MMM YYYY') ?>] <?= protect($announcement->title) ?></title>
             <id><?= $announcement->tagUri() ?></id>
 
             <link href="<?= url_full('show announcement', ['id' => $announcement->id]) ?>" rel="alternate" type="text/html" />

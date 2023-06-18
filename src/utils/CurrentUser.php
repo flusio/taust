@@ -10,9 +10,9 @@ use taust\models;
  */
 class CurrentUser
 {
-    private static $instance;
+    private static ?models\User $instance = null;
 
-    public static function get()
+    public static function get(): ?models\User
     {
         if (!isset($_SESSION['current_user_id'])) {
             return null;
@@ -31,19 +31,19 @@ class CurrentUser
         return self::$instance;
     }
 
-    public static function set($user_id)
+    public static function set(string $user_id): void
     {
         $_SESSION['current_user_id'] = $user_id;
         self::$instance = null;
     }
 
-    public static function reset()
+    public static function reset(): void
     {
         unset($_SESSION['current_user_id']);
         self::$instance = null;
     }
 
-    public static function currentId()
+    public static function currentId(): ?string
     {
         if (isset($_SESSION['current_user_id'])) {
             return $_SESSION['current_user_id'];

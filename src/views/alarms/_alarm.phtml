@@ -10,23 +10,23 @@
                     <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
                     href="<?= url('show domain', ['id' => $alarm->domain_id]) ?>#alarm-<?= $alarm->id ?>"
                     data-turbolinks="false"
-                ><?= _d($alarm->created_at, '%F %T') ?></a>
+                ><?= _d($alarm->created_at, 'yyyy-MM-dd HH:mm:ss') ?></a>
             <?php else: ?>
                 <a
                     <?= $alarm->finished_at ? 'class="link--muted"' : '' ?>
                     href="<?= url('show server', ['id' => $alarm->server_id]) ?>#alarm-<?= $alarm->id ?>"
                     data-turbolinks="false"
-                ><?= _d($alarm->created_at, '%F %T') ?></a>
+                ><?= _d($alarm->created_at, 'yyyy-MM-dd HH:mm:ss') ?></a>
             <?php endif; ?>
 
             <?php if ($alarm->finished_at): ?>
-                · <span title="<?= _d($alarm->finished_at, '%F %T') ?>"><?= _('finished') ?></span>
+                · <span title="<?= _d($alarm->finished_at, 'yyyy-MM-dd HH:mm:ss') ?>"><?= _('finished') ?></span>
             <?php endif; ?>
         </div>
 
         <?php if (!$alarm->finished_at): ?>
             <form method="post" action="<?= url('finish alarm', ['id' => $alarm->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
                 <input type="hidden" name="from" value="<?= $from ?>" />
 
                 <button type="submit" class="button--ghost">

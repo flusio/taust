@@ -2,13 +2,20 @@
 
 namespace taust\controllers;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 use taust\utils;
 
 class Auth
 {
-    public function login()
+    /**
+     * @response 302 /
+     *     If the user is already connected.
+     * @response 200
+     *     On success.
+     */
+    public function login(): Response
     {
         if (utils\CurrentUser::get()) {
             return Response::redirect('home');
@@ -19,17 +26,32 @@ class Auth
         ]);
     }
 
-    public function createSession($request)
+    /**
+     * @request_param string username
+     * @request_param string password
+     * @request_param string csrf
+     *
+     * @response 400
+     *     If one of the parameters is invalid.
+     * @response 302 /
+     *     On success, or if the user is already connected.
+     */
+    public function createSession(Request $request): Response
     {
         if (utils\CurrentUser::get()) {
             return Response::redirect('home');
         }
 
-        $username = $request->param('username');
-        $password = $request->param('password');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $username = $request->param('username', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $password = $request->param('password', '');
+
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::badRequest('auth/login.phtml', [
                 'username' => $username,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
@@ -60,15 +82,25 @@ class Auth
         return $response;
     }
 
-    public function deleteSession($request)
+    /**
+     * @request_param string csrf
+     *
+     * @response 302 /
+     *     If the CSRF is invalid.
+     * @response 302 /login
+     *     On success, or if the user is not connected.
+     */
+    public function deleteSession(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $csrf = $request->param('csrf');
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::redirect('home');
         }
 

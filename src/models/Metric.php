@@ -2,93 +2,132 @@
 
 namespace taust\models;
 
-class Metric extends \Minz\Model
+use Minz\Database;
+
+/**
+ * @phpstan-type MetricPayload array{
+ *     'at': int,
+ *     'cpu_percent': float[],
+ *     'memory_total': int,
+ *     'memory_available': int,
+ *     'disks': MetricDisk[],
+ * }
+ *
+ * @phpstan-type MetricDisk array{
+ *     'name': string,
+ *     'total': int,
+ *     'free': int,
+ * }
+ *
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+#[Database\Table(name: 'metrics')]
+class Metric
 {
-    use DaoConnector;
+    use Database\Recordable;
 
-    public const PROPERTIES = [
-        'id' => [
-            'type' => 'integer',
-        ],
+    #[Database\Column]
+    public int $id;
 
-        'created_at' => [
-            'type' => 'datetime',
-        ],
+    #[Database\Column]
+    public \DateTimeImmutable $created_at;
 
-        'payload' => [
-            'type' => 'string',
-            'required' => true,
-            'validator' => '\taust\models\Metric::validateJson',
-        ],
+    /** @var MetricPayload */
+    #[Database\Column]
+    public array $payload;
 
-        'server_id' => [
-            'type' => 'string',
-            'required' => true,
-        ],
-    ];
+    #[Database\Column]
+    public string $server_id;
 
-    private $payload_decoded;
-
-    public static function init($server_id, $payload)
+    /**
+     * @param MetricPayload $payload
+     */
+    public function __construct(string $server_id, array $payload)
     {
-        return new self([
-            'payload' => $payload,
-            'server_id' => $server_id,
-        ]);
+        $this->payload = $payload;
+        $this->server_id = $server_id;
     }
 
-    public function cpuPercents()
+    /**
+     * @return float[]
+     */
+    public function cpuPercents(): array
     {
-        return $this->payload()->cpu_percent;
+        return $this->payload['cpu_percent'];
     }
 
-    public function memoryTotal()
+    public function memoryTotal(): int
     {
-        return $this->payload()->memory_total;
+        return $this->payload['memory_total'];
     }
 
-    public function memoryUsed()
+    public function memoryUsed(): int
     {
-        $payload = $this->payload();
-        return $payload->memory_total - $payload->memory_available;
+        return $this->payload['memory_total'] - $this->payload['memory_available'];
     }
 
-    public function memoryUsedPercent()
+    public function memoryUsedPercent(): float
     {
         return $this->memoryUsed() * 100 / $this->memoryTotal();
     }
 
-    public function disks()
+    /**
+     * @return MetricDisk[]
+     */
+    public function disks(): array
     {
-        return $this->payload()->disks;
+        return $this->payload['disks'];
     }
 
-    public function diskUsed($disk)
+    /**
+     * @param MetricDisk $disk
+     */
+    public function diskUsed(array $disk): int
     {
-        return $disk->total - $disk->free;
+        return $disk['total'] - $disk['free'];
     }
 
-    public function diskUsedPercent($disk)
+    /**
+     * @param MetricDisk $disk
+     */
+    public function diskUsedPercent(array $disk): float
     {
-        return $this->diskUsed($disk) * 100 / $disk->total;
+        return $this->diskUsed($disk) * 100 / $disk['total'];
     }
 
-    public function payload()
+    public static function findLastByServerId(string $server_id): ?self
     {
-        if (!$this->payload_decoded) {
-            $this->payload_decoded = json_decode($this->payload);
-        }
-        return $this->payload_decoded;
-    }
+        $sql = <<<'SQL'
+            SELECT * FROM metrics
+            WHERE server_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+        SQL;
 
-    public static function validateJson($json)
-    {
-        json_decode($json);
-        $error_message = json_last_error_msg();
-        if ($error_message === 'No error') {
-            return true;
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        $statement->execute([$server_id]);
+
+        $result = $statement->fetch();
+        if (is_array($result)) {
+            return self::fromDatabaseRow($result);
         } else {
-            return $error_message;
+            return null;
         }
+    }
+
+    public static function deleteOlderThan(\DateTimeImmutable $datetime): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM metrics
+            WHERE created_at < ?;
+        SQL;
+
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        return $statement->execute([
+            $datetime->format(Database\Column::DATETIME_FORMAT),
+        ]);
     }
 }

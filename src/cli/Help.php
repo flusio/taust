@@ -10,24 +10,42 @@ use Minz\Response;
  */
 class Help
 {
-    public function show()
+    /**
+     * @response 200
+     *     On success.
+     */
+    public function show(): Response
     {
         $usage = "Usage: php cli COMMAND [--OPTION=VALUE]...\n";
         $usage .= "\n";
         $usage .= "COMMAND can be one of the following:\n";
         $usage .= "  help                 Show this help\n";
         $usage .= "\n";
-        $usage .= "  alarms monitor       Check domains and servers to find any new or outdated alarms\n";
-        $usage .= "  alarms notify        Send alarms notifications if any\n";
-        $usage .= "\n";
-        $usage .= "  domains heartbeats   Check that monitored domains are up (port 443)\n";
-        $usage .= "\n";
         $usage .= "  users create         Create a user\n";
         $usage .= "      --username=USERNAME\n";
         $usage .= "      --password=PASSWORD\n";
         $usage .= "\n";
-        $usage .= "  system clear-old     Clear old data\n";
-        $usage .= "  system setup         Initialize or update the system\n";
+        $usage .= "  migrations               List the migrations\n";
+        $usage .= "  migrations setup         Initialize or migrate the application\n";
+        $usage .= "      [--seed=BOOL]        Whether you want to seed the application or not (default: false)\n";
+        $usage .= "  migrations rollback      Rollback the latest migrations\n";
+        $usage .= "      [--steps=INT]        The number of migrations to rollback\n";
+        $usage .= "  migrations create        Create a new migration\n";
+        $usage .= "      --name=TEXT          The name of the migration (only chars from A to Z and numbers)\n";
+        $usage .= "\n";
+        $usage .= "  jobs                     List the registered jobs\n";
+        $usage .= "  jobs watch               Wait for and execute jobs\n";
+        $usage .= "      [--queue=TEXT]       The name of the queue to wait (default: all)\n";
+        $usage .= "      [--stop-after=INT]   The max number of jobs to execute (default is infinite)\n";
+        $usage .= "      [--sleep-duration=INT] The number of seconds between two cycles (default: 3)\n";
+        $usage .= "  jobs show                Display info about a job\n";
+        $usage .= "      --id=ID              The ID of the job\n";
+        $usage .= "  jobs run                 Execute a single job\n";
+        $usage .= "      --id=ID              The ID of the job\n";
+        $usage .= "  jobs unfail              Discard the error of a job\n";
+        $usage .= "      --id=ID              The ID of the job\n";
+        $usage .= "  jobs unlock              Unlock a job\n";
+        $usage .= "      --id=ID              The ID of the job\n";
 
         return Response::text(200, $usage);
     }

@@ -20,7 +20,7 @@
             </div>
 
             <div>
-                <?= _d($announcement->planned_at, '%a %e %b, %H:%M') ?>
+                <?= _d($announcement->planned_at, 'EEE d MMM, HH:mm') ?>
             </div>
         </div>
     </header>
@@ -42,7 +42,7 @@
     <?php if ($current_user): ?>
         <footer class="post__actions">
             <form method="post" action="<?= url('update announcement status', ['id' => $announcement->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
                 <?php if ($announcement->status === 'ongoing'): ?>
                     <input type="hidden" name="status" value="finished" />
                     <button type="submit">
@@ -68,7 +68,7 @@
                     data-action="confirmation#confirm"
                     data-confirmation-message-value="<?= _('Are you sure that you want to delete this announcement?') ?>"
                 >
-                    <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+                    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
                     <button type="submit">
                         <?= _('Delete') ?>
                     </button>

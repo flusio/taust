@@ -2,33 +2,41 @@
 
 namespace taust\models;
 
-class Domain extends \Minz\Model
+use Minz\Database;
+use Minz\Translatable;
+use Minz\Validable;
+
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+#[Database\Table(name: 'domains')]
+class Domain
 {
-    use DaoConnector;
+    use Database\Recordable;
+    use Validable;
 
-    public const PROPERTIES = [
-        'id' => [
-            'type' => 'string',
-            'required' => true,
-            'validator' => '\taust\models\Domain::validateDomain',
-        ],
+    #[Database\Column]
+    #[Validable\Presence(
+        message: new Translatable('Select a domain name.'),
+    )]
+    #[Check\Domain(
+        message: new Translatable('Select a valid domain name.'),
+    )]
+    public string $id;
 
-        'created_at' => [
-            'type' => 'datetime',
-        ],
-    ];
+    #[Database\Column]
+    public \DateTimeImmutable $created_at;
 
-    public static function init($url)
+    public function __construct(string $url)
     {
         $url_components = parse_url($url);
-        return new self([
-            'id' => isset($url_components['host']) ? $url_components['host'] : $url,
-        ]);
+        $this->id = $url_components['host'] ?? $url;
     }
 
-    public function status()
+    public function status(): string
     {
-        $last_heartbeat = Heartbeat::daoToModel('findLastHeartbeatByDomainId', $this->id);
+        $last_heartbeat = Heartbeat::findLastHeartbeatByDomainId($this->id);
         if ($last_heartbeat) {
             if ($last_heartbeat->created_at <= \Minz\Time::ago(5, 'minutes')) {
                 return 'unknown';
@@ -42,34 +50,33 @@ class Domain extends \Minz\Model
         }
     }
 
-    public function validate()
+    /**
+     * @return self[]
+     */
+    public static function listAllOrderById(): array
     {
-        $formatted_errors = [];
+        $sql = 'SELECT * FROM domains ORDER BY id';
 
-        foreach (parent::validate() as $property => $error) {
-            $code = $error['code'];
-
-            if ($property === 'id') {
-                if ($code === \Minz\Model::ERROR_REQUIRED) {
-                    $formatted_error = _('The domain is required.');
-                } else {
-                    $formatted_error = _('This domain is invalid.');
-                }
-            } else {
-                $formatted_error = $error;
-            }
-
-            $formatted_errors[$property] = $formatted_error;
-        }
-
-        return $formatted_errors;
+        $database = Database::get();
+        $statement = $database->query($sql);
+        return self::fromDatabaseRows($statement->fetchAll());
     }
 
-    public static function validateDomain($domain)
+    /**
+     * @return self[]
+     */
+    public static function listByPageId(string $page_id): array
     {
-        $filtered = filter_var($domain, FILTER_VALIDATE_DOMAIN, [
-            'flags' => FILTER_FLAG_HOSTNAME,
-        ]);
-        return $filtered !== false;
+        $sql = <<<'SQL'
+            SELECT d.* FROM domains d, pages_to_domains pd
+            WHERE d.id = pd.domain_id
+            AND pd.page_id = ?
+            ORDER BY d.id;
+        SQL;
+
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        $statement->execute([$page_id]);
+        return self::fromDatabaseRows($statement->fetchAll());
     }
 }

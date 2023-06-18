@@ -2,86 +2,108 @@
 
 namespace taust\models;
 
-use taust\utils;
+use Minz\Database;
+use Minz\Translatable;
+use Minz\Validable;
 
-class Page extends \Minz\Model
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+#[Database\Table(name: 'pages')]
+class Page
 {
-    use DaoConnector;
+    use Database\Recordable;
+    use Validable;
 
     public const TITLE_MAX_LENGTH = 100;
 
-    public const PROPERTIES = [
-        'id' => [
-            'type' => 'string',
-            'required' => true,
-        ],
+    #[Database\Column]
+    public string $id;
 
-        'created_at' => [
-            'type' => 'datetime',
-        ],
+    #[Database\Column]
+    public \DateTimeImmutable $created_at;
 
-        'title' => [
-            'type' => 'string',
-            'required' => true,
-            'validator' => '\taust\models\Page::validateTitle',
-        ],
+    #[Database\Column]
+    #[Validable\Presence(
+        message: new Translatable('The title is required.'),
+    )]
+    #[Validable\Length(
+        max: self::TITLE_MAX_LENGTH,
+        message: new Translatable('Enter a title of maximum {max} characters.'),
+    )]
+    public string $title;
 
-        'hostname' => [
-            'type' => 'string',
-        ],
+    #[Database\Column]
+    public string $hostname;
 
-        'style' => [
-            'type' => 'string',
-        ],
+    #[Database\Column]
+    public string $style;
 
-        'locale' => [
-            'type' => 'string',
-            'required' => true,
-        ],
-    ];
+    #[Database\Column]
+    public string $locale;
 
-    public static function init($title)
+    public function __construct(string $title)
     {
-        return new self([
-            'id' => utils\Random::timebased(),
-            'title' => $title,
-            'hostname' => '',
-            'style' => '',
-            'locale' => 'auto',
-        ]);
+        $this->id = \Minz\Random::timebased();
+        $this->title = $title;
+        $this->hostname = '';
+        $this->style = '';
+        $this->locale = 'auto';
     }
 
-    public function domains()
+    /**
+     * @return Domain[]
+     */
+    public function domains(): array
     {
-        return Domain::daoToList('listByPageId', $this->id);
+        return Domain::listByPageId($this->id);
     }
 
-    public function servers()
+    /**
+     * @return Server[]
+     */
+    public function servers(): array
     {
-        return Server::daoToList('listByPageId', $this->id);
+        return Server::listByPageId($this->id);
     }
 
-    public function announcements()
+    /**
+     * @return Announcement[]
+     */
+    public function announcements(): array
     {
-        return Announcement::daoToList('listByPageId', $this->id);
+        return Announcement::listByPageId($this->id);
     }
 
-    public function announcementsByYears()
+    /**
+     * @return array<string, Announcement[]>
+     */
+    public function announcementsByYears(): array
     {
-        $announcements = Announcement::daoToList('listByPageId', $this->id);
+        $announcements = Announcement::listByPageId($this->id);
         $announcements_by_years = [];
         foreach ($announcements as $announcement) {
+            /** @var string */
             $year = $announcement->planned_at->format('Y');
+
+            if (!isset($announcements_by_years[$year])) {
+                $announcements_by_years[$year] = [];
+            }
+
             $announcements_by_years[$year][] = $announcement;
         }
 
         return $announcements_by_years;
     }
 
-    public function weekAnnouncements()
+    /**
+     * @return array<string, Announcement[]>
+     */
+    public function weekAnnouncements(): array
     {
         $after = \Minz\Time::relative('today -1 week');
-        $announcements = Announcement::daoToList('listByPageIdAfter', $this->id, $after);
+        $announcements = Announcement::listByPageIdAfter($this->id, $after);
 
         $tomorrow = \Minz\Time::relative('tomorrow');
         $announcements_by_days = [];
@@ -97,36 +119,22 @@ class Page extends \Minz\Model
         return $announcements_by_days;
     }
 
-    public function tagUri()
+    public function tagUri(): string
     {
         $host = \Minz\Configuration::$url_options['host'];
         $date = $this->created_at->format('Y-m-d');
         return "tag:{$host},{$date}:pages/{$this->id}";
     }
 
-    public function validate()
+    /**
+     * @return self[]
+     */
+    public static function listAllOrderByTitle(): array
     {
-        $formatted_errors = [];
+        $sql = 'SELECT * FROM pages ORDER BY title';
 
-        foreach (parent::validate() as $property => $error) {
-            $code = $error['code'];
-
-            if ($property === 'title' && $code === \Minz\Model::ERROR_REQUIRED) {
-                $formatted_error = _('The title is required.');
-            } elseif ($property === 'title') {
-                $formatted_error = _f('The title must be less than %d characters.', self::TITLE_MAX_LENGTH);
-            } else {
-                $formatted_error = $error;
-            }
-
-            $formatted_errors[$property] = $formatted_error;
-        }
-
-        return $formatted_errors;
-    }
-
-    public static function validateTitle($title)
-    {
-        return mb_strlen($title) <= self::TITLE_MAX_LENGTH;
+        $database = Database::get();
+        $statement = $database->query($sql);
+        return self::fromDatabaseRows($statement->fetchAll());
     }
 }

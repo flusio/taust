@@ -1,11 +1,16 @@
 <?php
 
-function format_number($number, $precision = 2, $thousands_separator = '&nbsp;')
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+
+function format_number(float $number, int $precision = 2, string $thousands_separator = '&nbsp;'): string
 {
     return number_format($number, $precision, '.', $thousands_separator);
 }
 
-function format_bytes($size, $precision = 2)
+function format_bytes(int $size, int $precision = 2): string
 {
     $base = log($size, 1024);
     $suffixes = array('', 'K', 'M', 'G', 'T');
@@ -13,13 +18,9 @@ function format_bytes($size, $precision = 2)
     return format_number(pow(1024, $base - floor($base)), $precision) . '&nbsp;' . $suffixes[floor($base)];
 }
 
-function locale_to_bcp_47($locale)
+function locale_to_bcp_47(string $locale): string
 {
     $splitted_locale = explode('_', $locale, 2);
-    if (!$splitted_locale) {
-        // This is line is virtually inaccessible
-        return $locale;
-    }
 
     if (count($splitted_locale) === 1) {
         return $splitted_locale[0];

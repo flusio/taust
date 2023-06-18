@@ -2,26 +2,43 @@
 
 namespace taust\controllers;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 use taust\utils;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Domains
 {
-    public function index()
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function index(): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $domains = models\Domain::daoToList('listAllOrderById');
+        $domains = models\Domain::listAllOrderById();
         return Response::ok('domains/index.phtml', [
             'domains' => $domains,
         ]);
     }
 
-    public function new()
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function new(): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
@@ -33,24 +50,39 @@ class Domains
         ]);
     }
 
-    public function create($request)
+    /**
+     * @request_param string id
+     *     Must be a valid domain name.
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 400
+     *     If the id or the CSRF are invalid, or if the id already exists.
+     * @response 302 /domains/:id
+     *     On success.
+     */
+    public function create(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $id = $request->param('id', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::badRequest('domains/new.phtml', [
                 'id' => $id,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
             ]);
         }
 
-        $domain = models\Domain::init($id);
+        $domain = new models\Domain($id);
         $errors = $domain->validate();
         if ($errors) {
             return Response::badRequest('domains/new.phtml', [
@@ -76,25 +108,35 @@ class Domains
         ]);
     }
 
-    public function show($request)
+    /**
+     * @request_param string id
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 404
+     *     If the domain doesn't exist.
+     * @response 200
+     *     On success.
+     */
+    public function show(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
+        /** @var string */
+        $id = $request->param('id', '');
+
         $domain = models\Domain::find($id);
+
         if (!$domain) {
             return Response::notFound('not_found.phtml');
         }
 
-        $alarms = models\Alarm::daoToList('listByDomainIdOrderByDescCreatedAt', $domain->id);
-        $last_heartbeat = models\Heartbeat::daoToModel('findLastHeartbeatByDomainId', $domain->id);
-        $last_heartbeat_at = null;
-        if ($last_heartbeat) {
-            $last_heartbeat_at = $last_heartbeat->created_at;
-        }
+        $alarms = models\Alarm::listByDomainIdOrderByDescCreatedAt($domain->id);
+        $last_heartbeat = models\Heartbeat::findLastHeartbeatByDomainId($domain->id);
+        $last_heartbeat_at = $last_heartbeat->created_at ?? null;
 
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
@@ -103,17 +145,33 @@ class Domains
         ]);
     }
 
-    public function delete($request)
+    /**
+     * @request_param string id
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 302 /domains/:id
+     *     If the CSRF is invalid.
+     * @response 404
+     *     If the domain doesn't exist.
+     * @response 302 /
+     *     On success.
+     */
+    public function delete(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $id = $request->param('id', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::redirect('show domain', ['id' => $id]);
         }
 

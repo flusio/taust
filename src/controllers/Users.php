@@ -2,13 +2,24 @@
 
 namespace taust\controllers;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 use taust\utils;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Users
 {
-    public function show($request)
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function show(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
@@ -22,19 +33,39 @@ class Users
         ]);
     }
 
-    public function update($request)
+    /**
+     * @request_param string email
+     * @request_param string free_mobile_login
+     * @request_param string free_mobile_key
+     * @request_param string csrf
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 400
+     *     If one of the parameter is invalid.
+     * @response 200
+     *     On success.
+     */
+    public function update(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $email = $request->param('email');
-        $free_mobile_login = $request->param('free_mobile_login');
-        $free_mobile_key = $request->param('free_mobile_key');
-        $csrf = $request->param('csrf');
+        /** @var string */
+        $email = $request->param('email', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $free_mobile_login = $request->param('free_mobile_login', '');
+
+        /** @var string */
+        $free_mobile_key = $request->param('free_mobile_key', '');
+
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::badRequest('users/show.phtml', [
                 'email' => $email,
                 'free_mobile_login' => $free_mobile_login,
@@ -43,7 +74,7 @@ class Users
             ]);
         }
 
-        $current_user->email = utils\Email::sanitize($email);
+        $current_user->email = \Minz\Email::sanitize($email);
         $current_user->free_mobile_login = $free_mobile_login ? trim($free_mobile_login) : '';
         $current_user->free_mobile_key = $free_mobile_key ? trim($free_mobile_key) : '';
 

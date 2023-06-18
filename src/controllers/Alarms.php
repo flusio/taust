@@ -2,21 +2,32 @@
 
 namespace taust\controllers;
 
+use Minz\Request;
 use Minz\Response;
 use taust\models;
 use taust\utils;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Alarms
 {
-    public function index($request)
+    /**
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 200
+     *     On success.
+     */
+    public function index(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $ongoing_alarms = models\Alarm::daoToList('listOngoingOrderByDescCreatedAt');
-        $finished_alarms = models\Alarm::daoToList('listLastFinished');
+        $ongoing_alarms = models\Alarm::listOngoingOrderByDescCreatedAt();
+        $finished_alarms = models\Alarm::listLastFinished();
 
         return Response::ok('alarms/index.phtml', [
             'ongoing_alarms' => $ongoing_alarms,
@@ -24,18 +35,35 @@ class Alarms
         ]);
     }
 
-    public function finish($request)
+    /**
+     * @request_param string id
+     * @request_param string csrf
+     * @request_param string from
+     *
+     * @response 302 /login
+     *     If the user is not connected.
+     * @response 404
+     *     If the alarm doesn't exist.
+     * @response 302 /:from
+     *     On success or if the CSRF is invalid.
+     */
+    public function finish(Request $request): Response
     {
         $current_user = utils\CurrentUser::get();
         if (!$current_user) {
             return Response::redirect('login');
         }
 
-        $id = $request->param('id');
-        $csrf = $request->param('csrf');
-        $from = $request->param('from');
+        /** @var string */
+        $id = $request->param('id', '');
 
-        if (!\Minz\CSRF::validate($csrf)) {
+        /** @var string */
+        $csrf = $request->param('csrf', '');
+
+        /** @var string */
+        $from = $request->param('from', '');
+
+        if (!\Minz\Csrf::validate($csrf)) {
             return Response::found($from);
         }
 

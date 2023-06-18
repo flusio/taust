@@ -23,12 +23,15 @@
 
 <?php if ($metric): ?>
     <p class="paragraph--centered paragraph--muted">
-        <?= _f('Last ping on %s', _d($metric->created_at, '%a %d %b %Y %H:%M:%S')) ?>
+        <?= _f('Last ping on %s', _d($metric->created_at, 'EEE d MMM YYYY, HH:mm:ss')) ?>
     </p>
 <?php endif; ?>
 
 <p>
-    <strong>IPv4:</strong> <?= $server->ipv4 ?>
+    <?php if ($server->ipv4): ?>
+        <strong>IPv4:</strong> <?= $server->ipv4 ?>
+    <?php endif; ?>
+
     <?php if ($server->ipv6): ?>
         · <strong>IPv6:</strong> <?= $server->ipv6 ?>
     <?php endif; ?>
@@ -83,8 +86,8 @@
                 class="list__item list__item--gauge"
                 style="--gauge-value: <?= format_number($metric->diskUsedPercent($disk), 2, '') ?>%;"
             >
-                <code><?= $disk->name ?></code><br />
-                <?= _f('%s used on %s', format_bytes($metric->diskUsed($disk)), format_bytes($disk->total)) ?>
+                <code><?= $disk['name'] ?></code><br />
+                <?= _f('%s used on %s', format_bytes($metric->diskUsed($disk)), format_bytes($disk['total'])) ?>
                 (<?= format_number($metric->diskUsedPercent($disk)) ?>&nbsp;%)
             </li>
         <?php endforeach; ?>
@@ -111,7 +114,7 @@
         data-action="confirmation#confirm"
         data-confirmation-message-value="<?= _('Are you sure that you want to stop to monitor this server?') ?>"
     >
-        <input type="hidden" name="csrf" value="<?= csrf_token() ?>" />
+        <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
         <button type="submit">
             <?= _('Stop monitoring this server') ?>
         </button>

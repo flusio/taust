@@ -2,47 +2,86 @@
 
 namespace taust\models;
 
-class Heartbeat extends \Minz\Model
+use Minz\Database;
+
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+#[Database\Table(name: 'heartbeats')]
+class Heartbeat
 {
-    use DaoConnector;
+    use Database\Recordable;
 
-    public const PROPERTIES = [
-        'id' => [
-            'type' => 'integer',
-        ],
+    #[Database\Column]
+    public int $id;
 
-        'created_at' => [
-            'type' => 'datetime',
-        ],
+    #[Database\Column]
+    public \DateTimeImmutable $created_at;
 
-        'is_success' => [
-            'type' => 'boolean',
-        ],
+    #[Database\Column]
+    public bool $is_success;
 
-        'details' => [
-            'type' => 'string',
-        ],
+    #[Database\Column]
+    public string $details;
 
-        'domain_id' => [
-            'type' => 'string',
-        ],
-    ];
+    #[Database\Column]
+    public string $domain_id;
 
-    public static function initSuccess($domain_id)
+    public static function initSuccess(string $domain_id): self
     {
-        return new self([
-            'domain_id' => $domain_id,
-            'is_success' => true,
-            'details' => 'OK',
-        ]);
+        $heartbeat = new self();
+
+        $heartbeat->domain_id = $domain_id;
+        $heartbeat->is_success = true;
+        $heartbeat->details = 'OK';
+
+        return $heartbeat;
     }
 
-    public static function initError($domain_id, $details)
+    public static function initError(string $domain_id, string $details): self
     {
-        return new self([
-            'domain_id' => $domain_id,
-            'is_success' => false,
-            'details' => $details,
+        $heartbeat = new self();
+
+        $heartbeat->domain_id = $domain_id;
+        $heartbeat->is_success = false;
+        $heartbeat->details = $details;
+
+        return $heartbeat;
+    }
+
+    public static function findLastHeartbeatByDomainId(string $domain_id): ?self
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM heartbeats
+            WHERE domain_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+        SQL;
+
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        $statement->execute([$domain_id]);
+
+        $result = $statement->fetch();
+        if (is_array($result)) {
+            return self::fromDatabaseRow($result);
+        } else {
+            return null;
+        }
+    }
+
+    public static function deleteOlderThan(\DateTimeImmutable $datetime): bool
+    {
+        $sql = <<<SQL
+            DELETE FROM heartbeats
+            WHERE created_at < ?;
+        SQL;
+
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        return $statement->execute([
+            $datetime->format(Database\Column::DATETIME_FORMAT)
         ]);
     }
 }

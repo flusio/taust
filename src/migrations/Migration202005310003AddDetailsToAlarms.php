@@ -2,9 +2,13 @@
 
 namespace taust\migrations;
 
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
 class Migration202005310003AddDetailsToAlarms
 {
-    public function migrate()
+    public function migrate(): bool
     {
         $database = \Minz\Database::get();
 
@@ -15,4 +19,3 @@ class Migration202005310003AddDetailsToAlarms
         return $database->exec($sql) !== false;
     }
 }
-

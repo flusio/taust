@@ -29,7 +29,7 @@ install: ## Install the dependencies
 
 .PHONY: setup
 setup: .env ## Setup the application system
-	$(PHP) cli system setup
+	$(PHP) cli migrations setup --seed
 
 .PHONY: lint
 lint: ## Run the linter on the PHP files

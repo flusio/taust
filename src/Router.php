@@ -10,101 +10,97 @@ class Router
 {
     /**
      * Get the application router (doesn't include CLI routes)
-     *
-     * @return \Minz\Router
      */
-    public static function load()
+    public static function load(): \Minz\Router
     {
         $router = new \Minz\Router();
 
-        $router->addRoute('get', '/', 'Dashboard#index', 'home');
-        $router->addRoute('post', '/', 'Metrics#create', 'create metrics');
+        $router->addRoute('GET', '/', 'Dashboard#index', 'home');
+        $router->addRoute('POST', '/', 'Metrics#create', 'create metrics');
 
-        $router->addRoute('get', '/login', 'Auth#login', 'login');
-        $router->addRoute('post', '/login', 'Auth#createSession', 'create session');
-        $router->addRoute('post', '/logout', 'Auth#deleteSession', 'logout');
+        $router->addRoute('GET', '/login', 'Auth#login', 'login');
+        $router->addRoute('POST', '/login', 'Auth#createSession', 'create session');
+        $router->addRoute('POST', '/logout', 'Auth#deleteSession', 'logout');
 
-        $router->addRoute('get', '/profile', 'Users#show', 'user');
-        $router->addRoute('post', '/profile', 'Users#update', 'update user');
+        $router->addRoute('GET', '/profile', 'Users#show', 'user');
+        $router->addRoute('POST', '/profile', 'Users#update', 'update user');
 
-        $router->addRoute('get', '/domains', 'Domains#index', 'domains');
-        $router->addRoute('get', '/domains/new', 'Domains#new', 'new domain');
-        $router->addRoute('post', '/domains/new', 'Domains#create', 'create domain');
-        $router->addRoute('get', '/domains/:id', 'Domains#show', 'show domain');
-        $router->addRoute('post', '/domains/:id/delete', 'Domains#delete', 'delete domain');
+        $router->addRoute('GET', '/domains', 'Domains#index', 'domains');
+        $router->addRoute('GET', '/domains/new', 'Domains#new', 'new domain');
+        $router->addRoute('POST', '/domains/new', 'Domains#create', 'create domain');
+        $router->addRoute('GET', '/domains/:id', 'Domains#show', 'show domain');
+        $router->addRoute('POST', '/domains/:id/delete', 'Domains#delete', 'delete domain');
 
-        $router->addRoute('get', '/servers', 'Servers#index', 'servers');
-        $router->addRoute('get', '/servers/new', 'Servers#new', 'new server');
-        $router->addRoute('post', '/servers/new', 'Servers#create', 'create server');
-        $router->addRoute('get', '/servers/:id', 'Servers#show', 'show server');
-        $router->addRoute('post', '/servers/:id/delete', 'Servers#delete', 'delete server');
+        $router->addRoute('GET', '/servers', 'Servers#index', 'servers');
+        $router->addRoute('GET', '/servers/new', 'Servers#new', 'new server');
+        $router->addRoute('POST', '/servers/new', 'Servers#create', 'create server');
+        $router->addRoute('GET', '/servers/:id', 'Servers#show', 'show server');
+        $router->addRoute('POST', '/servers/:id/delete', 'Servers#delete', 'delete server');
 
-        $router->addRoute('get', '/alarms', 'Alarms#index', 'alarms');
-        $router->addRoute('post', '/alarms/:id/finish', 'Alarms#finish', 'finish alarm');
+        $router->addRoute('GET', '/alarms', 'Alarms#index', 'alarms');
+        $router->addRoute('POST', '/alarms/:id/finish', 'Alarms#finish', 'finish alarm');
 
-        $router->addRoute('get', '/pages', 'Pages#index', 'pages');
-        $router->addRoute('get', '/pages/new', 'Pages#new', 'new page');
-        $router->addRoute('post', '/pages/new', 'Pages#create', 'create page');
-        $router->addRoute('get', '/pages/:id', 'Pages#show', 'show page');
-        $router->addRoute('get', '/pages/:id/feed', 'Pages#feed', 'page feed');
-        $router->addRoute('get', '/pages/:id/style', 'Pages#style', 'page style');
-        $router->addRoute('post', '/pages/:id', 'pages/Announcements#create', 'create announcement');
-        $router->addRoute('get', '/pages/:id/announcements', 'pages/Announcements#index', 'page announcements');
-        $router->addRoute('get', '/pages/:id/edit', 'Pages#edit', 'edit page');
-        $router->addRoute('post', '/pages/:id/edit', 'Pages#update', 'update page');
-        $router->addRoute('post', '/pages/:id/delete', 'Pages#delete', 'delete page');
+        $router->addRoute('GET', '/pages', 'Pages#index', 'pages');
+        $router->addRoute('GET', '/pages/new', 'Pages#new', 'new page');
+        $router->addRoute('POST', '/pages/new', 'Pages#create', 'create page');
+        $router->addRoute('GET', '/pages/:id', 'Pages#show', 'show page');
+        $router->addRoute('GET', '/pages/:id/feed', 'Pages#feed', 'page feed');
+        $router->addRoute('GET', '/pages/:id/style', 'Pages#style', 'page style');
+        $router->addRoute('POST', '/pages/:id', 'pages/Announcements#create', 'create announcement');
+        $router->addRoute('GET', '/pages/:id/announcements', 'pages/Announcements#index', 'page announcements');
+        $router->addRoute('GET', '/pages/:id/edit', 'Pages#edit', 'edit page');
+        $router->addRoute('POST', '/pages/:id/edit', 'Pages#update', 'update page');
+        $router->addRoute('POST', '/pages/:id/delete', 'Pages#delete', 'delete page');
 
 
-        $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
-        $router->addRoute('get', '/a/:id/edit', 'Announcements#edit', 'edit announcement');
-        $router->addRoute('post', '/a/:id/edit', 'Announcements#update', 'update announcement');
-        $router->addRoute('post', '/a/:id/status', 'Announcements#updateStatus', 'update announcement status');
-        $router->addRoute('post', '/a/:id/delete', 'Announcements#delete', 'delete announcement');
+        $router->addRoute('GET', '/a/:id', 'Announcements#show', 'show announcement');
+        $router->addRoute('GET', '/a/:id/edit', 'Announcements#edit', 'edit announcement');
+        $router->addRoute('POST', '/a/:id/edit', 'Announcements#update', 'update announcement');
+        $router->addRoute('POST', '/a/:id/status', 'Announcements#updateStatus', 'update announcement status');
+        $router->addRoute('POST', '/a/:id/delete', 'Announcements#delete', 'delete announcement');
 
         return $router;
     }
 
     /**
      * Get the application router for a page
-     *
-     * @param string $page_id
-     *
-     * @return \Minz\Router
      */
-    public static function loadForPage($page_id)
+    public static function loadForDedicatedHostname(): \Minz\Router
     {
         $router = new \Minz\Router();
 
-        $router->addRoute('get', '/', 'Pages#show', 'home');
-        $router->addRoute('get', '/feed', 'Pages#feed', 'page feed');
-        $router->addRoute('get', '/style', 'Pages#style', 'page style');
-        $router->addRoute('get', '/a/:id', 'Announcements#show', 'show announcement');
-        $router->addRoute('get', '/announcements', 'pages/Announcements#index', 'page announcements');
+        $router->addRoute('GET', '/', 'Pages#show', 'home');
+        $router->addRoute('GET', '/feed', 'Pages#feed', 'page feed');
+        $router->addRoute('GET', '/style', 'Pages#style', 'page style');
+        $router->addRoute('GET', '/a/:id', 'Announcements#show', 'show announcement');
+        $router->addRoute('GET', '/announcements', 'pages/Announcements#index', 'page announcements');
 
         return $router;
     }
 
     /**
      * Get the CLI router (includes application routes)
-     *
-     * @return \Minz\Router
      */
-    public static function loadCli()
+    public static function loadCli(): \Minz\Router
     {
         $router = self::load();
 
-        $router->addRoute('cli', '/', 'Help#show');
-        $router->addRoute('cli', '/help', 'Help#show');
+        $router->addRoute('CLI', '/', 'Help#show');
+        $router->addRoute('CLI', '/help', 'Help#show');
 
-        $router->addRoute('cli', '/system/setup', 'System#setup');
-        $router->addRoute('cli', '/system/clear-old', 'System#clearOld');
+        $router->addRoute('CLI', '/users/create', 'Users#create');
 
-        $router->addRoute('cli', '/users/create', 'Users#create');
+        $router->addRoute('CLI', '/migrations', 'Migrations#index');
+        $router->addRoute('CLI', '/migrations/setup', 'Migrations#setup');
+        $router->addRoute('CLI', '/migrations/rollback', 'Migrations#rollback');
+        $router->addRoute('CLI', '/migrations/create', 'Migrations#create');
 
-        $router->addRoute('cli', '/domains/heartbeats', 'Domains#heartbeats');
-
-        $router->addRoute('cli', '/alarms/monitor', 'Alarms#monitor');
-        $router->addRoute('cli', '/alarms/notify', 'Alarms#notify');
+        $router->addRoute('CLI', '/jobs', 'Jobs#index');
+        $router->addRoute('CLI', '/jobs/watch', 'Jobs#watch');
+        $router->addRoute('CLI', '/jobs/run', 'Jobs#run');
+        $router->addRoute('CLI', '/jobs/show', 'Jobs#show');
+        $router->addRoute('CLI', '/jobs/unfail', 'Jobs#unfail');
+        $router->addRoute('CLI', '/jobs/unlock', 'Jobs#unlock');
 
         return $router;
     }

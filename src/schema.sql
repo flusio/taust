@@ -86,3 +86,18 @@ CREATE TABLE announcements (
     title TEXT NOT NULL,
     content TEXT NOT NULL
 );
+
+CREATE TABLE jobs (
+    id SERIAL PRIMARY KEY,
+    created_at TIMESTAMPTZ NOT NULL,
+    updated_at TIMESTAMPTZ NOT NULL,
+    perform_at TIMESTAMPTZ NOT NULL,
+    name TEXT NOT NULL DEFAULT '',
+    args JSON NOT NULL DEFAULT '{}',
+    frequency TEXT NOT NULL DEFAULT '',
+    queue TEXT NOT NULL DEFAULT 'default',
+    locked_at TIMESTAMPTZ,
+    number_attempts BIGINT NOT NULL DEFAULT 0,
+    last_error TEXT NOT NULL DEFAULT '',
+    failed_at TIMESTAMPTZ
+);

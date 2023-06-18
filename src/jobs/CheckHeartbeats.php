@@ -1,18 +1,36 @@
 <?php
 
-namespace taust\cli;
+namespace taust\jobs;
 
-use Minz\Response;
+use Minz\Job;
 use taust\models;
 
-class Domains
+/**
+ * @author  Marien Fressinaud <dev@marienfressinaud.fr>
+ * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
+ */
+class CheckHeartbeats extends Job
 {
-    public function heartbeats($request)
+    public static function install(): void
     {
-        if ($request->method() !== 'cli') {
-            return Response::text(400, 'This endpoint must be called from command line.');
+        $job = new self();
+        if (!self::existsBy(['name' => $job->name])) {
+            $perform_at = \Minz\Time::now();
+            $job->performLater($perform_at);
         }
+    }
 
+    public function __construct()
+    {
+        parent::__construct();
+        $this->frequency = '+1 minute';
+    }
+
+    /**
+     * Check the heartbeats of the domains.
+     */
+    public function perform(): void
+    {
         $curl_session = curl_init();
         curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
@@ -36,11 +54,11 @@ class Domains
 
             $heartbeat->save();
 
-            $results[] = "{$heartbeat->domain_id}: {$heartbeat->details}";
+            if (!$heartbeat->is_success) {
+                \Minz\Log::warning("{$heartbeat->domain_id}: {$heartbeat->details}");
+            }
         }
 
         curl_close($curl_session);
-
-        return Response::text(200, implode("\n", $results));
     }
 }
