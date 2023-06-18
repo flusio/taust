@@ -1,5 +1,7 @@
 FROM php:8.0-fpm
 
+ENV COMPOSER_HOME /tmp
+
 RUN apt-get update && \
     apt-get install -y git locales libpq-dev libzip-dev unzip libicu-dev && \
     docker-php-ext-configure intl && \
@@ -8,3 +10,5 @@ RUN apt-get update && \
 RUN echo 'en_GB.UTF-8 UTF-8' >> /etc/locale.gen && \
     echo 'fr_FR.UTF-8 UTF-8' >> /etc/locale.gen && \
     locale-gen
+
+COPY --from=composer/composer /usr/bin/composer /usr/bin/composer
