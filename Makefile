@@ -4,10 +4,8 @@ USER = $(shell id -u):$(shell id -g)
 
 ifdef NO_DOCKER
 	PHP = php
-	CLI = php cli
 else
 	PHP = ./docker/bin/php
-	CLI = ./docker/bin/cli
 endif
 
 .PHONY: docker-start
@@ -25,7 +23,7 @@ docker-clean: ## Clean the Docker stuff
 
 .PHONY: setup
 setup: .env ## Setup the application system
-	$(CLI) system setup
+	$(PHP) cli system setup
 
 .PHONY: help
 help:
