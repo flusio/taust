@@ -3,9 +3,7 @@ version: '3'
 services:
     php:
         image: taust_php:dev
-        build:
-            context: .
-            dockerfile: Dockerfile.php
+        build: .
         restart: unless-stopped
         ports:
             - "9000:9000"
