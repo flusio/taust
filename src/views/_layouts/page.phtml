@@ -25,15 +25,21 @@
 
 <div class="layout layout--page">
     <main class="layout__content">
-        <h1 class="layout__title">
-            <?php if ($current_user): ?>
-                <a href="<?= url('edit page', ['id' => $page->id]) ?>">
+        <?php if ($current_user): ?>
+            <div class="header">
+                <h1 class="header__item--extend">
                     <?= $title ?>
+                </h1>
+
+                <a class="link--primary" href="<?= url('edit page', ['id' => $page->id]) ?>">
+                    <?= _('Edit the page') ?>
                 </a>
-            <?php else: ?>
+            </div>
+        <?php else: ?>
+            <h1 class="layout__title">
                 <?= $title ?>
-            <?php endif; ?>
-        </h1>
+            </h1>
+        <?php endif; ?>
 
         <?= $this->safe('content') ?>
     </main>

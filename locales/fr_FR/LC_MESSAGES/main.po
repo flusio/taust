@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: taust\n"
-"POT-Creation-Date: 2023-06-27 11:38+0200\n"
-"PO-Revision-Date: 2023-06-27 11:41+0200\n"
+"POT-Creation-Date: 2023-06-27 17:49+0200\n"
+"PO-Revision-Date: 2023-06-27 17:50+0200\n"
 "Last-Translator: Marien Fressinaud <dev@marienfressinaud.fr>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -157,6 +157,10 @@ msgstr "Profil (%s)"
 msgid "Logout"
 msgstr "Se déconnecter"
 
+#: views/_layouts/page.phtml:35
+msgid "Edit the page"
+msgstr "Modifier la page"
+
 #: views/alarms/_alarm.phtml:23
 msgid "finished"
 msgstr "terminé"
@@ -226,7 +230,7 @@ msgstr "Titre"
 msgid "Content"
 msgstr "Contenu"
 
-#: views/announcements/edit.phtml:100 views/pages/edit.phtml:126
+#: views/announcements/edit.phtml:100 views/pages/edit.phtml:128
 msgid "Save changes"
 msgstr "Enregistrer les changements"
 
@@ -417,7 +421,7 @@ msgstr "Dernier ping le %s"
 msgid "↻ Refresh the page"
 msgstr "↻ Rafraîchir la page"
 
-#: views/domains/show.phtml:51 views/pages/edit.phtml:132
+#: views/domains/show.phtml:51 views/pages/edit.phtml:134
 #: views/servers/show.phtml:108
 msgid "Danger zone 😈"
 msgstr "Zone de danger 😈"
@@ -498,39 +502,43 @@ msgstr "Incident"
 msgid "Page %s"
 msgstr "Page %s"
 
-#: views/pages/edit.phtml:19
+#: views/pages/edit.phtml:12
+msgid "Show the page"
+msgstr "Afficher la page"
+
+#: views/pages/edit.phtml:21
 msgid "Domains (optional)"
 msgstr "Domaines (facultatif)"
 
-#: views/pages/edit.phtml:39
+#: views/pages/edit.phtml:41
 msgid "Servers (optional)"
 msgstr "Serveurs (facultatif)"
 
-#: views/pages/edit.phtml:59
+#: views/pages/edit.phtml:61
 msgid "Hostname (optional)"
 msgstr "Nom d’hôte (facultatif)"
 
-#: views/pages/edit.phtml:72
+#: views/pages/edit.phtml:74
 msgid "open"
 msgstr "ouvrir"
 
-#: views/pages/edit.phtml:86
+#: views/pages/edit.phtml:88
 msgid "Custom style (optional)"
 msgstr "Style personnalisé (facultatif)"
 
-#: views/pages/edit.phtml:100
+#: views/pages/edit.phtml:102
 msgid "Page language"
 msgstr "Langue de la page"
 
-#: views/pages/edit.phtml:105
+#: views/pages/edit.phtml:107
 msgid "Autodetected"
 msgstr "Autodétectée"
 
-#: views/pages/edit.phtml:139
+#: views/pages/edit.phtml:141
 msgid "Are you sure that you want to delete this page?"
 msgstr "Êtes-vous certain‧e que vous souhaitez supprimer cette page ?"
 
-#: views/pages/edit.phtml:143
+#: views/pages/edit.phtml:145
 msgid "Delete this status page"
 msgstr "Supprimer cette page de statut"
 

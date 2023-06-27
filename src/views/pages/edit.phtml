@@ -5,11 +5,13 @@
     ]);
 ?>
 
-<h1>
-    <a href="<?= url('show page', ['id' => $page->id]) ?>">
-        <?= $this->protect($page->title) ?>
+<div class="header">
+    <h1 class="header__item--extend"><?= $this->protect($page->title) ?></h1>
+
+    <a class="link--primary" href="<?= url('show page', ['id' => $page->id]) ?>">
+        <?= _('Show the page') ?>
     </a>
-</h1>
+</div>
 
 <form method="post" action="<?= url('update page', ['id' => $page->id]) ?>">
     <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />

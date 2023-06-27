@@ -1,16 +1,9 @@
-.header__container {
+.header {
     display: flex;
-    align-items: center;
+    max-width: 30rem;
+    align-items: baseline;
 }
 
-.header__separator {
+.header__item--extend {
     flex: 1;
-}
-
-.header__link {
-    padding: 1em 2em;
-}
-
-.header__link--home {
-    font-weight: bold;
 }
