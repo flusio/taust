@@ -55,6 +55,7 @@ class Heartbeat
         $sql = <<<'SQL'
             SELECT * FROM heartbeats
             WHERE domain_id = ?
+            AND is_success = true
             ORDER BY created_at DESC
             LIMIT 1
         SQL;
