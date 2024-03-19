@@ -42,13 +42,13 @@ class User
     #[Validable\Email(
         message: new Translatable('Enter a valid email.'),
     )]
-    public ?string $email;
+    public ?string $email = null;
 
     #[Database\Column]
-    public ?string $free_mobile_login;
+    public ?string $free_mobile_login = null;
 
     #[Database\Column]
-    public ?string $free_mobile_key;
+    public ?string $free_mobile_key = null;
 
     public function __construct(string $username, string $password)
     {
