@@ -13,15 +13,15 @@ endif
 .PHONY: docker-start
 docker-start: .env ## Start a development server
 	@echo "Running webserver on http://localhost:8000"
-	docker-compose -p taust -f docker/docker-compose.yml up
+	docker compose -p taust -f docker/docker-compose.yml up
 
 .PHONY: docker-build
 docker-build: ## Rebuild the Docker image
-	docker-compose -p taust -f docker/docker-compose.yml build
+	docker compose -p taust -f docker/docker-compose.yml build
 
 .PHONY: docker-clean
 docker-clean: ## Clean the Docker stuff
-	docker-compose -p taust -f docker/docker-compose.yml down
+	docker compose -p taust -f docker/docker-compose.yml down
 
 .PHONY: install
 install: ## Install the dependencies

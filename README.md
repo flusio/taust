@@ -147,7 +147,7 @@ $ git clone --recurse-submodules https://github.com/flusio/taust.git
 $ cd taust
 ```
 
-Install [Docker](https://docs.docker.com/engine/install/) and [Docker Compose](https://docs.docker.com/compose/install/).
+Install [Docker](https://docs.docker.com/engine/install/).
 
 Install the development dependencies:
 
