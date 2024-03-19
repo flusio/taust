@@ -84,7 +84,7 @@ class Application
             $router = Router::load();
         }
 
-        \Minz\Output\View::$extensions_to_content_types['.atom.xml.php'] = 'application/atom+xml;charset=UTF-8';
+        \Minz\Output\View::$extensions_to_content_types['.atom.xml.phtml'] = 'application/xml';
 
         \Minz\Engine::init($router, [
             'start_session' => true,
