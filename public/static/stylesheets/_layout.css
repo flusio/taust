@@ -99,7 +99,7 @@ body {
 }
 
 .aside--layout .aside__link--active::after {
-    content: '➜';
+    content: '👉';
     float: right;
 }
 
