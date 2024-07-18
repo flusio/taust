@@ -33,6 +33,7 @@ class FreeMobile
             'Hey, this is taust robot at %s.',
             \Minz\Url::absoluteFor('home')
         );
+        $message .= ' ';
         $message .= ViewHelpers::formatGettext(
             'It looks like you have a problem with the %s.',
             $object
