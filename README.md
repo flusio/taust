@@ -8,8 +8,6 @@ It allows you to monitor:
 
 It is able to notify you about alerts by emails or SMS (only via the French Free Mobile operator).
 
-It supports PHP 8.1+ and has very few dependencies.
-
 taust is licensed under [AGPL 3](/LICENSE).
 
 ## Contributing
@@ -34,7 +32,7 @@ Just note that the documentation is not well detailed and it is expected you're 
 
 You’ll need:
 
-- PHP 8.1+ (with intl, gettext, pcntl and pdo\_pgsql extensions);
+- PHP 8.2+ (with intl, gettext, pcntl and pdo\_pgsql extensions);
 - a PostgreSQL database;
 - a webserver (Nginx in this documentation).
 
