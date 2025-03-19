@@ -8,7 +8,7 @@ It allows you to monitor:
 
 It is able to notify you about alerts by emails or SMS (only via the French Free Mobile operator).
 
-taust is licensed under [AGPL 3](/LICENSE).
+taust is licensed under [AGPL 3](/LICENSE.txt).
 
 ## Contributing
 
