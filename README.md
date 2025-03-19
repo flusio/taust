@@ -67,7 +67,7 @@ $ sudo chmod 400 .env
 ```
 
 Then, configure your virtual host to serve PHP files from the `public/` directory.
-You can inspire yourself with the Nginx configuration in [`docker/nginx.conf`](/docker/nginx.conf).
+You can inspire yourself with the Nginx configuration in [`docker/development/nginx.conf`](/docker/development/nginx.conf).
 Note that taust must be served on HTTPS in production.
 You can use [certbot](https://certbot.eff.org/) for that.
 

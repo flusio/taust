@@ -6,7 +6,7 @@ services:
         ports:
             - "9000:9000"
         volumes:
-            - ..:/var/www/html:z
+            - ../..:/var/www/html:z
         user: $USER
         links:
             - database
@@ -17,7 +17,7 @@ services:
         restart: unless-stopped
         command: php cli jobs watch
         volumes:
-            - ..:/var/www/html:z
+            - ../..:/var/www/html:z
         user: $USER
         links:
             - database
@@ -28,7 +28,7 @@ services:
         ports:
             - "8000:80"
         volumes:
-            - ..:/var/www/html:z
+            - ../..:/var/www/html:z
             - ./nginx.conf:/etc/nginx/conf.d/default.conf:z
         links:
             - php
