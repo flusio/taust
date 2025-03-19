@@ -53,8 +53,6 @@ class Application
 
     private function initApp(Request $request): void
     {
-        include(\Minz\Configuration::$app_path . '/src/utils/view_helpers.php');
-
         /** @var string */
         $app_hostname = $request->param('app_hostname', '');
 

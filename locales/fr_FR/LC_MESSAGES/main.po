@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: taust\n"
-"POT-Creation-Date: 2023-06-27 17:49+0200\n"
-"PO-Revision-Date: 2023-06-27 17:50+0200\n"
+"POT-Creation-Date: 2025-03-19 18:13+0100\n"
+"PO-Revision-Date: 2025-03-19 18:13+0100\n"
 "Last-Translator: Marien Fressinaud <dev@marienfressinaud.fr>\n"
 "Language-Team: \n"
 "Language: fr_FR\n"
@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.2.2\n"
+"X-Generator: Poedit 3.5\n"
 "X-Poedit-Basepath: ../../../src\n"
 "X-Poedit-KeywordsList: Translatable;_f;_n:1,2;_nf:1,2;formatGettext;"
 "formatNgettext:1,2\n"
@@ -41,7 +41,7 @@ msgstr "Ce domaine existe déjà."
 msgid "A page already has the same hostname."
 msgstr "Une page possède déjà ce nom d’hôte."
 
-#: mailers/Alarms.php:15
+#: mailers/Alarms.php:31
 msgid "[taust] A new problem has been detected"
 msgstr "[taust] Un nouveau problème a été détecté"
 
@@ -117,7 +117,7 @@ msgstr "Saisissez une adresse email."
 msgid "Hey, this is taust robot at %s."
 msgstr "Salut, c’est le robot taust de %s."
 
-#: services/FreeMobile.php:37
+#: services/FreeMobile.php:38
 #, php-format
 msgid "It looks like you have a problem with the %s."
 msgstr "Il semblerait que vous ayez un problème avec le %s."

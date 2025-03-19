@@ -33,6 +33,7 @@ Just note that the documentation is not well detailed and it is expected you're 
 You’ll need:
 
 - PHP 8.2+ (with intl, gettext, pcntl and pdo\_pgsql extensions);
+- [Composer](https://getcomposer.org/)
 - a PostgreSQL database;
 - a webserver (Nginx in this documentation).
 
@@ -40,8 +41,14 @@ Download taust:
 
 ```console
 $ cd /var/www
-$ git clone --recurse-submodules https://github.com/flusio/taust.git
+$ git clone https://github.com/flusio/taust.git
 $ cd taust
+```
+
+Install the Composer dependencies with:
+
+```console
+$ composer install --no-dev --optimize-autoloader
 ```
 
 Create a `.env` file:
@@ -53,17 +60,17 @@ $ vim .env # or edit with nano or whatever editor you prefer
 
 The environment file is commented so it should not be too complicated to setup correctly.
 
-Initialize the database:
-
-```console
-$ php cli migrations setup --seed
-```
-
 Set correct permissions on the files:
 
 ```console
 $ sudo chown -R www-data:www-data .
 $ sudo chmod 400 .env
+```
+
+Initialize the database:
+
+```console
+$ php cli migrations setup --seed
 ```
 
 Then, configure your virtual host to serve PHP files from the `public/` directory.
@@ -119,7 +126,13 @@ If you prefer, you can configure a Cron task instead. For instance, with `cronta
 Fetch the new code with Git:
 
 ```console
-$ git pull --recurse-submodules
+$ git pull
+```
+
+Then, install the dependencies:
+
+```console
+$ composer install --no-dev --optimize-autoloader
 ```
 
 Run the migrations:
@@ -141,7 +154,7 @@ Optional last step that might be useful: verify that your instance is still onli
 Download taust:
 
 ```console
-$ git clone --recurse-submodules https://github.com/flusio/taust.git
+$ git clone https://github.com/flusio/taust.git
 $ cd taust
 ```
 

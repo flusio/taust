@@ -3,7 +3,6 @@
 namespace taust\jobs;
 
 use Minz\Job;
-use taust\mailers;
 use taust\models;
 use taust\services;
 

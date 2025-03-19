@@ -3,17 +3,16 @@
 namespace taust\mailers;
 
 use taust\models;
+use Minz\Mailer;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Alarms extends \Minz\Mailer
+class Alarms extends Mailer
 {
-    public function sendAlarm(string $email, models\Alarm $alarm): bool
+    public function sendAlarm(string $to, models\Alarm $alarm): Mailer\Email
     {
-        $subject = _('[taust] A new problem has been detected');
-
         if ($alarm->domain_id) {
             $object = $alarm->domain_id . ' domain';
         } elseif ($alarm->server_id) {
@@ -28,7 +27,9 @@ class Alarms extends \Minz\Mailer
             throw new \Exception("Alarm #{$alarm->id} has no domain nor server associated.");
         }
 
-        $this->setBody(
+        $email = new Mailer\Email();
+        $email->setSubject(_('[taust] A new problem has been detected'));
+        $email->setBody(
             'mailers/alarms/alarm.phtml',
             'mailers/alarms/alarm.txt',
             [
@@ -37,6 +38,9 @@ class Alarms extends \Minz\Mailer
                 'object' => $object,
             ]
         );
-        return $this->send($email, $subject);
+
+        $this->send($email, to: $to);
+
+        return $email;
     }
 }
