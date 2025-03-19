@@ -56,7 +56,7 @@ ifeq ($(LINTER), $(filter $(LINTER), all rector))
 	$(PHP) vendor/bin/rector process --dry-run --config .rector.php
 endif
 ifeq ($(LINTER),$(filter $(LINTER), all phpcs))
-	$(PHP) ./vendor/bin/phpcs --standard=PSR12 ./src
+	$(PHP) ./vendor/bin/phpcs
 endif
 
 .PHONY: help
