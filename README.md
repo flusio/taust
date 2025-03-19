@@ -159,8 +159,23 @@ Start the application:
 $ make docker-start
 ```
 
+> [!TIP]
+> You can change the port of the application by passing the `PORT` parameter:
+>
+> ```console
+> $ make docker-start PORT=9000
+> ```
+
 Setup the database:
 
 ```console
-$ make setup
+$ make db-setup
 ```
+
+The containers can be stopped and cleaned with:
+
+```console
+$ make docker-clean
+```
+
+Most of the time, you can settle for <kbd>CTRL + C</kbd> (the Docker network and containers aren’t deleted this way).
