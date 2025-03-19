@@ -1,3 +1,5 @@
+name: taust
+
 services:
     php:
         image: taust_php:dev
