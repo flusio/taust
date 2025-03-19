@@ -21,6 +21,8 @@ class Migration202005290000CreateUsers
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

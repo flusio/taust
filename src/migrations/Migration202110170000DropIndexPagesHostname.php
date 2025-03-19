@@ -16,6 +16,8 @@ class Migration202110170000DropIndexPagesHostname
             DROP INDEX idx_pages_hostname;
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

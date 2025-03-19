@@ -1,0 +1,9 @@
+parameters:
+    level: 9
+    paths:
+        - public/index.php
+        - src
+
+    excludePaths:
+        analyseAndScan:
+            - src/views/*

@@ -19,6 +19,8 @@ class Migration202005300000CreateDomains
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

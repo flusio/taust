@@ -16,6 +16,8 @@ class Migration202110190002AddLocaleToPages
             ALTER TABLE pages ADD COLUMN locale TEXT NOT NULL DEFAULT 'auto';
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

@@ -21,6 +21,8 @@ class Migration202006010001CreateMetrics
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

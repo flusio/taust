@@ -23,6 +23,8 @@ class Migration202006010000CreateServers
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

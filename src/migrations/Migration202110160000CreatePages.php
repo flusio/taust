@@ -20,6 +20,8 @@ class Migration202110160000CreatePages
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

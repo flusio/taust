@@ -14,7 +14,9 @@ class CurrentUser
 
     public static function get(): ?models\User
     {
-        if (!isset($_SESSION['current_user_id'])) {
+        $current_user_id = self::currentId();
+
+        if (!is_string($current_user_id)) {
             return null;
         }
 
@@ -22,7 +24,7 @@ class CurrentUser
             return self::$instance;
         }
 
-        $user = models\User::find($_SESSION['current_user_id']);
+        $user = models\User::find($current_user_id);
         if (!$user) {
             return null;
         }
@@ -45,8 +47,9 @@ class CurrentUser
 
     public static function currentId(): ?string
     {
-        if (isset($_SESSION['current_user_id'])) {
-            return $_SESSION['current_user_id'];
+        $current_user_id = $_SESSION['current_user_id'] ?? null;
+        if (is_string($current_user_id)) {
+            return $current_user_id;
         } else {
             return null;
         }

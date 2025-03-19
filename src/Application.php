@@ -24,7 +24,18 @@ class Application
             $this->initApp($request);
         }
 
-        return \Minz\Engine::run($request);
+        $response = \Minz\Engine::run($request);
+
+        if ($response instanceof Response) {
+            /** @var string */
+            $http_uri = $_SERVER['REQUEST_URI'];
+            $response->setHeader('Turbolinks-Location', $http_uri);
+            // This is useful only on Servers#show page, but because of Turbolinks, we must
+            // to be sure that the correct CSP is sent on every page.
+            $response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
+        }
+
+        return $response;
     }
 
     private function initCli(Request $request): void

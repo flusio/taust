@@ -16,6 +16,8 @@ class Migration202005310003AddDetailsToAlarms
             ALTER TABLE alarms ADD COLUMN details TEXT NOT NULL DEFAULT '';
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

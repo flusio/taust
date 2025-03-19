@@ -19,6 +19,8 @@ class Migration202005310002AddEmailAndFreeMobileCredentialsToUsers
                 ADD COLUMN free_mobile_key TEXT;
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

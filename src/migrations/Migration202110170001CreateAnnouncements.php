@@ -26,6 +26,8 @@ class Migration202110170001CreateAnnouncements
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

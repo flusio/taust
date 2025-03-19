@@ -23,6 +23,8 @@ class Migration202110160002CreatePagesToServers
             CREATE UNIQUE INDEX idx_pages_to_servers ON pages_to_servers(page_id, server_id);
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

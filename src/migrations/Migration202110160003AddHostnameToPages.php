@@ -17,6 +17,8 @@ class Migration202110160003AddHostnameToPages
             CREATE UNIQUE INDEX idx_pages_hostname ON pages(hostname);
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

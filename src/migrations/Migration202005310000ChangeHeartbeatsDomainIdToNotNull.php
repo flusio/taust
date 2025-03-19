@@ -17,6 +17,8 @@ class Migration202005310000ChangeHeartbeatsDomainIdToNotNull
             ALTER COLUMN domain_id SET NOT NULL
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

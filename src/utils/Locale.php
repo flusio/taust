@@ -62,7 +62,7 @@ class Locale
      * folder. Keys are the locales and values are their human-readable
      * translations.
      *
-     * @return string[]
+     * @return array<string, string>
      */
     public static function availableLocales(): array
     {
@@ -91,7 +91,11 @@ class Locale
 
             $metadata = json_decode($raw_metadata, true);
 
-            if (!is_array($metadata) || !isset($metadata['name'])) {
+            if (
+                !is_array($metadata) ||
+                !isset($metadata['name']) ||
+                !is_string($metadata['name'])
+            ) {
                 continue;
             }
 

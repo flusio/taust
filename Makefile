@@ -50,7 +50,7 @@ endif
 lint: LINTER ?= all
 lint: ## Run the linter on the PHP files (can take a LINTER argument)
 ifeq ($(LINTER),$(filter $(LINTER), all phpstan))
-	$(PHP) ./vendor/bin/phpstan analyse --memory-limit 1G -c phpstan.neon
+	$(PHP) ./vendor/bin/phpstan analyse --memory-limit 1G -c .phpstan.neon
 endif
 ifeq ($(LINTER),$(filter $(LINTER), all phpcs))
 	$(PHP) ./vendor/bin/phpcs --standard=PSR12 ./src

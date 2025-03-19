@@ -23,6 +23,8 @@ class Migration202110160001CreatePagesToDomains
             CREATE UNIQUE INDEX idx_pages_to_domains ON pages_to_domains(page_id, domain_id);
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

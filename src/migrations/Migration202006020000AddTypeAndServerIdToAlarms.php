@@ -19,6 +19,8 @@ class Migration202006020000AddTypeAndServerIdToAlarms
                 ALTER COLUMN domain_id DROP NOT NULL;
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

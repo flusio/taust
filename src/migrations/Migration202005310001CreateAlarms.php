@@ -22,6 +22,8 @@ class Migration202005310001CreateAlarms
             );
         SQL;
 
-        return $database->exec($sql) !== false;
+        $database->exec($sql);
+
+        return true;
     }
 }

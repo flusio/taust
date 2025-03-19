@@ -13,17 +13,26 @@ include $app_path . '/vendor/autoload.php';
 
 \Minz\Configuration::load('dotenv', $app_path);
 
-$request = \Minz\Request::initFromGlobals();
-$request->setParam('app_hostname', $_SERVER['HTTP_HOST']);
+// Initialize the Application and execute the request to get a Response
+try {
+    $application = new \taust\Application();
 
-$application = new \taust\Application();
-$response = $application->run($request);
+    $request = \Minz\Request::initFromGlobals();
+    $request->setParam('app_hostname', $_SERVER['HTTP_HOST']);
 
-$http_uri = $_SERVER['REQUEST_URI'];
-$response->setHeader('Turbolinks-Location', $http_uri);
-// This is useful only on Servers#show page, but because of Turbolinks, we must
-// to be sure that the correct CSP is sent on every page.
-$response->setContentSecurityPolicy('style-src', "'self' 'unsafe-inline'");
+    $response = $application->run($request);
+} catch (\Minz\Errors\RequestError $e) {
+    $response = \Minz\Response::notFound('not_found.phtml', [
+        'error' => $e,
+    ]);
+} catch (\Exception $e) {
+    $response = \Minz\Response::internalServerError('internal_server_error.phtml', [
+        'error' => $e,
+    ]);
+}
 
-$is_head = strtoupper($_SERVER['REQUEST_METHOD']) === 'HEAD';
+/** @var string */
+$request_method = $_SERVER['REQUEST_METHOD'];
+$is_head = strtoupper($request_method) === 'HEAD';
+
 \Minz\Response::sendByHttp($response, echo_output: !$is_head);
