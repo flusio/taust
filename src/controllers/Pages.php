@@ -69,10 +69,7 @@ class Pages
             return Response::redirect('login');
         }
 
-        /** @var string */
         $title = $request->param('title', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -106,7 +103,6 @@ class Pages
      */
     public function show(Request $request): Response
     {
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -137,7 +133,6 @@ class Pages
      */
     public function feed(Request $request): Response
     {
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -162,7 +157,6 @@ class Pages
      */
     public function style(Request $request): Response
     {
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -193,7 +187,6 @@ class Pages
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -242,25 +235,14 @@ class Pages
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
-
         /** @var string[] */
         $domain_ids = $request->paramArray('domain_ids', []);
-
         /** @var string[] */
         $server_ids = $request->paramArray('server_ids', []);
-
-        /** @var string */
         $hostname = $request->param('hostname', '');
-
-        /** @var string */
         $style = $request->param('style', '');
-
-        /** @var string */
         $locale = $request->param('locale', '');
 
         $page = models\Page::find($id);
@@ -335,10 +317,7 @@ class Pages
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {

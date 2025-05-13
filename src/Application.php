@@ -26,7 +26,7 @@ class Application
 
         $response = \Minz\Engine::run($request);
 
-        if ($response instanceof Response) {
+        if ($response instanceof Response && $request->method() !== 'CLI') {
             /** @var string */
             $http_uri = $_SERVER['REQUEST_URI'];
             $response->setHeader('Turbolinks-Location', $http_uri);

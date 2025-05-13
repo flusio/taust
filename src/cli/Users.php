@@ -24,15 +24,11 @@ class Users
      */
     public function create(Request $request): Response
     {
-        /** @var string */
         $username = $request->param('username', '');
-
-        /** @var string */
         $password = $request->param('password', '');
 
         $user = new models\User($username, $password);
 
-        /** @var array<string, string> */
         $errors = $user->validate();
         if ($errors) {
             return Response::text(400, 'Can’t create a user: ' . implode(' ', $errors));

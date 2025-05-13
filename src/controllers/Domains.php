@@ -69,10 +69,7 @@ class Domains
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -125,7 +122,6 @@ class Domains
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $domain = models\Domain::find($id);
@@ -165,10 +161,7 @@ class Domains
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {

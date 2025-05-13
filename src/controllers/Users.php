@@ -53,16 +53,9 @@ class Users
             return Response::redirect('login');
         }
 
-        /** @var string */
         $email = $request->param('email', '');
-
-        /** @var string */
         $free_mobile_login = $request->param('free_mobile_login', '');
-
-        /** @var string */
         $free_mobile_key = $request->param('free_mobile_key', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {

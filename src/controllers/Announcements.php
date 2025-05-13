@@ -19,7 +19,6 @@ class Announcements
      */
     public function show(Request $request): Response
     {
-        /** @var string */
         $id = $request->param('id', '');
 
         $announcement = models\Announcement::find($id);
@@ -52,7 +51,6 @@ class Announcements
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $announcement = models\Announcement::find($id);
@@ -96,7 +94,6 @@ class Announcements
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $announcement = models\Announcement::find($id);
@@ -107,20 +104,11 @@ class Announcements
 
         $page = $announcement->page();
 
-        /** @var string */
         $csrf = $request->param('csrf', '');
-
-        /** @var string */
         $type = $request->param('type', '');
 
-        /** @var string */
-        $planned_at = $request->param('planned_at', '');
-        $planned_at = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $planned_at);
-
-        /** @var string */
+        $planned_at = $request->paramDatetime('planned_at', \Minz\Time::now());
         $title = $request->param('title', '');
-
-        /** @var string */
         $content = $request->param('content', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -132,20 +120,6 @@ class Announcements
                 'title' => $title,
                 'content' => $content,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
-            ]);
-        }
-
-        if ($planned_at === false) {
-            return Response::badRequest('announcements/edit.phtml', [
-                'page' => $page,
-                'announcement' => $announcement,
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'errors' => [
-                    'planned_at' => _('Enter a valid date.'),
-                ],
             ]);
         }
 
@@ -193,7 +167,6 @@ class Announcements
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $announcement = models\Announcement::find($id);
@@ -202,10 +175,7 @@ class Announcements
             return Response::notFound('not_found.phtml');
         }
 
-        /** @var string */
         $csrf = $request->param('csrf', '');
-
-        /** @var string */
         $status = $request->param('status', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -241,10 +211,7 @@ class Announcements
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         $announcement = models\Announcement::find($id);

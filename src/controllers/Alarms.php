@@ -54,13 +54,8 @@ class Alarms
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
-
-        /** @var string */
         $from = $request->param('from', '');
 
         if (!\Minz\Csrf::validate($csrf)) {

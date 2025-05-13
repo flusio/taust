@@ -42,13 +42,8 @@ class Auth
             return Response::redirect('home');
         }
 
-        /** @var string */
         $username = $request->param('username', '');
-
-        /** @var string */
         $password = $request->param('password', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -97,7 +92,6 @@ class Auth
             return Response::redirect('login');
         }
 
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {

@@ -23,7 +23,6 @@ class Announcements
      */
     public function index(Request $request): Response
     {
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -63,7 +62,6 @@ class Announcements
             return Response::redirect('login');
         }
 
-        /** @var string */
         $id = $request->param('id', '');
 
         $page = models\Page::find($id);
@@ -72,20 +70,10 @@ class Announcements
             return Response::notFound('not_found.phtml');
         }
 
-        /** @var string */
         $type = $request->param('type', '');
-
-        /** @var string */
-        $planned_at = $request->param('planned_at', '');
-        $planned_at = \DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $planned_at);
-
-        /** @var string */
+        $planned_at = $request->paramDatetime('planned_at', \Minz\Time::now());
         $title = $request->param('title', '');
-
-        /** @var string */
         $content = $request->param('content', '');
-
-        /** @var string */
         $csrf = $request->param('csrf', '');
 
         if (!\Minz\Csrf::validate($csrf)) {
@@ -99,22 +87,6 @@ class Announcements
                 'title' => $title,
                 'content' => $content,
                 'error' => _('A security verification failed: you should retry to submit the form.'),
-            ]);
-        }
-
-        if ($planned_at === false) {
-            return Response::badRequest('pages/show.phtml', [
-                'page' => $page,
-                'domains' => $page->domains(),
-                'servers' => $page->servers(),
-                'announcements_by_days' => $page->weekAnnouncements(),
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'errors' => [
-                    'planned_at' => _('Enter a valid date.'),
-                ],
             ]);
         }
 
