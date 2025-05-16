@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -47,7 +48,7 @@ class Pages
         }
 
         return Response::ok('pages/new.phtml', [
-            'title' => '',
+            'form' => new forms\NewPage(),
         ]);
     }
 
@@ -69,25 +70,18 @@ class Pages
             return Response::redirect('login');
         }
 
-        $title = $request->param('title', '');
-        $csrf = $request->param('csrf', '');
+        $page = new models\Page();
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        $form = new forms\NewPage(model: $page);
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
             return Response::badRequest('pages/new.phtml', [
-                'title' => $title,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $page = new models\Page($title);
-        $errors = $page->validate();
-        if ($errors) {
-            return Response::badRequest('pages/new.phtml', [
-                'title' => $title,
-                'errors' => $errors,
-            ]);
-        }
-
+        $page = $form->model();
         $page->save();
 
         return Response::redirect('edit page', ['id' => $page->id]);
@@ -188,25 +182,20 @@ class Pages
         }
 
         $id = $request->param('id', '');
-
         $page = models\Page::find($id);
 
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
 
-        $servers = models\Server::listAllOrderById();
-        $domains = models\Domain::listAllOrderById();
+        $form = new forms\Page([
+            'domain_ids' => array_column($page->domains(), 'id'),
+            'server_ids' => array_column($page->servers(), 'id'),
+        ], model: $page);
 
         return Response::ok('pages/edit.phtml', [
             'page' => $page,
-            'domain_ids' => array_column($page->domains(), 'id'),
-            'server_ids' => array_column($page->servers(), 'id'),
-            'servers' => $servers,
-            'domains' => $domains,
-            'hostname' => $page->hostname,
-            'style' => $page->style,
-            'locale' => $page->locale,
+            'form' => $form,
         ]);
     }
 
@@ -236,63 +225,27 @@ class Pages
         }
 
         $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-        /** @var string[] */
-        $domain_ids = $request->paramArray('domain_ids', []);
-        /** @var string[] */
-        $server_ids = $request->paramArray('server_ids', []);
-        $hostname = $request->param('hostname', '');
-        $style = $request->param('style', '');
-        $locale = $request->param('locale', '');
-
         $page = models\Page::find($id);
-        $servers = models\Server::listAllOrderById();
-        $domains = models\Domain::listAllOrderById();
 
         if (!$page) {
             return Response::notFound('not_found.phtml');
         }
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        $form = new forms\Page(model: $page);
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
             return Response::badRequest('pages/edit.phtml', [
                 'page' => $page,
-                'domain_ids' => $domain_ids,
-                'server_ids' => $server_ids,
-                'servers' => $servers,
-                'domains' => $domains,
-                'hostname' => $hostname,
-                'style' => $style,
-                'locale' => $locale,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $existing_page = models\Page::findBy([
-            'hostname' => $hostname,
-        ]);
-        if ($existing_page && $existing_page->id !== $page->id && $hostname !== '') {
-            return Response::badRequest('pages/edit.phtml', [
-                'page' => $page,
-                'domain_ids' => $domain_ids,
-                'server_ids' => $server_ids,
-                'servers' => $servers,
-                'domains' => $domains,
-                'hostname' => $hostname,
-                'style' => $style,
-                'locale' => $locale,
-                'errors' => [
-                    'hostname' => _('A page already has the same hostname.'),
-                ],
-            ]);
-        }
-
-        $page->hostname = $hostname;
-        $page->style = $style;
-        $page->locale = $locale;
+        $page = $form->model();
         $page->save();
 
-        models\PageToDomain::set($page->id, $domain_ids);
-        models\PageToServer::set($page->id, $server_ids);
+        models\PageToDomain::set($page->id, $form->domain_ids);
+        models\PageToServer::set($page->id, $form->server_ids);
 
         return Response::redirect('edit page', ['id' => $page->id]);
     }

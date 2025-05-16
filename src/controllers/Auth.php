@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -22,7 +23,7 @@ class Auth
         }
 
         return Response::ok('auth/login.phtml', [
-            'username' => '',
+            'form' => new forms\Login(),
         ]);
     }
 
@@ -42,31 +43,16 @@ class Auth
             return Response::redirect('home');
         }
 
-        $username = $request->param('username', '');
-        $password = $request->param('password', '');
-        $csrf = $request->param('csrf', '');
+        $form = new forms\Login();
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $user = models\User::findBy(['username' => trim($username)]);
-        if (!$user) {
-            return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('Wrong credentials!'),
-            ]);
-        }
-
-        if (!$user->verifyPassword($password)) {
-            return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('Wrong credentials!'),
-            ]);
-        }
+        $user = $form->user();
 
         utils\CurrentUser::set($user->id);
 
@@ -92,10 +78,11 @@ class Auth
             return Response::redirect('login');
         }
 
-        $csrf = $request->param('csrf', '');
+        $form = new forms\Logout();
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
-            return Response::redirect('home');
+        if (!$form->validate()) {
+            return \Minz\Response::redirect('home');
         }
 
         utils\CurrentUser::reset();

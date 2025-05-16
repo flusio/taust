@@ -55,7 +55,7 @@ class Application
             'controller_namespace' => '\\taust\\cli',
         ]);
 
-        \Minz\Output\View::declareDefaultVariables([
+        \Minz\Template\Simple::addGlobals([
             'error' => null,
             'bin' => $bin,
             'current_command' => $current_command,
@@ -93,7 +93,7 @@ class Application
             $router = Router::load();
         }
 
-        \Minz\Output\View::$extensions_to_content_types['.atom.xml.phtml'] = 'application/xml';
+        \Minz\Output\Template::$extensions_to_content_types['.atom.xml.phtml'] = 'application/xml';
 
         \Minz\Engine::init($router, [
             'start_session' => true,
@@ -122,7 +122,7 @@ class Application
             $request->setParam('id', $page->id);
         }
 
-        \Minz\Output\View::declareDefaultVariables([
+        \Minz\Template\Simple::addGlobals([
             'environment' => \Minz\Configuration::$environment,
             'errors' => [],
             'error' => null,
@@ -130,7 +130,7 @@ class Application
             'current_locale' => $locale,
             'navigation_active' => null,
             'is_app_page' => $page !== null,
-            'csrf_token' => \Minz\Csrf::generate(),
+            'logout_form' => new forms\Logout(),
         ]);
     }
 }

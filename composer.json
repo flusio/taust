@@ -17,7 +17,7 @@
         "ext-pcntl": "*",
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*",
-        "flus/minz": "^1.0",
+        "flus/minz": "dev-new/twig#d7eb432a944dfaa1d52a18696ec85c2c57f1848e",
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {
