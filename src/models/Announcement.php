@@ -14,6 +14,7 @@ use Minz\Validable;
 class Announcement
 {
     use Database\Recordable;
+    use Requirable;
     use Validable;
 
     #[Database\Column]
@@ -56,42 +57,15 @@ class Announcement
     )]
     public string $content;
 
-    public static function initIncident(
-        string $page_id,
-        \DateTimeImmutable $planned_at,
-        string $title,
-        string $content,
-    ): self {
-        $announcement = new self();
-
-        $announcement->id = \Minz\Random::timebased();
-        $announcement->planned_at = $planned_at;
-        $announcement->type = 'incident';
-        $announcement->status = 'ongoing';
-        $announcement->page_id = $page_id;
-        $announcement->title = $title;
-        $announcement->content = $content;
-
-        return $announcement;
-    }
-
-    public static function initMaintenance(
-        string $page_id,
-        \DateTimeImmutable $planned_at,
-        string $title,
-        string $content,
-    ): self {
-        $announcement = new self();
-
-        $announcement->id = \Minz\Random::timebased();
-        $announcement->planned_at = $planned_at;
-        $announcement->type = 'maintenance';
-        $announcement->status = 'ongoing';
-        $announcement->page_id = $page_id;
-        $announcement->title = $title;
-        $announcement->content = $content;
-
-        return $announcement;
+    public function __construct(Page $page)
+    {
+        $this->id = \Minz\Random::timebased();
+        $this->type = 'maintenance';
+        $this->status = 'ongoing';
+        $this->planned_at = \Minz\Time::now();
+        $this->page_id = $page->id;
+        $this->title = '';
+        $this->content = '';
     }
 
     public function htmlContent(): string

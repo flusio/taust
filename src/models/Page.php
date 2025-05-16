@@ -14,6 +14,7 @@ use Minz\Validable;
 class Page
 {
     use Database\Recordable;
+    use Requirable;
     use Validable;
 
     public const TITLE_MAX_LENGTH = 100;
@@ -43,10 +44,10 @@ class Page
     #[Database\Column]
     public string $locale;
 
-    public function __construct(string $title)
+    public function __construct()
     {
         $this->id = \Minz\Random::timebased();
-        $this->title = $title;
+        $this->title = '';
         $this->hostname = '';
         $this->style = '';
         $this->locale = 'auto';
@@ -136,5 +137,14 @@ class Page
         $database = Database::get();
         $statement = $database->query($sql);
         return self::fromDatabaseRows($statement->fetchAll());
+    }
+
+    #[Validable\Check]
+    public function checkHostnameIsNotBaseUrl(): void
+    {
+        $base_url = \Minz\Url::baseUrl();
+        if ($base_url === $this->hostname) {
+            $this->addError('hostname', 'is_base_url', _('The hostname cannot be the taust’s host.'));
+        }
     }
 }

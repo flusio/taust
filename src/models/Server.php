@@ -14,6 +14,7 @@ use Minz\Validable;
 class Server
 {
     use Database\Recordable;
+    use Requirable;
     use Validable;
 
     #[Database\Column]
@@ -29,26 +30,32 @@ class Server
     #[Check\Domain(
         message: new Translatable('Enter a valid hostname.'),
     )]
-    public string $hostname;
+    public string $hostname = '';
 
     #[Database\Column]
     #[Check\Ip(
         version: 'v4',
         message: new Translatable('This server declares an invalid DNS A record.'),
     )]
-    public string $ipv4;
+    public string $ipv4 = '';
 
     #[Database\Column]
     #[Check\Ip(
         version: 'v6',
         message: new Translatable('This server declares an invalid DNS AAAA record.'),
     )]
-    public ?string $ipv6;
+    public string $ipv6 = '';
 
     #[Database\Column]
     public string $auth_token;
 
-    public function __construct(string $hostname)
+    public function __construct()
+    {
+        $this->id = \Minz\Random::timebased();
+        $this->auth_token = \Minz\Random::hex(128);
+    }
+
+    public function setHostname(string $hostname): void
     {
         $url_components = parse_url($hostname);
         $hostname = $url_components['host'] ?? $hostname;
@@ -67,11 +74,9 @@ class Server
             $dns_AAAA = '';
         }
 
-        $this->id = \Minz\Random::timebased();
         $this->hostname = $hostname;
         $this->ipv4 = $dns_A;
         $this->ipv6 = $dns_AAAA;
-        $this->auth_token = \Minz\Random::hex(128);
     }
 
     public function status(): string

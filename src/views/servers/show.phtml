@@ -114,7 +114,7 @@
         data-action="confirmation#confirm"
         data-confirmation-message-value="<?= _('Are you sure that you want to stop to monitor this server?') ?>"
     >
-        <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+        <input type="hidden" name="csrf_token" value="<?= $base_form->csrfToken() ?>" />
         <button type="submit">
             <?= _('Stop monitoring this server') ?>
         </button>

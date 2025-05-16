@@ -64,7 +64,7 @@
             </ul>
 
             <form method="post" action="<?= url('logout') ?>" class="aside__bottom">
-                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+                <input type="hidden" name="csrf_token" value="<?= $base_form->csrfToken() ?>" />
                 <button type="submit" class="aside__button aside__button--logout">
                     <?= _('Logout') ?>
                 </button>

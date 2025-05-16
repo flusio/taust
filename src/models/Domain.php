@@ -14,6 +14,7 @@ use Minz\Validable;
 class Domain
 {
     use Database\Recordable;
+    use Requirable;
     use Validable;
 
     #[Database\Column]
@@ -23,12 +24,15 @@ class Domain
     #[Check\Domain(
         message: new Translatable('Select a valid domain name.'),
     )]
+    #[Validable\Unique(
+        message: new Translatable('This domain already exists.'),
+    )]
     public string $id;
 
     #[Database\Column]
     public \DateTimeImmutable $created_at;
 
-    public function __construct(string $url)
+    public function setId(string $url): void
     {
         $url_components = parse_url($url);
         $this->id = $url_components['host'] ?? $url;

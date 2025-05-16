@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -11,7 +12,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Alarms
+class Alarms extends BaseController
 {
     /**
      * @response 302 /login
@@ -21,23 +22,17 @@ class Alarms
      */
     public function index(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
-
-        $ongoing_alarms = models\Alarm::listOngoingOrderByDescCreatedAt();
-        $finished_alarms = models\Alarm::listLastFinished();
+        $this->requireCurrentUser();
 
         return Response::ok('alarms/index.phtml', [
-            'ongoing_alarms' => $ongoing_alarms,
-            'finished_alarms' => $finished_alarms,
+            'ongoing_alarms' => models\Alarm::listOngoingOrderByDescCreatedAt(),
+            'finished_alarms' => models\Alarm::listLastFinished(),
         ]);
     }
 
     /**
      * @request_param string id
-     * @request_param string csrf
+     * @request_param string csrf_token
      * @request_param string from
      *
      * @response 302 /login
@@ -49,22 +44,17 @@ class Alarms
      */
     public function finish(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-        $from = $request->param('from', '');
+        $id = $request->parameters->getString('id', '');
+        $alarm = models\Alarm::require($id);
+        $from = $request->parameters->getString('from', '');
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        $form = new forms\BaseForm();
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
             return Response::found($from);
-        }
-
-        $alarm = models\Alarm::find($id);
-        if (!$alarm) {
-            return Response::notFound('not_found.phtml');
         }
 
         $alarm->finish();

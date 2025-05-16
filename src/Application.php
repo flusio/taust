@@ -42,7 +42,7 @@ class Application
     {
         $router = Router::loadCli();
 
-        $bin = $request->param('bin');
+        $bin = $request->parameters->getString('bin');
         $bin = $bin === 'cli' ? 'php cli' : $bin;
 
         $current_command = $request->path();
@@ -55,7 +55,7 @@ class Application
             'controller_namespace' => '\\taust\\cli',
         ]);
 
-        \Minz\Output\View::declareDefaultVariables([
+        \Minz\Template\Simple::addGlobals([
             'error' => null,
             'bin' => $bin,
             'current_command' => $current_command,
@@ -64,8 +64,7 @@ class Application
 
     private function initApp(Request $request): void
     {
-        /** @var string */
-        $app_hostname = $request->param('app_hostname', '');
+        $app_hostname = $request->headers->getString('Host', '');
 
         if ($app_hostname !== '') {
             $page = models\Page::findBy([
@@ -93,7 +92,7 @@ class Application
             $router = Router::load();
         }
 
-        \Minz\Output\View::$extensions_to_content_types['.atom.xml.phtml'] = 'application/xml';
+        \Minz\Output\Template::$extensions_to_content_types['.atom.xml.phtml'] = 'application/xml';
 
         \Minz\Engine::init($router, [
             'start_session' => true,
@@ -103,8 +102,7 @@ class Application
         ]);
 
         if (!utils\CurrentUser::currentId()) {
-            /** @var string */
-            $user_id = $request->cookie('taust_session', '');
+            $user_id = $request->cookies->getString('taust_session', '');
             utils\CurrentUser::set($user_id);
         }
 
@@ -112,17 +110,16 @@ class Application
         if ($page && isset($available_locales[$page->locale])) {
             $locale = $page->locale;
         } else {
-            /** @var string */
-            $http_accept_language = $request->header('HTTP_ACCEPT_LANGUAGE', '');
+            $http_accept_language = $request->headers->getString('Accept-Language', '');
             $locale = utils\Locale::best($http_accept_language);
         }
         utils\Locale::setCurrentLocale($locale);
 
-        if ($page && !$request->param('id')) {
-            $request->setParam('id', $page->id);
+        if ($page && !$request->parameters->getString('id')) {
+            $request->parameters->set('id', $page->id);
         }
 
-        \Minz\Output\View::declareDefaultVariables([
+        \Minz\Template\Simple::addGlobals([
             'environment' => \Minz\Configuration::$environment,
             'errors' => [],
             'error' => null,
@@ -130,7 +127,7 @@ class Application
             'current_locale' => $locale,
             'navigation_active' => null,
             'is_app_page' => $page !== null,
-            'csrf_token' => \Minz\Csrf::generate(),
+            'base_form' => new forms\BaseForm(),
         ]);
     }
 }

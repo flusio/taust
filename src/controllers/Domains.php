@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -11,7 +12,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Domains
+class Domains extends BaseController
 {
     /**
      * @response 302 /login
@@ -21,14 +22,10 @@ class Domains
      */
     public function index(): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $domains = models\Domain::listAllOrderById();
         return Response::ok('domains/index.phtml', [
-            'domains' => $domains,
+            'domains' => models\Domain::listAllOrderById(),
         ]);
     }
 
@@ -40,20 +37,17 @@ class Domains
      */
     public function new(): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
         return Response::ok('domains/new.phtml', [
-            'id' => '',
+            'form' => new forms\Domain(),
         ]);
     }
 
     /**
      * @request_param string id
      *     Must be a valid domain name.
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -64,40 +58,19 @@ class Domains
      */
     public function create(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
+        $domain = new models\Domain();
+        $form = new forms\Domain(model: $domain);
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('domains/new.phtml', [
-                'id' => $id,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $domain = new models\Domain($id);
-        $errors = $domain->validate();
-        if ($errors) {
-            return Response::badRequest('domains/new.phtml', [
-                'id' => $id,
-                'errors' => $errors,
-            ]);
-        }
-
-        $exist = models\Domain::exists($domain->id);
-        if ($exist) {
-            return Response::badRequest('domains/new.phtml', [
-                'id' => $id,
-                'errors' => [
-                    'id' => _('This domain already exists.'),
-                ],
-            ]);
-        }
-
+        $domain = $form->model();
         $domain->save();
 
         return Response::redirect('show domain', [
@@ -117,18 +90,10 @@ class Domains
      */
     public function show(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-
-        $domain = models\Domain::find($id);
-
-        if (!$domain) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $domain = models\Domain::require($id);
 
         $alarms = models\Alarm::listByDomainIdOrderByDescCreatedAt($domain->id);
         $last_heartbeat = models\Heartbeat::findLastHeartbeatByDomainId($domain->id);
@@ -143,7 +108,7 @@ class Domains
 
     /**
      * @request_param string id
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -156,24 +121,19 @@ class Domains
      */
     public function delete(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
+        $this->requireCurrentUser();
+
+        $id = $request->parameters->getString('id', '');
+        $domain = models\Domain::require($id);
+
+        $form = new forms\BaseForm();
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
+            return Response::redirect('show domain', ['id' => $domain->id]);
         }
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-
-        if (!\Minz\Csrf::validate($csrf)) {
-            return Response::redirect('show domain', ['id' => $id]);
-        }
-
-        $domain = models\Domain::find($id);
-        if (!$domain) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        models\Domain::delete($domain->id);
+        $domain->remove();
 
         return Response::redirect('home');
     }

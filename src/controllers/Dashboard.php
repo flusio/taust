@@ -10,7 +10,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Dashboard
+class Dashboard extends BaseController
 {
     /**
      * @response 302 /login
@@ -20,10 +20,7 @@ class Dashboard
      */
     public function index(): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
         $domains = models\Domain::listAll();
         $number_domains = count($domains);

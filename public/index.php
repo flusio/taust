@@ -18,7 +18,6 @@ try {
     $application = new \taust\Application();
 
     $request = \Minz\Request::initFromGlobals();
-    $request->setParam('app_hostname', $_SERVER['HTTP_HOST']);
 
     $response = $application->run($request);
 } catch (\Minz\Errors\RequestError $e) {

@@ -4,10 +4,11 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
-class Announcements
+class Announcements extends BaseController
 {
     /**
      * @request_param string id
@@ -19,17 +20,10 @@ class Announcements
      */
     public function show(Request $request): Response
     {
-        $id = $request->param('id', '');
-
-        $announcement = models\Announcement::find($id);
-        if (!$announcement) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        $page = models\Page::find($announcement->page_id);
+        $id = $request->parameters->getString('id', '');
+        $announcement = models\Announcement::require($id);
 
         return Response::ok('announcements/show.phtml', [
-            'page' => $page,
             'announcement' => $announcement,
         ]);
     }
@@ -46,26 +40,14 @@ class Announcements
      */
     public function edit(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-
-        $announcement = models\Announcement::find($id);
-
-        if (!$announcement) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $announcement = models\Announcement::require($id);
 
         return Response::ok('announcements/edit.phtml', [
-            'page' => $announcement->page(),
             'announcement' => $announcement,
-            'type' => $announcement->type,
-            'planned_at' => $announcement->planned_at,
-            'title' => $announcement->title,
-            'content' => $announcement->content,
+            'form' => new forms\Announcement(model: $announcement),
         ]);
     }
 
@@ -76,7 +58,7 @@ class Announcements
      *     Format: Y-m-d\TH:i
      * @request_param string title
      * @request_param string content
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -89,58 +71,22 @@ class Announcements
      */
     public function update(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
+        $id = $request->parameters->getString('id', '');
+        $announcement = models\Announcement::require($id);
 
-        $announcement = models\Announcement::find($id);
+        $form = new forms\Announcement(model: $announcement);
+        $form->handleRequest($request);
 
-        if (!$announcement) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        $page = $announcement->page();
-
-        $csrf = $request->param('csrf', '');
-        $type = $request->param('type', '');
-
-        $planned_at = $request->paramDatetime('planned_at', \Minz\Time::now());
-        $title = $request->param('title', '');
-        $content = $request->param('content', '');
-
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('announcements/edit.phtml', [
-                'page' => $page,
                 'announcement' => $announcement,
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $announcement->type = $type;
-        $announcement->planned_at = $planned_at;
-        $announcement->title = $title;
-        $announcement->content = $content;
-
-        $errors = $announcement->validate();
-        if ($errors) {
-            return Response::badRequest('announcements/edit.phtml', [
-                'page' => $page,
-                'announcement' => $announcement,
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'errors' => $errors,
-            ]);
-        }
-
+        $announcement = $form->model();
         $announcement->save();
 
         return Response::redirect('show announcement', ['id' => $announcement->id]);
@@ -149,7 +95,7 @@ class Announcements
     /**
      * @request_param string id
      * @request_param string status
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -162,32 +108,19 @@ class Announcements
      */
     public function updateStatus(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
+        $id = $request->parameters->getString('id', '');
+        $announcement = models\Announcement::require($id);
 
-        $announcement = models\Announcement::find($id);
+        $form = new forms\AnnouncementStatus(model: $announcement);
+        $form->handleRequest($request);
 
-        if (!$announcement) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        $csrf = $request->param('csrf', '');
-        $status = $request->param('status', '');
-
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::redirect('show page', ['id' => $announcement->page_id]);
         }
 
-        if ($status === 'ongoing') {
-            $announcement->status = 'ongoing';
-        } else {
-            $announcement->status = 'finished';
-        }
-
+        $announcement = $form->model();
         $announcement->save();
 
         return Response::redirect('show announcement', ['id' => $announcement->id]);
@@ -195,7 +128,7 @@ class Announcements
 
     /**
      * @request_param string id
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -206,27 +139,21 @@ class Announcements
      */
     public function delete(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-
-        $announcement = models\Announcement::find($id);
-
-        if (!$announcement) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $announcement = models\Announcement::require($id);
 
         $page_id = $announcement->page_id;
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        $form = new forms\BaseForm();
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
             return Response::redirect('show page', ['id' => $page_id]);
         }
 
-        models\Announcement::delete($announcement->id);
+        $announcement->remove();
 
         return Response::redirect('show page', ['id' => $page_id]);
     }

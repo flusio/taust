@@ -4,6 +4,8 @@ namespace taust\controllers\pages;
 
 use Minz\Request;
 use Minz\Response;
+use taust\controllers\BaseController;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -11,7 +13,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Announcements
+class Announcements extends BaseController
 {
     /**
      * @request_param string id
@@ -23,17 +25,11 @@ class Announcements
      */
     public function index(Request $request): Response
     {
-        $id = $request->param('id', '');
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
         return Response::ok('pages/announcements/index.phtml', [
             'page' => $page,
-            'announcements_by_years' => $page->announcementsByYears(),
         ]);
     }
 
@@ -44,7 +40,7 @@ class Announcements
      *     Format: Y-m-d\TH:i
      * @request_param string title
      * @request_param string content
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -57,70 +53,23 @@ class Announcements
      */
     public function create(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
-        $page = models\Page::find($id);
+        $announcement = new models\Announcement($page);
+        $form = new forms\Announcement(model: $announcement);
+        $form->handleRequest($request);
 
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        $type = $request->param('type', '');
-        $planned_at = $request->paramDatetime('planned_at', \Minz\Time::now());
-        $title = $request->param('title', '');
-        $content = $request->param('content', '');
-        $csrf = $request->param('csrf', '');
-
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('pages/show.phtml', [
                 'page' => $page,
-                'domains' => $page->domains(),
-                'servers' => $page->servers(),
-                'announcements_by_days' => $page->weekAnnouncements(),
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'announcement_form' => $form,
             ]);
         }
 
-        if ($type === 'maintenance') {
-            $announcement = models\Announcement::initMaintenance(
-                $page->id,
-                $planned_at,
-                $title,
-                $content
-            );
-        } else {
-            $announcement = models\Announcement::initIncident(
-                $page->id,
-                $planned_at,
-                $title,
-                $content
-            );
-        }
-
-        $errors = $announcement->validate();
-        if ($errors) {
-            return Response::badRequest('pages/show.phtml', [
-                'page' => $page,
-                'domains' => $page->domains(),
-                'servers' => $page->servers(),
-                'announcements_by_days' => $page->weekAnnouncements(),
-                'type' => $type,
-                'planned_at' => $planned_at,
-                'title' => $title,
-                'content' => $content,
-                'errors' => $errors,
-            ]);
-        }
-
+        $announcement = $form->model();
         $announcement->save();
 
         return Response::redirect('show page', ['id' => $page->id]);

@@ -4,10 +4,11 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
-class Auth
+class Auth extends BaseController
 {
     /**
      * @response 302 /
@@ -22,14 +23,14 @@ class Auth
         }
 
         return Response::ok('auth/login.phtml', [
-            'username' => '',
+            'form' => new forms\Login(),
         ]);
     }
 
     /**
      * @request_param string username
      * @request_param string password
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 400
      *     If one of the parameters is invalid.
@@ -42,31 +43,16 @@ class Auth
             return Response::redirect('home');
         }
 
-        $username = $request->param('username', '');
-        $password = $request->param('password', '');
-        $csrf = $request->param('csrf', '');
+        $form = new forms\Login();
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $user = models\User::findBy(['username' => trim($username)]);
-        if (!$user) {
-            return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('Wrong credentials!'),
-            ]);
-        }
-
-        if (!$user->verifyPassword($password)) {
-            return Response::badRequest('auth/login.phtml', [
-                'username' => $username,
-                'error' => _('Wrong credentials!'),
-            ]);
-        }
+        $user = $form->user();
 
         utils\CurrentUser::set($user->id);
 
@@ -78,7 +64,7 @@ class Auth
     }
 
     /**
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /
      *     If the CSRF is invalid.
@@ -87,15 +73,13 @@ class Auth
      */
     public function deleteSession(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $csrf = $request->param('csrf', '');
+        $form = new forms\BaseForm();
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
-            return Response::redirect('home');
+        if (!$form->validate()) {
+            return \Minz\Response::redirect('home');
         }
 
         utils\CurrentUser::reset();

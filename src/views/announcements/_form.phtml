@@ -1,0 +1,95 @@
+<form method="post" action="<?= $this->safe('action') ?>">
+    <?php if ($form->isInvalid('@base')): ?>
+        <p class="form__error">
+            <?= $form->error('@base') ?>
+        </p>
+    <?php endif; ?>
+
+    <div class="form-group <?= $form->isInvalid('type') ? 'form-group--invalid' : '' ?>">
+        <label for="type">
+            <?= _('Type') ?>
+        </label>
+
+        <select id="type" name="type" required>
+            <option <?= $form->type === 'maintenance' ? 'selected' : '' ?> value="maintenance">
+                <?= _('🔧 Maintenance') ?>
+            </option>
+
+            <option <?= $form->type === 'incident' ? 'selected' : '' ?> value="incident">
+                <?= _('🔥 Incident') ?>
+            </option>
+        </select>
+
+        <?php if ($form->isInvalid('type')): ?>
+            <p class="form-group__error">
+                <?= $form->error('type') ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= $form->isInvalid('planned_at') ? 'form-group--invalid' : '' ?>">
+        <label for="planned-at">
+            <?= _('Date') ?>
+        </label>
+
+        <input
+            id="planned-at"
+            name="planned_at"
+            type="datetime-local"
+            value="<?= $form->format('planned_at') ?>"
+            required
+        />
+
+        <?php if ($form->isInvalid('planned_at')): ?>
+            <p class="form-group__error">
+                <?= $form->error('planned_at') ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= $form->isInvalid('title') ? 'form-group--invalid' : '' ?>">
+        <label for="title">
+            <?= _('Title') ?>
+        </label>
+
+        <input
+            id="title"
+            name="title"
+            type="text"
+            value="<?= $form->title ?>"
+            required
+        />
+
+        <?php if ($form->isInvalid('title')): ?>
+            <p class="form-group__error">
+                <?= $form->error('title') ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form-group <?= $form->isInvalid('content') ? 'form-group--invalid' : '' ?>">
+        <label for="content">
+            <?= _('Content') ?>
+        </label>
+
+        <textarea
+            id="content"
+            name="content"
+            required
+        ><?= $form->content ?></textarea>
+
+        <?php if ($form->isInvalid('content')): ?>
+            <p class="form-group__error">
+                <?= $form->error('content') ?>
+            </p>
+        <?php endif; ?>
+    </div>
+
+    <div class="form__actions">
+        <button type="submit" class="button--primary">
+            <?= $submit ?>
+        </button>
+    </div>
+
+    <input type="hidden" name="csrf_token" value="<?= $form->csrfToken() ?>" />
+</form>

@@ -26,7 +26,7 @@
 
         <?php if (!$alarm->finished_at): ?>
             <form method="post" action="<?= url('finish alarm', ['id' => $alarm->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+                <input type="hidden" name="csrf_token" value="<?= $base_form->csrfToken() ?>" />
                 <input type="hidden" name="from" value="<?= $from ?>" />
 
                 <button type="submit" class="button--ghost">

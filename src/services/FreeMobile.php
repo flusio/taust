@@ -2,7 +2,7 @@
 
 namespace taust\services;
 
-use Minz\Output\ViewHelpers;
+use Minz\Template\SimpleTemplateHelpers;
 use taust\models;
 
 /**
@@ -29,12 +29,12 @@ class FreeMobile
             throw new \Exception("Alarm #{$alarm->id} has no domain nor server associated.");
         }
 
-        $message = ViewHelpers::formatGettext(
+        $message = SimpleTemplateHelpers::formatGettext(
             'Hey, this is taust robot at %s.',
             \Minz\Url::absoluteFor('home')
         );
         $message .= ' ';
-        $message .= ViewHelpers::formatGettext(
+        $message .= SimpleTemplateHelpers::formatGettext(
             'It looks like you have a problem with the %s.',
             $object
         );

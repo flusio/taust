@@ -14,49 +14,53 @@
 </div>
 
 <form method="post" action="<?= url('update page', ['id' => $page->id]) ?>">
-    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+    <?php if ($form->isInvalid('@base')): ?>
+        <p class="form__error">
+            <?= $form->error('@base') ?>
+        </p>
+    <?php endif; ?>
 
-    <div class="form-group <?= isset($errors['domain_ids']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('domain_ids') ? 'form-group--invalid' : '' ?>">
         <label for="domain-ids">
             <?= _('Domains (optional)') ?>
         </label>
 
         <select id="domain-ids" name="domain_ids[]" multiple>
-            <?php foreach ($domains as $domain): ?>
-                <option <?= in_array($domain->id, $domain_ids) ? 'selected' : '' ?> value="<?= $domain->id ?>">
+            <?php foreach ($form->domains() as $domain): ?>
+                <option <?= $form->isDomainSelected($domain) ? 'selected' : '' ?> value="<?= $domain->id ?>">
                     <?= protect($domain->id) ?>
                 </option>
             <?php endforeach; ?>
         </select>
 
-        <?php if (isset($errors['domain_ids'])): ?>
+        <?php if ($form->isInvalid('domain_ids')): ?>
             <p class="form-group__error">
-                <?= $errors['domain_ids'] ?>
+                <?= $form->error('domain_ids') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['server_ids']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('server_ids') ? 'form-group--invalid' : '' ?>">
         <label for="server-ids">
             <?= _('Servers (optional)') ?>
         </label>
 
         <select id="server-ids" name="server_ids[]" multiple>
-            <?php foreach ($servers as $server): ?>
-                <option <?= in_array($server->id, $server_ids) ? 'selected' : '' ?> value="<?= $server->id ?>">
+            <?php foreach ($form->servers() as $server): ?>
+                <option <?= $form->isServerSelected($server) ? 'selected' : '' ?> value="<?= $server->id ?>">
                     <?= protect($server->hostname) ?>
                 </option>
             <?php endforeach; ?>
         </select>
 
-        <?php if (isset($errors['server_ids'])): ?>
+        <?php if ($form->isInvalid('server_ids')): ?>
             <p class="form-group__error">
-                <?= $errors['server_ids'] ?>
+                <?= $form->error('server_ids') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['hostname']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('hostname') ? 'form-group--invalid' : '' ?>">
         <label for="hostname">
             <?= _('Hostname (optional)') ?>
         </label>
@@ -66,59 +70,59 @@
                 id="hostname"
                 name="hostname"
                 type="text"
-                value="<?= $hostname ?>"
+                value="<?= $form->hostname ?>"
             />
 
-            <?php if ($hostname): ?>
-                <a class="link--primary" target="_blank" rel="noopener noreferrer" href="https://<?= $hostname ?>">
+            <?php if ($form->hostname): ?>
+                <a class="link--primary" target="_blank" rel="noopener noreferrer" href="https://<?= $form->hostname ?>">
                     <?= _('open') ?>
                 </a>
             <?php endif; ?>
         </div>
 
-        <?php if (isset($errors['hostname'])): ?>
+        <?php if ($form->isInvalid('hostname')): ?>
             <p class="form-group__error">
-                <?= $errors['hostname'] ?>
+                <?= $form->error('hostname') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['style']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('style') ? 'form-group--invalid' : '' ?>">
         <label for="style">
             <?= _('Custom style (optional)') ?>
         </label>
 
-        <textarea id="style" name="style" spellcheck="false"><?= $style ?></textarea>
+        <textarea id="style" name="style" spellcheck="false"><?= $form->style ?></textarea>
 
-        <?php if (isset($errors['style'])): ?>
+        <?php if ($form->isInvalid('style')): ?>
             <p class="form-group__error">
-                <?= $errors['style'] ?>
+                <?= $form->error('style') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['locale']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('locale') ? 'form-group--invalid' : '' ?>">
         <label for="locale">
             <?= _('Page language') ?>
         </label>
 
         <select id="locale" name="locale" required>
-            <option <?= $locale === 'auto' ? 'selected' : '' ?> value="auto">
+            <option <?= $form->locale === 'auto' ? 'selected' : '' ?> value="auto">
                 <?= _('Autodetected') ?>
             </option>
 
-            <option <?= $locale === 'en_GB' ? 'selected' : '' ?> value="en_GB">
+            <option <?= $form->locale === 'en_GB' ? 'selected' : '' ?> value="en_GB">
                 English
             </option>
 
-            <option <?= $locale === 'fr_FR' ? 'selected' : '' ?> value="fr_FR">
+            <option <?= $form->locale === 'fr_FR' ? 'selected' : '' ?> value="fr_FR">
                 Français
             </option>
         </select>
 
-        <?php if (isset($errors['locale'])): ?>
+        <?php if ($form->isInvalid('locale')): ?>
             <p class="form-group__error">
-                <?= $errors['locale'] ?>
+                <?= $form->error('locale') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -128,6 +132,8 @@
             <?= _('Save changes') ?>
         </button>
     </div>
+
+    <input type="hidden" name="csrf_token" value="<?= $form->csrfToken() ?>" />
 </form>
 
 <section class="section--danger">
@@ -140,7 +146,7 @@
         data-action="confirmation#confirm"
         data-confirmation-message-value="<?= _('Are you sure that you want to delete this page?') ?>"
     >
-        <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+        <input type="hidden" name="csrf_token" value="<?= $base_form->csrfToken() ?>" />
         <button type="submit">
             <?= _('Delete this status page') ?>
         </button>

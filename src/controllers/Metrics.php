@@ -10,7 +10,7 @@ use taust\models;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Metrics
+class Metrics extends BaseController
 {
     /**
      * @request_header string PHP_AUTH_PW
@@ -25,8 +25,7 @@ class Metrics
      */
     public function create(Request $request): Response
     {
-        /** @var string */
-        $auth_token = $request->header('PHP_AUTH_PW', '');
+        $auth_token = $this->getAuthToken($request);
 
         if (!$auth_token) {
             return Response::text(401, 'You must pass the server token as basic auth password');
@@ -40,7 +39,7 @@ class Metrics
             return Response::text(400, 'The auth token matches with no servers, please check its value');
         }
 
-        $payload = $request->paramJson('@input');
+        $payload = $request->parameters->getJson('@input');
         if ($payload === null) {
             return Response::text(400, 'The payload is not a valid JSON.');
         }
@@ -58,5 +57,25 @@ class Metrics
         $metric->save();
 
         return Response::text(200, 'OK');
+    }
+
+    private function getAuthToken(Request $request): ?string
+    {
+        $authorization_header = $request->headers->getString('Authorization', '');
+
+        $result = preg_match('/^Basic (?P<token>\w+)$/', $authorization_header, $matches);
+        if ($result === false || !isset($matches['token'])) {
+            return null;
+        }
+
+        $token = $matches['token'];
+        $decoded_token = base64_decode($token);
+
+        $decoded_token_parts = explode(':', $decoded_token);
+        if (count($decoded_token_parts) !== 2) {
+            return null;
+        }
+
+        return $decoded_token_parts[1];
     }
 }

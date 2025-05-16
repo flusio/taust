@@ -1,6 +1,6 @@
 <article class="post">
     <header class="post__header">
-        <div class="post__title"><?= $this->protect($announcement->title) ?></div>
+        <h1 class="post__title"><?= $this->protect($announcement->title) ?></h1>
 
         <div class="post__info">
             <div>
@@ -11,9 +11,15 @@
                 <?php endif; ?>
             </div>
 
-            <a href="<?= url('show announcement', ['id' => $announcement->id]) ?>">
-                <?= _d($announcement->planned_at, 'EEE d MMM, HH:mm') ?>
-            </a>
+            <time datetime="<?= $announcement->planned_at->format(DATE_ATOM) ?>">
+                <?php if (!isset($date_clickable) || $date_clickable): ?>
+                    <a href="<?= url('show announcement', ['id' => $announcement->id]) ?>">
+                        <?= _d($announcement->planned_at, 'EEE d MMM, HH:mm') ?>
+                    </a>
+                <?php else: ?>
+                    <?= _d($announcement->planned_at, 'EEE d MMM, HH:mm') ?>
+                <?php endif; ?>
+            </time>
         </div>
     </header>
 
@@ -33,9 +39,9 @@
 
     <?php if ($current_user): ?>
         <footer class="post__actions">
+            <?php $status_form = new \taust\forms\AnnouncementStatus(model: $announcement); ?>
             <form method="post" action="<?= url('update announcement status', ['id' => $announcement->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
-                <?php if ($announcement->status === 'ongoing'): ?>
+                <?php if ($status_form->status === 'ongoing'): ?>
                     <input type="hidden" name="status" value="finished" />
                     <button type="submit">
                         <?= _('✔ Finish') ?>
@@ -46,6 +52,7 @@
                         <?= _('↻ Reactivate') ?>
                     </button>
                 <?php endif; ?>
+                <input type="hidden" name="csrf_token" value="<?= $status_form->csrfToken() ?>" />
             </form>
 
             <div class="post__actions-group">
@@ -60,7 +67,7 @@
                     data-action="confirmation#confirm"
                     data-confirmation-message-value="<?= _('Are you sure that you want to delete this announcement?') ?>"
                 >
-                    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+                    <input type="hidden" name="csrf_token" value="<?= $base_form->csrfToken() ?>" />
                     <button type="submit">
                         <?= _('Delete') ?>
                     </button>

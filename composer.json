@@ -17,7 +17,7 @@
         "ext-pcntl": "*",
         "ext-pdo": "*",
         "ext-pdo_pgsql": "*",
-        "flus/minz": "^1.0",
+        "flus/minz": "^2.0",
         "erusev/parsedown": "^1.7"
     },
     "require-dev": {

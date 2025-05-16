@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -11,7 +12,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Pages
+class Pages extends BaseController
 {
     /**
      * @response 302 /login
@@ -21,15 +22,10 @@ class Pages
      */
     public function index(): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
-
-        $pages = models\Page::listAllOrderByTitle();
+        $this->requireCurrentUser();
 
         return Response::ok('pages/index.phtml', [
-            'pages' => $pages,
+            'pages' => models\Page::listAllOrderByTitle(),
         ]);
     }
 
@@ -41,19 +37,16 @@ class Pages
      */
     public function new(): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
         return Response::ok('pages/new.phtml', [
-            'title' => '',
+            'form' => new forms\NewPage(),
         ]);
     }
 
     /**
      * @request_param string title
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -64,30 +57,20 @@ class Pages
      */
     public function create(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $title = $request->param('title', '');
-        $csrf = $request->param('csrf', '');
+        $page = new models\Page();
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        $form = new forms\NewPage(model: $page);
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
             return Response::badRequest('pages/new.phtml', [
-                'title' => $title,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $page = new models\Page($title);
-        $errors = $page->validate();
-        if ($errors) {
-            return Response::badRequest('pages/new.phtml', [
-                'title' => $title,
-                'errors' => $errors,
-            ]);
-        }
-
+        $page = $form->model();
         $page->save();
 
         return Response::redirect('edit page', ['id' => $page->id]);
@@ -103,23 +86,13 @@ class Pages
      */
     public function show(Request $request): Response
     {
-        $id = $request->param('id', '');
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
+        $announcement = new models\Announcement($page);
 
         return Response::ok('pages/show.phtml', [
             'page' => $page,
-            'domains' => $page->domains(),
-            'servers' => $page->servers(),
-            'announcements_by_days' => $page->weekAnnouncements(),
-            'type' => 'maintenance',
-            'planned_at' => \Minz\Time::now(),
-            'title' => '',
-            'content' => '',
+            'announcement_form' => new forms\Announcement(model: $announcement),
         ]);
     }
 
@@ -133,13 +106,8 @@ class Pages
      */
     public function feed(Request $request): Response
     {
-        $id = $request->param('id', '');
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
         return Response::ok('pages/feed.atom.xml.phtml', [
             'page' => $page,
@@ -157,13 +125,8 @@ class Pages
      */
     public function style(Request $request): Response
     {
-        $id = $request->param('id', '');
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
         $response = Response::text(200, $page->style);
         $response->setHeader('Content-Type', 'text/css');
@@ -182,31 +145,14 @@ class Pages
      */
     public function edit(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        $servers = models\Server::listAllOrderById();
-        $domains = models\Domain::listAllOrderById();
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
         return Response::ok('pages/edit.phtml', [
             'page' => $page,
-            'domain_ids' => array_column($page->domains(), 'id'),
-            'server_ids' => array_column($page->servers(), 'id'),
-            'servers' => $servers,
-            'domains' => $domains,
-            'hostname' => $page->hostname,
-            'style' => $page->style,
-            'locale' => $page->locale,
+            'form' => new forms\Page(model: $page),
         ]);
     }
 
@@ -217,7 +163,7 @@ class Pages
      * @request_param string hostname
      * @request_param string style
      * @request_param string locale
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -230,76 +176,33 @@ class Pages
      */
     public function update(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $this->requireCurrentUser();
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-        /** @var string[] */
-        $domain_ids = $request->paramArray('domain_ids', []);
-        /** @var string[] */
-        $server_ids = $request->paramArray('server_ids', []);
-        $hostname = $request->param('hostname', '');
-        $style = $request->param('style', '');
-        $locale = $request->param('locale', '');
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
 
-        $page = models\Page::find($id);
-        $servers = models\Server::listAllOrderById();
-        $domains = models\Domain::listAllOrderById();
+        $form = new forms\Page(model: $page);
+        $form->handleRequest($request);
 
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('pages/edit.phtml', [
                 'page' => $page,
-                'domain_ids' => $domain_ids,
-                'server_ids' => $server_ids,
-                'servers' => $servers,
-                'domains' => $domains,
-                'hostname' => $hostname,
-                'style' => $style,
-                'locale' => $locale,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $existing_page = models\Page::findBy([
-            'hostname' => $hostname,
-        ]);
-        if ($existing_page && $existing_page->id !== $page->id && $hostname !== '') {
-            return Response::badRequest('pages/edit.phtml', [
-                'page' => $page,
-                'domain_ids' => $domain_ids,
-                'server_ids' => $server_ids,
-                'servers' => $servers,
-                'domains' => $domains,
-                'hostname' => $hostname,
-                'style' => $style,
-                'locale' => $locale,
-                'errors' => [
-                    'hostname' => _('A page already has the same hostname.'),
-                ],
-            ]);
-        }
-
-        $page->hostname = $hostname;
-        $page->style = $style;
-        $page->locale = $locale;
+        $page = $form->model();
         $page->save();
 
-        models\PageToDomain::set($page->id, $domain_ids);
-        models\PageToServer::set($page->id, $server_ids);
+        models\PageToDomain::set($page->id, $form->domain_ids);
+        models\PageToServer::set($page->id, $form->server_ids);
 
         return Response::redirect('edit page', ['id' => $page->id]);
     }
 
     /**
      * @request_param string id
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -312,25 +215,19 @@ class Pages
      */
     public function delete(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
+        $this->requireCurrentUser();
+
+        $id = $request->parameters->getString('id', '');
+        $page = models\Page::require($id);
+
+        $form = new forms\BaseForm();
+        $form->handleRequest($request);
+
+        if (!$form->validate()) {
+            return Response::redirect('edit page', ['id' => $page->id]);
         }
 
-        $id = $request->param('id', '');
-        $csrf = $request->param('csrf', '');
-
-        if (!\Minz\Csrf::validate($csrf)) {
-            return Response::redirect('edit server', ['id' => $id]);
-        }
-
-        $page = models\Page::find($id);
-
-        if (!$page) {
-            return Response::notFound('not_found.phtml');
-        }
-
-        models\Page::delete($page->id);
+        $page->remove();
 
         return Response::redirect('pages');
     }
