@@ -25,8 +25,9 @@
         </div>
 
         <?php if (!$alarm->finished_at): ?>
+            <?php $ignore_form = new \taust\forms\BaseForm(); ?>
             <form method="post" action="<?= url('finish alarm', ['id' => $alarm->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+                <input type="hidden" name="csrf_token" value="<?= $ignore_form->csrfToken() ?>" />
                 <input type="hidden" name="from" value="<?= $from ?>" />
 
                 <button type="submit" class="button--ghost">

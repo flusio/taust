@@ -50,6 +50,7 @@
 <section class="section--danger">
     <h2><?= _('Danger zone 😈') ?></h2>
 
+    <?php $delete_form = new \taust\forms\BaseForm(); ?>
     <form
         method="post"
         action="<?= url('delete domain', ['id' => $domain->id]) ?>"
@@ -57,7 +58,7 @@
         data-action="confirmation#confirm"
         data-confirmation-message-value="<?= _('Are you sure that you want to stop to monitor this domain?') ?>"
     >
-        <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+        <input type="hidden" name="csrf_token" value="<?= $delete_form->csrfToken() ?>" />
         <button type="submit">
             <?= _('Stop monitoring this domain') ?>
         </button>

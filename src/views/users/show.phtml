@@ -10,7 +10,11 @@
 </h1>
 
 <form method="post" action="<?= url('update user') ?>">
-    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
+    <?php if ($form->isInvalid('@base')): ?>
+        <p class="form__error">
+            <?= $form->error('@base') ?>
+        </p>
+    <?php endif; ?>
 
     <p>
         <?= _('You’ll receive alarms notifications by setting these information.') ?>
@@ -22,7 +26,7 @@
         </p>
     <?php endif; ?>
 
-    <div class="form-group <?= isset($errors['email']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('email') ? 'form-group--invalid' : '' ?>">
         <label for="email">
             <?= _('Email address') ?>
         </label>
@@ -31,17 +35,17 @@
             id="email"
             name="email"
             type="email"
-            value="<?= $email ?>"
+            value="<?= $form->email ?>"
         />
 
-        <?php if (isset($errors['email'])): ?>
+        <?php if ($form->isInvalid('email')): ?>
             <p class="form-group__error">
-                <?= $errors['email'] ?>
+                <?= $form->error('email') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['free_mobile_login']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('free_mobile_login') ? 'form-group--invalid' : '' ?>">
         <label for="free_mobile_login">
             <?= _('Free mobile login') ?>
         </label>
@@ -50,17 +54,17 @@
             id="free_mobile_login"
             name="free_mobile_login"
             type="text"
-            value="<?= $free_mobile_login ?>"
+            value="<?= $form->free_mobile_login ?>"
         />
 
-        <?php if (isset($errors['free_mobile_login'])): ?>
+        <?php if ($form->isInvalid('free_mobile_login')): ?>
             <p class="form-group__error">
-                <?= $errors['free_mobile_login'] ?>
+                <?= $form->error('free_mobile_login') ?>
             </p>
         <?php endif; ?>
     </div>
 
-    <div class="form-group <?= isset($errors['free_mobile_key']) ? 'form-group--invalid' : '' ?>">
+    <div class="form-group <?= $form->isInvalid('free_mobile_key') ? 'form-group--invalid' : '' ?>">
         <label for="free_mobile_key">
             <?= _('Free mobile key') ?>
         </label>
@@ -69,12 +73,12 @@
             id="free_mobile_key"
             name="free_mobile_key"
             type="password"
-            value="<?= $free_mobile_key ?>"
+            value="<?= $form->free_mobile_key ?>"
         />
 
-        <?php if (isset($errors['free_mobile_key'])): ?>
+        <?php if ($form->isInvalid('free_mobile_key')): ?>
             <p class="form-group__error">
-                <?= $errors['free_mobile_key'] ?>
+                <?= $form->error('free_mobile_key') ?>
             </p>
         <?php endif; ?>
     </div>
@@ -88,4 +92,6 @@
             <?= _('Back to the dashboard') ?>
         </a>
     </div>
+
+    <input type="hidden" name="csrf_token" value="<?= $form->csrfToken() ?>" />
 </form>

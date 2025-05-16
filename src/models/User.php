@@ -61,4 +61,13 @@ class User
     {
         return password_verify($password, $this->password_hash);
     }
+
+    public function setEmail(?string $email): void
+    {
+        if ($email) {
+            $email = \Minz\Email::sanitize($email);
+        }
+
+        $this->email = $email;
+    }
 }

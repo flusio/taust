@@ -1,4 +1,6 @@
 <?php
+    $page = $announcement->page();
+
     $this->layout('announcement.phtml', [
         'title' => $this->protect($announcement->title),
         'page' => $page,
@@ -6,74 +8,4 @@
     ]);
 ?>
 
-<article class="post">
-    <header class="post__header">
-        <h1 class="post__title"><?= $this->protect($announcement->title) ?></h1>
-
-        <div class="post__info">
-            <div>
-                <?php if ($announcement->type === 'maintenance'): ?>
-                    <?= _('🔧 Maintenance') ?>
-                <?php else: ?>
-                    <?= _('🔥 Incident') ?>
-                <?php endif; ?>
-            </div>
-
-            <div>
-                <?= _d($announcement->planned_at, 'EEE d MMM, HH:mm') ?>
-            </div>
-        </div>
-    </header>
-
-    <?php if ($announcement->status === 'finished'): ?>
-        <p class="post__notice">
-            <?php if ($announcement->type === 'maintenance'): ?>
-                <?= _('This maintenance is over.') ?>
-            <?php else: ?>
-                <?= _('This incident is over.') ?>
-            <?php endif; ?>
-        </p>
-    <?php endif; ?>
-
-    <div class="post__content">
-        <?= $announcement->htmlContent() ?>
-    </div>
-
-    <?php if ($current_user): ?>
-        <footer class="post__actions">
-            <form method="post" action="<?= url('update announcement status', ['id' => $announcement->id]) ?>">
-                <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
-                <?php if ($announcement->status === 'ongoing'): ?>
-                    <input type="hidden" name="status" value="finished" />
-                    <button type="submit">
-                        <?= _('✔ Finish') ?>
-                    </button>
-                <?php else: ?>
-                    <input type="hidden" name="status" value="ongoing" />
-                    <button type="submit" class="button--ghost">
-                        <?= _('↻ Reactivate') ?>
-                    </button>
-                <?php endif; ?>
-            </form>
-
-            <div class="post__actions-group">
-                <a class="link--primary" href="<?= url('edit announcement', ['id' => $announcement->id]) ?>">
-                    <?= _('Edit') ?>
-                </a>
-
-                <form
-                    method="post"
-                    action="<?= url('delete announcement', ['id' => $announcement->id]) ?>"
-                    data-controller="confirmation"
-                    data-action="confirmation#confirm"
-                    data-confirmation-message-value="<?= _('Are you sure that you want to delete this announcement?') ?>"
-                >
-                    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
-                    <button type="submit">
-                        <?= _('Delete') ?>
-                    </button>
-                </form>
-            </div>
-        </footer>
-    <?php endif; ?>
-</article>
+<?= $this->include('announcements/_announcement.phtml', ['announcement' => $announcement, 'date_clickable' => false]) ?>
