@@ -4,6 +4,7 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\forms;
 use taust\models;
 use taust\utils;
 
@@ -11,7 +12,7 @@ use taust\utils;
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
  * @license http://www.gnu.org/licenses/agpl-3.0.en.html AGPL
  */
-class Users
+class Users extends BaseController
 {
     /**
      * @response 302 /login
@@ -21,15 +22,10 @@ class Users
      */
     public function show(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $current_user = $this->requireCurrentUser();
 
         return Response::ok('users/show.phtml', [
-            'email' => $current_user->email,
-            'free_mobile_login' => $current_user->free_mobile_login,
-            'free_mobile_key' => $current_user->free_mobile_key,
+            'form' => new forms\User(model: $current_user),
         ]);
     }
 
@@ -37,7 +33,7 @@ class Users
      * @request_param string email
      * @request_param string free_mobile_login
      * @request_param string free_mobile_key
-     * @request_param string csrf
+     * @request_param string csrf_token
      *
      * @response 302 /login
      *     If the user is not connected.
@@ -48,40 +44,19 @@ class Users
      */
     public function update(Request $request): Response
     {
-        $current_user = utils\CurrentUser::get();
-        if (!$current_user) {
-            return Response::redirect('login');
-        }
+        $current_user = $this->requireCurrentUser();
 
-        $email = $request->param('email', '');
-        $free_mobile_login = $request->param('free_mobile_login', '');
-        $free_mobile_key = $request->param('free_mobile_key', '');
-        $csrf = $request->param('csrf', '');
+        $form = new forms\User(model: $current_user);
+        $form->handleRequest($request);
 
-        if (!\Minz\Csrf::validate($csrf)) {
+        if (!$form->validate()) {
             return Response::badRequest('users/show.phtml', [
-                'email' => $email,
-                'free_mobile_login' => $free_mobile_login,
-                'free_mobile_key' => $free_mobile_key,
-                'error' => _('A security verification failed: you should retry to submit the form.'),
+                'form' => $form,
             ]);
         }
 
-        $current_user->email = \Minz\Email::sanitize($email);
-        $current_user->free_mobile_login = $free_mobile_login ? trim($free_mobile_login) : '';
-        $current_user->free_mobile_key = $free_mobile_key ? trim($free_mobile_key) : '';
-
-        $errors = $current_user->validate();
-        if ($errors) {
-            return Response::badRequest('users/show.phtml', [
-                'email' => $email,
-                'free_mobile_login' => $free_mobile_login,
-                'free_mobile_key' => $free_mobile_key,
-                'errors' => $errors,
-            ]);
-        }
-
-        $current_user->save();
+        $user = $form->model();
+        $user->save();
 
         return Response::redirect('user');
     }

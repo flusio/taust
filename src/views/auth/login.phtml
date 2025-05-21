@@ -1,13 +1,11 @@
 <?php $this->layout('centered.phtml', ['title' => _('Log in taust')]); ?>
 
 <form method="post" action="<?= url('create session') ?>">
-    <?php if ($error): ?>
+    <?php if ($form->isInvalid('@base')): ?>
         <p class="form__error">
-            <?= $error ?>
+            <?= $form->error('@base') ?>
         </p>
     <?php endif; ?>
-
-    <input type="hidden" name="csrf" value="<?= $csrf_token ?>" />
 
     <div class="form-group">
         <label for="username">
@@ -18,7 +16,7 @@
             id="username"
             name="username"
             type="text"
-            value="<?= $username ?>"
+            value="<?= $form->username ?>"
             required
             autofocus
         />
@@ -42,4 +40,6 @@
             <?= _('Login') ?>
         </button>
     </div>
+
+    <input type="hidden" name="csrf_token" value="<?= $form->csrfToken() ?>">
 </form>

@@ -7,6 +7,7 @@
 
 <h1><?= _('History of announcements') ?></h1>
 
+<?php $announcements_by_years = $page->announcementsByYears(); ?>
 <?php foreach ($announcements_by_years as $year => $announcements): ?>
     <h2 class="history__year"><?= $year ?></h2>
 
