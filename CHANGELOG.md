@@ -1,5 +1,11 @@
 # Changelog of taust
 
+## 2025-05-28 - v1.0.2
+
+### Bug fixes
+
+- Fix Basic authentication ([5965dbc](https://github.com/flusio/taust/commit/5965dbc))
+
 ## 2025-05-28 - v1.0.1
 
 ### Technical
