@@ -63,7 +63,7 @@ class Metrics extends BaseController
     {
         $authorization_header = $request->headers->getString('Authorization', '');
 
-        $result = preg_match('/^Basic (?P<token>\w+)$/', $authorization_header, $matches);
+        $result = preg_match('/^Basic (?P<token>[\w=]+)$/', $authorization_header, $matches);
         if ($result === false || !isset($matches['token'])) {
             return null;
         }
