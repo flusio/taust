@@ -1,5 +1,11 @@
 # Changelog of taust
 
+## 2025-05-29 - v1.0.3
+
+### Bug fixes
+
+- Fix defining templates in Engine config ([14dbee4](https://github.com/flusio/taust/commit/14dbee4))
+
 ## 2025-05-28 - v1.0.2
 
 ### Bug fixes
