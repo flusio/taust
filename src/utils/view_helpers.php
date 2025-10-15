@@ -14,8 +14,9 @@ function format_bytes(int $size, int $precision = 2): string
 {
     $base = log($size, 1024);
     $suffixes = array('', 'K', 'M', 'G', 'T');
+    $suffix = $suffixes[intval(floor($base))];
 
-    return format_number(pow(1024, $base - floor($base)), $precision) . '&nbsp;' . $suffixes[floor($base)];
+    return format_number(pow(1024, $base - floor($base)), $precision) . '&nbsp;' . $suffix;
 }
 
 function locale_to_bcp_47(string $locale): string
