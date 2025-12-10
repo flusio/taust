@@ -14,7 +14,7 @@ use Minz\Validable;
 class Page
 {
     use Database\Recordable;
-    use Requirable;
+    use Database\Resource;
     use Validable;
 
     public const TITLE_MAX_LENGTH = 100;

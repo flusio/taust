@@ -4,9 +4,9 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -22,7 +22,7 @@ class Pages extends BaseController
      */
     public function index(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('pages/index.phtml', [
             'pages' => models\Page::listAllOrderByTitle(),
@@ -37,7 +37,7 @@ class Pages extends BaseController
      */
     public function new(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('pages/new.phtml', [
             'form' => new forms\NewPage(),
@@ -57,7 +57,7 @@ class Pages extends BaseController
      */
     public function create(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         $page = new models\Page();
 
@@ -86,8 +86,7 @@ class Pages extends BaseController
      */
     public function show(Request $request): Response
     {
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
         $announcement = new models\Announcement($page);
 
         return Response::ok('pages/show.phtml', [
@@ -106,8 +105,7 @@ class Pages extends BaseController
      */
     public function feed(Request $request): Response
     {
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         return Response::ok('pages/feed.atom.xml.phtml', [
             'page' => $page,
@@ -125,8 +123,7 @@ class Pages extends BaseController
      */
     public function style(Request $request): Response
     {
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         $response = Response::text(200, $page->style);
         $response->setHeader('Content-Type', 'text/css');
@@ -145,10 +142,9 @@ class Pages extends BaseController
      */
     public function edit(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         return Response::ok('pages/edit.phtml', [
             'page' => $page,
@@ -176,10 +172,9 @@ class Pages extends BaseController
      */
     public function update(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         $form = new forms\Page(model: $page);
         $form->handleRequest($request);
@@ -215,10 +210,9 @@ class Pages extends BaseController
      */
     public function delete(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         $form = new forms\BaseForm();
         $form->handleRequest($request);

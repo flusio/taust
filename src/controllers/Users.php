@@ -4,9 +4,8 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
-use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -22,7 +21,7 @@ class Users extends BaseController
      */
     public function show(Request $request): Response
     {
-        $current_user = $this->requireCurrentUser();
+        $current_user = auth\CurrentUser::require();
 
         return Response::ok('users/show.phtml', [
             'form' => new forms\User(model: $current_user),
@@ -44,7 +43,7 @@ class Users extends BaseController
      */
     public function update(Request $request): Response
     {
-        $current_user = $this->requireCurrentUser();
+        $current_user = auth\CurrentUser::require();
 
         $form = new forms\User(model: $current_user);
         $form->handleRequest($request);

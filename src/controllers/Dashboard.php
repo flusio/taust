@@ -3,8 +3,8 @@
 namespace taust\controllers;
 
 use Minz\Response;
+use taust\auth;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -20,7 +20,7 @@ class Dashboard extends BaseController
      */
     public function index(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         $domains = models\Domain::listAll();
         $number_domains = count($domains);

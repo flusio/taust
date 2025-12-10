@@ -4,10 +4,10 @@ namespace taust\controllers\pages;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\controllers\BaseController;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -25,8 +25,7 @@ class Announcements extends BaseController
      */
     public function index(Request $request): Response
     {
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         return Response::ok('pages/announcements/index.phtml', [
             'page' => $page,
@@ -53,10 +52,9 @@ class Announcements extends BaseController
      */
     public function create(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $page = models\Page::require($id);
+        $page = models\Page::requireFromRequest($request);
 
         $announcement = new models\Announcement($page);
         $form = new forms\Announcement(model: $announcement);

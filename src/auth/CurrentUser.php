@@ -1,6 +1,6 @@
 <?php
 
-namespace taust\utils;
+namespace taust\auth;
 
 use taust\models;
 
@@ -31,6 +31,17 @@ class CurrentUser
 
         self::$instance = $user;
         return self::$instance;
+    }
+
+    public static function require(): models\User
+    {
+        $current_user = self::get();
+
+        if (!$current_user) {
+            throw new MissingCurrentUserError();
+        }
+
+        return $current_user;
     }
 
     public static function set(string $user_id): void

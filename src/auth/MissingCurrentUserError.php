@@ -1,6 +1,6 @@
 <?php
 
-namespace taust\errors;
+namespace taust\auth;
 
 /**
  * @author Marien Fressinaud <dev@marienfressinaud.fr>

@@ -5,9 +5,7 @@ namespace taust\controllers;
 use Minz\Controller;
 use Minz\Request;
 use Minz\Response;
-use taust\models;
-use taust\errors;
-use taust\utils;
+use taust\auth;
 
 /**
  * @author Marien Fressinaud <dev@marienfressinaud.fr>
@@ -15,26 +13,19 @@ use taust\utils;
  */
 class BaseController
 {
-    public function requireCurrentUser(): models\User
-    {
-        $current_user = utils\CurrentUser::get();
-
-        if (!$current_user) {
-            throw new errors\MissingCurrentUserError();
-        }
-
-        return $current_user;
-    }
-
-    #[Controller\ErrorHandler(errors\MissingCurrentUserError::class)]
+    #[Controller\ErrorHandler(auth\MissingCurrentUserError::class)]
     public function redirectOnMissingCurrentUser(Request $request): Response
     {
         return Response::redirect('login');
     }
 
-    #[Controller\ErrorHandler(errors\MissingResourceError::class)]
-    public function failOnMissingRessource(Request $request): Response
-    {
-        return Response::notFound('not_found.phtml');
+    #[Controller\ErrorHandler(\Minz\Errors\MissingRecordError::class)]
+    public function failOnMissingRessource(
+        Request $request,
+        \Minz\Errors\MissingRecordError $error,
+    ): Response {
+        return Response::notFound('not_found.phtml', [
+            'error' => $error,
+        ]);
     }
 }

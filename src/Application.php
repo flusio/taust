@@ -101,9 +101,9 @@ class Application
             'controller_namespace' => '\\taust\\controllers',
         ]);
 
-        if (!utils\CurrentUser::currentId()) {
+        if (!auth\CurrentUser::currentId()) {
             $user_id = $request->cookies->getString('taust_session', '');
-            utils\CurrentUser::set($user_id);
+            auth\CurrentUser::set($user_id);
         }
 
         $available_locales = utils\Locale::availableLocales();
@@ -123,7 +123,7 @@ class Application
             'environment' => \Minz\Configuration::$environment,
             'errors' => [],
             'error' => null,
-            'current_user' => utils\CurrentUser::get(),
+            'current_user' => auth\CurrentUser::get(),
             'current_locale' => $locale,
             'navigation_active' => null,
             'is_app_page' => $page !== null,

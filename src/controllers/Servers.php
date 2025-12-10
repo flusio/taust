@@ -4,9 +4,9 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -22,7 +22,7 @@ class Servers extends BaseController
      */
     public function index(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('servers/index.phtml', [
             'servers' => models\Server::listAllOrderById(),
@@ -37,7 +37,7 @@ class Servers extends BaseController
      */
     public function new(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('servers/new.phtml', [
             'form' => new forms\Server(),
@@ -57,7 +57,7 @@ class Servers extends BaseController
      */
     public function create(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         $server = new models\Server();
         $form = new forms\Server(model: $server);
@@ -89,10 +89,9 @@ class Servers extends BaseController
      */
     public function show(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $server = models\Server::require($id);
+        $server = models\Server::requireFromRequest($request);
 
         $alarms = models\Alarm::listByServerIdOrderByDescCreatedAt($server->id);
         $metric = models\Metric::findLastByServerId($server->id);
@@ -119,10 +118,9 @@ class Servers extends BaseController
      */
     public function delete(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $server = models\Server::require($id);
+        $server = models\Server::requireFromRequest($request);
 
         $form = new forms\BaseForm();
         $form->handleRequest($request);

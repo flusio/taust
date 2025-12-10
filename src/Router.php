@@ -18,9 +18,9 @@ class Router
         $router->addRoute('GET', '/', 'Dashboard#index', 'home');
         $router->addRoute('POST', '/', 'Metrics#create', 'create metrics');
 
-        $router->addRoute('GET', '/login', 'Auth#login', 'login');
-        $router->addRoute('POST', '/login', 'Auth#createSession', 'create session');
-        $router->addRoute('POST', '/logout', 'Auth#deleteSession', 'logout');
+        $router->addRoute('GET', '/login', 'Authentications#login', 'login');
+        $router->addRoute('POST', '/login', 'Authentications#createSession', 'create session');
+        $router->addRoute('POST', '/logout', 'Authentications#deleteSession', 'logout');
 
         $router->addRoute('GET', '/profile', 'Users#show', 'user');
         $router->addRoute('POST', '/profile', 'Users#update', 'update user');

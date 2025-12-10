@@ -4,9 +4,9 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -22,7 +22,7 @@ class Domains extends BaseController
      */
     public function index(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('domains/index.phtml', [
             'domains' => models\Domain::listAllOrderById(),
@@ -37,7 +37,7 @@ class Domains extends BaseController
      */
     public function new(): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('domains/new.phtml', [
             'form' => new forms\Domain(),
@@ -58,7 +58,7 @@ class Domains extends BaseController
      */
     public function create(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         $domain = new models\Domain();
         $form = new forms\Domain(model: $domain);
@@ -90,10 +90,9 @@ class Domains extends BaseController
      */
     public function show(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $domain = models\Domain::require($id);
+        $domain = models\Domain::requireFromRequest($request);
 
         $alarms = models\Alarm::listByDomainIdOrderByDescCreatedAt($domain->id);
         $last_heartbeat = models\Heartbeat::findLastHeartbeatByDomainId($domain->id);
@@ -121,10 +120,9 @@ class Domains extends BaseController
      */
     public function delete(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $domain = models\Domain::require($id);
+        $domain = models\Domain::requireFromRequest($request);
 
         $form = new forms\BaseForm();
         $form->handleRequest($request);

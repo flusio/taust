@@ -4,11 +4,11 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
-class Auth extends BaseController
+class Authentications extends BaseController
 {
     /**
      * @response 302 /
@@ -18,7 +18,7 @@ class Auth extends BaseController
      */
     public function login(): Response
     {
-        if (utils\CurrentUser::get()) {
+        if (auth\CurrentUser::get()) {
             return Response::redirect('home');
         }
 
@@ -39,7 +39,7 @@ class Auth extends BaseController
      */
     public function createSession(Request $request): Response
     {
-        if (utils\CurrentUser::get()) {
+        if (auth\CurrentUser::get()) {
             return Response::redirect('home');
         }
 
@@ -54,7 +54,7 @@ class Auth extends BaseController
 
         $user = $form->user();
 
-        utils\CurrentUser::set($user->id);
+        auth\CurrentUser::set($user->id);
 
         $response = Response::redirect('home');
         $response->setCookie('taust_session', $user->id, [
@@ -73,7 +73,7 @@ class Auth extends BaseController
      */
     public function deleteSession(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         $form = new forms\BaseForm();
         $form->handleRequest($request);
@@ -82,7 +82,7 @@ class Auth extends BaseController
             return \Minz\Response::redirect('home');
         }
 
-        utils\CurrentUser::reset();
+        auth\CurrentUser::reset();
 
         $response = Response::redirect('login');
         $response->removeCookie('taust_session');

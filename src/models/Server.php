@@ -14,7 +14,7 @@ use Minz\Validable;
 class Server
 {
     use Database\Recordable;
-    use Requirable;
+    use Database\Resource;
     use Validable;
 
     #[Database\Column]

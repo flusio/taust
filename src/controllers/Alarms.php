@@ -4,9 +4,9 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -22,7 +22,7 @@ class Alarms extends BaseController
      */
     public function index(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
         return Response::ok('alarms/index.phtml', [
             'ongoing_alarms' => models\Alarm::listOngoingOrderByDescCreatedAt(),
@@ -44,10 +44,9 @@ class Alarms extends BaseController
      */
     public function finish(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $alarm = models\Alarm::require($id);
+        $alarm = models\Alarm::requireFromRequest($request);
         $from = $request->parameters->getString('from', '');
 
         $form = new forms\BaseForm();

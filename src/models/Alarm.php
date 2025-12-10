@@ -12,7 +12,7 @@ use Minz\Database;
 class Alarm
 {
     use Database\Recordable;
-    use Requirable;
+    use Database\Resource;
 
     #[Database\Column]
     public int $id;

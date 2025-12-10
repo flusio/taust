@@ -4,9 +4,9 @@ namespace taust\controllers;
 
 use Minz\Request;
 use Minz\Response;
+use taust\auth;
 use taust\forms;
 use taust\models;
-use taust\utils;
 
 class Announcements extends BaseController
 {
@@ -20,8 +20,7 @@ class Announcements extends BaseController
      */
     public function show(Request $request): Response
     {
-        $id = $request->parameters->getString('id', '');
-        $announcement = models\Announcement::require($id);
+        $announcement = models\Announcement::requireFromRequest($request);
 
         return Response::ok('announcements/show.phtml', [
             'announcement' => $announcement,
@@ -40,10 +39,9 @@ class Announcements extends BaseController
      */
     public function edit(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $announcement = models\Announcement::require($id);
+        $announcement = models\Announcement::requireFromRequest($request);
 
         return Response::ok('announcements/edit.phtml', [
             'announcement' => $announcement,
@@ -71,10 +69,9 @@ class Announcements extends BaseController
      */
     public function update(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $announcement = models\Announcement::require($id);
+        $announcement = models\Announcement::requireFromRequest($request);
 
         $form = new forms\Announcement(model: $announcement);
         $form->handleRequest($request);
@@ -108,10 +105,9 @@ class Announcements extends BaseController
      */
     public function updateStatus(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $announcement = models\Announcement::require($id);
+        $announcement = models\Announcement::requireFromRequest($request);
 
         $form = new forms\AnnouncementStatus(model: $announcement);
         $form->handleRequest($request);
@@ -139,10 +135,9 @@ class Announcements extends BaseController
      */
     public function delete(Request $request): Response
     {
-        $this->requireCurrentUser();
+        auth\CurrentUser::require();
 
-        $id = $request->parameters->getString('id', '');
-        $announcement = models\Announcement::require($id);
+        $announcement = models\Announcement::requireFromRequest($request);
 
         $page_id = $announcement->page_id;
 

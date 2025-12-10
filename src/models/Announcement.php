@@ -14,7 +14,7 @@ use Minz\Validable;
 class Announcement
 {
     use Database\Recordable;
-    use Requirable;
+    use Database\Resource;
     use Validable;
 
     #[Database\Column]
