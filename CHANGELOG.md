@@ -1,5 +1,16 @@
 # Changelog of taust
 
+## 2025-12-11 - v1.0.4
+
+### Bug fixes
+
+- Fix alarms for domain heartbeat failures ([14a864d](https://github.com/flusio/taust/commit/14a864d))
+
+### Maintenance
+
+- Update the dependencies ([16a6738](https://github.com/flusio/taust/commit/16a6738), [ae77a49](https://github.com/flusio/taust/commit/ae77a49), [fe650b5](https://github.com/flusio/taust/commit/fe650b5), [1b09875](https://github.com/flusio/taust/commit/1b09875), [bdfbd46](https://github.com/flusio/taust/commit/bdfbd46))
+- Update code for Minz 2.3 ([f460946](https://github.com/flusio/taust/commit/f460946))
+
 ## 2025-05-29 - v1.0.3
 
 ### Bug fixes
