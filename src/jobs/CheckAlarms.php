@@ -38,7 +38,7 @@ class CheckAlarms extends Job
         $results = [];
 
         foreach ($domains as $domain) {
-            $heartbeat = models\Heartbeat::findLastHeartbeatByDomainId($domain->id);
+            $heartbeat = $domain->lastHeartbeat();
             if (!$heartbeat) {
                 continue;
             }

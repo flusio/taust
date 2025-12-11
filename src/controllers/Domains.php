@@ -94,14 +94,8 @@ class Domains extends BaseController
 
         $domain = models\Domain::requireFromRequest($request);
 
-        $alarms = models\Alarm::listByDomainIdOrderByDescCreatedAt($domain->id);
-        $last_heartbeat = models\Heartbeat::findLastHeartbeatByDomainId($domain->id);
-        $last_heartbeat_at = $last_heartbeat->created_at ?? null;
-
         return Response::ok('domains/show.phtml', [
             'domain' => $domain,
-            'last_heartbeat_at' => $last_heartbeat_at,
-            'alarms' => $alarms,
         ]);
     }
 

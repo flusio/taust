@@ -25,9 +25,10 @@
     </p>
 <?php endif; ?>
 
-<?php if ($last_heartbeat_at): ?>
+<?php $last_successful_heartbeat = $domain->lastSuccessfulHeartbeat(); ?>
+<?php if ($last_successful_heartbeat): ?>
     <p class="paragraph--centered paragraph--muted">
-        <?= _f('Last ping on %s', _d($last_heartbeat_at, 'EEE d MMM YYYY, HH:mm:ss')) ?>
+        <?= _f('Last ping on %s', _d($last_successful_heartbeat->created_at, 'EEE d MMM YYYY, HH:mm:ss')) ?>
     </p>
 <?php endif; ?>
 
@@ -37,6 +38,7 @@
     </a>
 </p>
 
+<?php $alarms = $domain->alarms(); ?>
 <?php if ($alarms): ?>
     <h2 id="alarms"><?= _('Alarms') ?></h2>
 

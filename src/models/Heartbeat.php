@@ -55,6 +55,27 @@ class Heartbeat
         $sql = <<<'SQL'
             SELECT * FROM heartbeats
             WHERE domain_id = ?
+            ORDER BY created_at DESC
+            LIMIT 1
+        SQL;
+
+        $database = Database::get();
+        $statement = $database->prepare($sql);
+        $statement->execute([$domain_id]);
+
+        $result = $statement->fetch();
+        if (is_array($result)) {
+            return self::fromDatabaseRow($result);
+        } else {
+            return null;
+        }
+    }
+
+    public static function findLastSuccessfulHeartbeatByDomainId(string $domain_id): ?self
+    {
+        $sql = <<<'SQL'
+            SELECT * FROM heartbeats
+            WHERE domain_id = ?
             AND is_success = true
             ORDER BY created_at DESC
             LIMIT 1

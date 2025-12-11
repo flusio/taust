@@ -40,7 +40,7 @@ class Domain
 
     public function status(): string
     {
-        $last_heartbeat = Heartbeat::findLastHeartbeatByDomainId($this->id);
+        $last_heartbeat = $this->lastHeartbeat();
         if ($last_heartbeat) {
             if ($last_heartbeat->created_at <= \Minz\Time::ago(5, 'minutes')) {
                 return 'unknown';
@@ -52,6 +52,24 @@ class Domain
         } else {
             return 'unknown';
         }
+    }
+
+    /**
+     * @return Alarm[]
+     */
+    public function alarms(): array
+    {
+        return Alarm::listByDomainIdOrderByDescCreatedAt($this->id);
+    }
+
+    public function lastHeartbeat(): ?Heartbeat
+    {
+        return Heartbeat::findLastHeartbeatByDomainId($this->id);
+    }
+
+    public function lastSuccessfulHeartbeat(): ?Heartbeat
+    {
+        return Heartbeat::findLastSuccessfulHeartbeatByDomainId($this->id);
     }
 
     /**
