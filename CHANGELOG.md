@@ -1,5 +1,12 @@
 # Changelog of taust
 
+## 2026-04-01 - v1.0.5
+
+### Maintenance
+
+- Update the dependencies ([d6be2ff](https://github.com/flusio/taust/commit/d6be2ff), [c04743f](https://github.com/flusio/taust/commit/c04743f))
+- Update Docker image to PHP 8.4 ([7887def](https://github.com/flusio/taust/commit/7887def))
+
 ## 2025-12-11 - v1.0.4
 
 ### Bug fixes
