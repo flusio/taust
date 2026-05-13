@@ -10,6 +10,11 @@
             "src/utils/view_helpers.php"
         ]
     },
+    "config": {
+        "platform": {
+          "php": "8.2"
+        }
+    },
     "require": {
         "php": ">=8.2",
         "ext-intl": "*",

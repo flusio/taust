@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "21a2cfa1af36426d66760bcc96d64642",
+    "content-hash": "ef77a345cfff829db43652f2e7d77964",
     "packages": [
         {
             "name": "erusev/parsedown",
@@ -718,5 +718,8 @@
         "ext-pdo_pgsql": "*"
     },
     "platform-dev": {},
+    "platform-overrides": {
+        "php": "8.2"
+    },
     "plugin-api-version": "2.9.0"
 }
