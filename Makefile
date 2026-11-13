@@ -59,6 +59,16 @@ ifeq ($(LINTER),$(filter $(LINTER), all phpcs))
 	$(PHP) ./vendor/bin/phpcs
 endif
 
+.PHONY: lint-fix
+lint-fix: LINTER ?= all
+lint-fix: ## Fix the errors detected by the linters (can take a LINTER argument)
+ifeq ($(LINTER), $(filter $(LINTER), all rector))
+	$(PHP) vendor/bin/rector process --config .rector.php
+endif
+ifeq ($(LINTER), $(filter $(LINTER), all phpcs))
+	$(PHP) vendor/bin/phpcbf
+endif
+
 .PHONY: release
 release: ## Release a new version (take a VERSION argument)
 ifndef VERSION
