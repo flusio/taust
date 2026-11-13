@@ -23,7 +23,7 @@ class Login extends BaseForm
     {
         try {
             $user = $this->user();
-        } catch (\RuntimeException $e) {
+        } catch (\RuntimeException) {
             $this->addError('@base', 'invalid_credentials', _('Wrong credentials!'));
             return;
         }

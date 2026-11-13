@@ -4,7 +4,6 @@ namespace taust\jobs;
 
 use Minz\Job;
 use taust\models;
-use taust\services;
 
 /**
  * @author  Marien Fressinaud <dev@marienfressinaud.fr>
@@ -34,8 +33,6 @@ class CheckAlarms extends Job
     {
         $domains = models\Domain::listAll();
         $servers = models\Server::listAll();
-
-        $results = [];
 
         foreach ($domains as $domain) {
             $heartbeat = $domain->lastHeartbeat();

@@ -88,9 +88,7 @@ class Page
             /** @var string */
             $year = $announcement->planned_at->format('Y');
 
-            if (!isset($announcements_by_years[$year])) {
-                $announcements_by_years[$year] = [];
-            }
+            $announcements_by_years[$year] ??= [];
 
             $announcements_by_years[$year][] = $announcement;
         }

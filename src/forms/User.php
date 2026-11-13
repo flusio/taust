@@ -3,7 +3,6 @@
 namespace taust\forms;
 
 use Minz\Form;
-use Minz\Validable;
 use taust\models;
 
 /**

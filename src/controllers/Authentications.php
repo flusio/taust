@@ -6,7 +6,6 @@ use Minz\Request;
 use Minz\Response;
 use taust\auth;
 use taust\forms;
-use taust\models;
 
 class Authentications extends BaseController
 {

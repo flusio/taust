@@ -35,8 +35,6 @@ class CheckHeartbeats extends Job
         curl_setopt($curl_session, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl_session, CURLOPT_TIMEOUT, 5);
         curl_setopt($curl_session, CURLOPT_USERAGENT, 'taust/dev (https://github.com/flusio/taust)');
-
-        $results = [];
         $domains = models\Domain::listAll();
         foreach ($domains as $domain) {
             curl_setopt($curl_session, CURLOPT_URL, 'https://' . $domain->id);
