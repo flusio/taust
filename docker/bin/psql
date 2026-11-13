@@ -1,7 +1,12 @@
 #!/bin/bash
 
-SCRIPT_PATH=$(dirname $(realpath -s $0))
-export COMPOSE_PROJECT_NAME=taust
-export COMPOSE_FILE=$SCRIPT_PATH/../development/docker-compose.yml
+SCRIPT_PATH=$(dirname "$(realpath -s "$0")")
+export COMPOSE_FILE="$SCRIPT_PATH/../development/docker-compose.yml"
 
-docker compose exec database psql -d taust_development -U postgres "$@"
+if [ -t 0 ]; then
+    TTY_OPTION=""
+else
+    TTY_OPTION="-T"
+fi
+
+docker compose exec $TTY_OPTION database psql -d taust_development -U postgres "$@"
